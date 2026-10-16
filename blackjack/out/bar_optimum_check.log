@@ -1,0 +1,13 @@
+{
+ "build": {
+  "file": "/home/claude/fix/labpack/builds-final/card-run-blackjack-classic-launch.html",
+  "sha": "381595b2ec0103398f92886e7429afc9624c3a53d6e68ebcd7e86fde01f2708c"
+ },
+ "runBarVersion": "170",
+ "states": 1351200,
+ "barStates": 782822,
+ "terminalStates": 568378,
+ "differences": 0,
+ "examples": [],
+ "compared": "round ends (MAX WIN clip, run cap) / DOUBLE OR NOTHING offered / DOUBLE HALF offered / half / keep: bar_optimum.cpp offers() vs RunBar.compute() of run-bar v170"
+}

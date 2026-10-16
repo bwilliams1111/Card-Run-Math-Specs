@@ -1,0 +1,9 @@
+backward optimal RTP 0.9436791432417289  worst 0.8195006877213405  ( 68.831 s)
+optimal                RTP 94.3679%  SD 0.9421  hit 69.529%  sumP 1.000000000000
+basic_stated           RTP 93.4480%  SD 0.9246  hit 72.481%  sumP 1.000000000000
+conventional_bj_basic  RTP 93.6512%  SD 0.9362  hit 71.444%  sumP 1.000000000000
+always_stand           RTP 87.4554%  SD 0.9796  hit 61.539%  sumP 1.000000000000
+always_hit             RTP 89.8423%  SD 0.8859  hit 74.982%  sumP 1.000000000000
+random                 RTP 87.5163%  SD 0.9118  hit 69.038%  sumP 1.000000000000
+worst                  RTP 81.9501%  SD 0.8978  hit 69.137%  sumP 1.000000000000
+done 68.886 s

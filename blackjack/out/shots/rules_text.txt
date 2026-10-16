@@ -1,0 +1,105 @@
+$
+1,050.00
+DOUBLE OR NOTHING
+WIN PAYS 2X · RETURNS 100.1%
+DEALER
+18
+10
+♠
+10
+♠
+10
+6
+♠
+6
+♠
+6
+2
+♠
+2
+♠
+2
+DEALER STANDS ON 17
+19 • 20 TIES WIN
+WON
+10
+♠
+10
+♠
+10
+J
+♠
+J
+♠
+J
+PLAY AGAIN
+$10.00
+BLACKJACK 20×
+CASHED OUT
+PAID $60.00
+BLACKJACK 20×
+HOW TO PLAY
+
+One bet plays four blackjack hands against one dealer. Every card is drawn from a full deck, so each card is independent of the cards already dealt. The dealer shows one card and draws after you, standing on all 17s.
+
+Your hands play left to right. You choose HIT or STAND on hard 12 to 16 and on soft 17; lower totals are hit for you and higher totals stand. A two-card 21 is a blackjack. Any tie with the dealer counts as a win, except a blackjack against a dealer blackjack, which is a tie (the BJ column still pays it). A dealer blackjack beats every other hand.
+
+PAYS
+
+Three columns, all added together:
+
+COUNT	× BET	PAYS AT $10.00
+WINS
+2	0.3×	$3.00
+3	1.2×	$12.00
+4	2×	$20.00
+MADE 21 (21 with three or more cards)
+1	0.4×	$4.00
+2	1×	$10.00
+3	2×	$20.00
+4	4×	$40.00
+BJ
+1	0.5×	$5.00
+2	2×	$20.00
+3	10×	$100.00
+4	18×	$180.00
+
+The top round is four blackjacks and four wins: 20×, about 1 in 209,000 rounds.
+
+RUN BAR
+20× is the build target and the top of the build: four blackjacks and four wins pay exactly 20×. On a 1,000× run you can keep doubling until your total reaches 1,000× your first win, and the double that crosses 1,000× pays in full. No round pays more than the max win of 20,000× your bet.
+
+After any win, including a return of your bet or less, the run bar opens:
+
+CASH OUT takes everything you hold.
+
+DOUBLE OR NOTHING is one hand against the dealer: beat the dealer and the amount doubles. You choose HIT or STAND on hard 12 to 16 and soft 17 and 18; the dealer hits 16 or less and stands on all 17s. You win ties on 19 and 20; any other tie deals the hand again.
+
+DOUBLE HALF doubles half of what you hold and puts the other half (plus any odd cent) in your RUN BANK.
+
+The RUN BANK is paid with everything else when the round ends; if a double loses, the RUN BANK comes back to cash out or double again.
+
+The minimum double is $0.02. A double that pays nothing ends the round.
+
+RETURN TO PLAYER
+PLAY	RETURN
+Board, best play	94.4%
+Board, basic play (below)	93.4%
+Board, worst play	82.0%
+DOUBLE OR NOTHING, best play	100.1%
+
+Best play uses every card on the table — all four hands and the dealer's card — to choose each hit or stand.
+
+Basic play: always hit hard 12; hit hard 13 against 2 and 3; stand on hard 13–16 against 4–6 and on 14–16 against 2 and 3; hit 13–16 against 7 or higher; hit soft 17 except against 7.
+
+LIMITS
+
+Bets: $1.00 to $100.00 in $0.10 steps.
+
+Max win: 20,000× your bet per round. Your operator may set a lower max win; every payout stops at the max win.
+
+Pays are rounded down to the cent.
+
+Results are decided by the game's random number generator. A malfunction voids all pays and plays.
+
+Return-to-player figures are long-run averages for the play described; any single round can return more or less.

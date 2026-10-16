@@ -1,0 +1,362 @@
+{
+ "build": {
+  "file": "/home/claude/fix/labpack/builds-final/card-run-blackjack-classic-launch.html",
+  "sha": "381595b2ec0103398f92886e7429afc9624c3a53d6e68ebcd7e86fde01f2708c"
+ },
+ "constants": {
+  "WINS": {
+   "2": 0.3,
+   "3": 1.2,
+   "4": 2
+  },
+  "BJ_C": {
+   "1": 0.5,
+   "2": 2,
+   "3": 10,
+   "4": 18
+  },
+  "M21": {
+   "1": 0.4,
+   "2": 1,
+   "3": 2,
+   "4": 4
+  },
+  "MAX_WIN_X": 20000,
+  "MIN_RUN": 0.02,
+  "RUN_CAP_X": 1000,
+  "BETS": [
+   1,
+   100,
+   0.1
+  ]
+ },
+ "board": {
+  "best": {
+   "rtp": 0.9436791432415289
+  },
+  "basic": {
+   "rtp": 0.9344800723309554
+  },
+  "standard": {
+   "rtp": 0.9365124168854505
+  },
+  "worst": {
+   "rtp": 0.8195006877211716
+  }
+ },
+ "boardRounding": {
+  "betsChecked": "$1.00-$100.00 step $0.10 (991 bets)",
+  "paysWithAFraction": 0,
+  "note": "board pays are exact at every legal bet: no rounding effect on the base game"
+ },
+ "double": {
+  "winChance": 0.5004548706450649,
+  "rtpBest": 1.0009097412901298,
+  "rtpWorst": 0.9208880103610555,
+  "rtpAlwaysStand": 0.9478144847434123,
+  "rtpAlwaysHit": 0.9730497607452274,
+  "pushChancePerDeal": 0.040520723768692674,
+  "dealsPerRun": 1.0422319947626717,
+  "winChancePerDeal": 0.4801760770729594,
+  "rtpBasic": 1.0007208809884691,
+  "winChanceBasic": 0.5003604404942346,
+  "table": {
+   "best": {
+    "winChance": 0.5004548706450649,
+    "rtp": 1.0009097412901298,
+    "pushChancePerDeal": 0.040520723768692674,
+    "dealsPerRun": 1.0422319947626717,
+    "winChancePerDeal": 0.4801760770729594
+   },
+   "basic": {
+    "winChance": 0.5003604404942346,
+    "rtp": 1.0007208809884691,
+    "pushChancePerDeal": 0.039995287450804856,
+    "dealsPerRun": 1.0416615532486309,
+    "winChancePerDeal": 0.4803483808476563
+   },
+   "worst": {
+    "winChance": 0.46044400518052775,
+    "rtp": 0.9208880103610555,
+    "pushChancePerDeal": 0.03683001094119977,
+    "dealsPerRun": 1.0382383290172794,
+    "winChancePerDeal": 0.4434858474319191
+   },
+   "alwaysStand": {
+    "winChance": 0.47390724237170617,
+    "rtp": 0.9478144847434123,
+    "pushChancePerDeal": 0.031447852725222394,
+    "dealsPerRun": 1.0324689308817367,
+    "winChancePerDeal": 0.4590038772081845
+   },
+   "alwaysHit": {
+    "winChance": 0.4865248803726137,
+    "rtp": 0.9730497607452274,
+    "pushChancePerDeal": 0.04540958846540588,
+    "dealsPerRun": 1.0475697093923306,
+    "winChancePerDeal": 0.4644319857767125
+   }
+  },
+  "basicDefinition": "the CR's \"ordinary blackjack basic strategy\" = the conventional no-doubling chart (strategy.js convMask: hard 12 stand against 4-6 else hit; hard 13-16 stand against 2-6 else hit; soft 17 hit; soft 18 stand against 2-8, hit against 9, 10, A); it reproduces the CR's 99.8981% (dealer hits soft 17) and 100.0721% (stands)",
+  "otherBasic": {
+   "rulesSheetBoardBasicOnTheDoubleHand": {
+    "winChance": 0.4997895108115283,
+    "rtp": 0.9995790216230566,
+    "pushChancePerDeal": 0.04212219009573461,
+    "dealsPerRun": 1.0439744920074352,
+    "winChancePerDeal": 0.4787372820292709
+   },
+   "note": "the rules sheet's basic play is a BOARD strategy (hard 12-16, soft 17); applied to this hand with soft 18 = stand it returns less"
+  },
+  "previousRuleHitsSoft17": {
+   "best": {
+    "winChance": 0.4995387399126304,
+    "rtp": 0.9990774798252609,
+    "pushChancePerDeal": 0.03925741416475395,
+    "dealsPerRun": 1.040861532260095,
+    "winChancePerDeal": 0.479928140708541
+   },
+   "basic": {
+    "winChance": 0.4994905431760999,
+    "rtp": 0.9989810863521998,
+    "pushChancePerDeal": 0.039011391374094456,
+    "dealsPerRun": 1.0405950611941965,
+    "winChancePerDeal": 0.48000472210859807
+   },
+   "worst": {
+    "winChance": 0.45958712263433,
+    "rtp": 0.91917424526866,
+    "pushChancePerDeal": 0.03579904562966775,
+    "dealsPerRun": 1.0371281997465416,
+    "winChancePerDeal": 0.44313434226033593
+   },
+   "alwaysStand": {
+    "winChance": 0.47440563643074657,
+    "rtp": 0.9488112728614931,
+    "pushChancePerDeal": 0.030516934282823337,
+    "dealsPerRun": 1.0314775320600864,
+    "winChancePerDeal": 0.4599282308003885
+   },
+   "alwaysHit": {
+    "winChance": 0.4842501939032536,
+    "rtp": 0.9685003878065072,
+    "pushChancePerDeal": 0.044214715325374895,
+    "dealsPerRun": 1.0462600921298206,
+    "winChancePerDeal": 0.4628392094335636
+   }
+  },
+  "note": "a win pays exactly 2 x the stake (whole cents), so there is no rounding at any stake. The dealer STANDS on all 17s (build of 16 Oct 2026); win chance per resolved hand p = 0.50045487064506489"
+ },
+ "policies": [
+  {
+   "policy": "P0",
+   "bet": 1,
+   "play": "best",
+   "rtp": 0.943679143241529,
+   "sdX": 0.9420583773452706,
+   "hitRate": 0.6952890182535302,
+   "sec": 0
+  },
+  {
+   "policy": "P2",
+   "bet": 1,
+   "play": "best",
+   "rtp": 0.9445376471227701,
+   "sdX": 1.6331234810851007,
+   "hitRate": 0.34796077569100464,
+   "sec": 0,
+   "closedForm": {
+    "rtp": 0.9445376471227702
+   }
+  },
+  {
+   "policy": "P3",
+   "bet": 1,
+   "play": "best",
+   "rtp": 0.9522993254403811,
+   "sdX": 42.8417020659923,
+   "hitRate": 0.0006852003181834951,
+   "sec": 0.001,
+   "closedForm": {
+    "rtp": 0.9522993254403811
+   }
+  },
+  {
+   "policy": "P4",
+   "bet": 1,
+   "play": "best",
+   "rtp": 0.9448246382574159,
+   "sdX": 2.692062053561868,
+   "hitRate": 0.49682941274236314,
+   "cutMass": 0.00018369750967761785,
+   "nodes": 726778807,
+   "eps": 1e-12,
+   "tail": {
+    "alpha": 1.0006068622518518,
+    "beta": 1.0012142770940657,
+    "w": 0.5004548706450649
+   },
+   "rtpLower": 0.9418874678219931,
+   "cutTotalX": 0.0029339661590526717,
+   "cutTailX": 0.0029371704354228356,
+   "hitRateLower": 0.4966457152326855,
+   "note": "paths cut below eps are valued with the linear tail model (alpha x banked + beta x held, an estimate); rtpLower values cut paths at 0 (rigorous); the upper bound is rtpLower + lambdaHat x cutTotalX with lambdaHat >= V*/(S+B) over all states (bar_optimum.cpp; aggregate.js), because a double now returns more than 100% and cashing out no longer bounds every policy",
+   "sec": 103.498
+  },
+  {
+   "policy": "P5",
+   "bet": 1,
+   "play": "best",
+   "rtp": 0.94410839518215,
+   "sdX": 1.154461888382341,
+   "hitRate": 0.6952890182535302,
+   "sec": 0,
+   "closedForm": {
+    "rtp": 0.94410839518215,
+    "sdX": 1.154461888382341,
+    "hitRate": 0.6952890182535302,
+    "rtpMinusP0": 0.00042925194062055374
+   }
+  },
+  {
+   "policy": "P0",
+   "bet": 10,
+   "play": "best",
+   "rtp": 0.9436791432415289,
+   "sdX": 0.9420583773452713,
+   "hitRate": 0.6952890182535302,
+   "sec": 0
+  },
+  {
+   "policy": "P2",
+   "bet": 10,
+   "play": "best",
+   "rtp": 0.9445376471227703,
+   "sdX": 1.6331234810851,
+   "hitRate": 0.34796077569100464,
+   "sec": 0,
+   "closedForm": {
+    "rtp": 0.9445376471227703
+   }
+  },
+  {
+   "policy": "P3",
+   "bet": 10,
+   "play": "best",
+   "rtp": 0.9522993254403812,
+   "sdX": 42.8417020659923,
+   "hitRate": 0.0006852003181834951,
+   "sec": 0.001,
+   "closedForm": {
+    "rtp": 0.9522993254403812
+   }
+  },
+  {
+   "policy": "P4",
+   "bet": 10,
+   "play": "best",
+   "rtp": 0.9448248036019525,
+   "sdX": 2.6921299890898203,
+   "hitRate": 0.4968453359192994,
+   "cutMass": 0.00018808273902286507,
+   "nodes": 747975564,
+   "eps": 1e-12,
+   "tail": {
+    "alpha": 1.0006068622518518,
+    "beta": 1.0012142770940657,
+    "w": 0.5004548706450649
+   },
+   "rtpLower": 0.9418875011889545,
+   "cutTotalX": 0.0029340979644396606,
+   "cutTailX": 0.0029373024129980556,
+   "hitRateLower": 0.49665725318027654,
+   "note": "paths cut below eps are valued with the linear tail model (alpha x banked + beta x held, an estimate); rtpLower values cut paths at 0 (rigorous); the upper bound is rtpLower + lambdaHat x cutTotalX with lambdaHat >= V*/(S+B) over all states (bar_optimum.cpp; aggregate.js), because a double now returns more than 100% and cashing out no longer bounds every policy",
+   "sec": 111.674
+  },
+  {
+   "policy": "P5",
+   "bet": 10,
+   "play": "best",
+   "rtp": 0.9441083951821494,
+   "sdX": 1.154461888382341,
+   "hitRate": 0.6952890182535302,
+   "sec": 0,
+   "closedForm": {
+    "rtp": 0.9441083951821494,
+    "sdX": 1.154461888382341,
+    "hitRate": 0.6952890182535302,
+    "rtpMinusP0": 0.0004292519406205537
+   }
+  },
+  {
+   "policy": "P0",
+   "bet": 100,
+   "play": "best",
+   "rtp": 0.9436791432415291,
+   "sdX": 0.9420583773452705,
+   "hitRate": 0.6952890182535302,
+   "sec": 0
+  },
+  {
+   "policy": "P2",
+   "bet": 100,
+   "play": "best",
+   "rtp": 0.9445376471227699,
+   "sdX": 1.6331234810851007,
+   "hitRate": 0.34796077569100464,
+   "sec": 0,
+   "closedForm": {
+    "rtp": 0.9445376471227697
+   }
+  },
+  {
+   "policy": "P3",
+   "bet": 100,
+   "play": "best",
+   "rtp": 0.9522993254403809,
+   "sdX": 42.8417020659923,
+   "hitRate": 0.0006852003181834951,
+   "sec": 0,
+   "closedForm": {
+    "rtp": 0.9522993254403808
+   }
+  },
+  {
+   "policy": "P4",
+   "bet": 100,
+   "play": "best",
+   "rtp": 0.9448248074332212,
+   "sdX": 2.692130827815013,
+   "hitRate": 0.49684547313057553,
+   "cutMass": 0.00018823426330965063,
+   "nodes": 748837027,
+   "eps": 1e-12,
+   "tail": {
+    "alpha": 1.0006068622518518,
+    "beta": 1.0012142770940657,
+    "w": 0.5004548706450649
+   },
+   "rtpLower": 0.941887504482776,
+   "cutTotalX": 0.0029340984984495555,
+   "cutTailX": 0.002937302950445237,
+   "hitRateLower": 0.49665723886726587,
+   "note": "paths cut below eps are valued with the linear tail model (alpha x banked + beta x held, an estimate); rtpLower values cut paths at 0 (rigorous); the upper bound is rtpLower + lambdaHat x cutTotalX with lambdaHat >= V*/(S+B) over all states (bar_optimum.cpp; aggregate.js), because a double now returns more than 100% and cashing out no longer bounds every policy",
+   "sec": 119.529
+  },
+  {
+   "policy": "P5",
+   "bet": 100,
+   "play": "best",
+   "rtp": 0.9441083951821496,
+   "sdX": 1.154461888382341,
+   "hitRate": 0.6952890182535302,
+   "sec": 0,
+   "closedForm": {
+    "rtp": 0.9441083951821496,
+    "sdX": 1.154461888382341,
+    "hitRate": 0.6952890182535302,
+    "rtpMinusP0": 0.0004292519406205538
+   }
+  }
+ ]
+}

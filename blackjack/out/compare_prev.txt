@@ -1,0 +1,69 @@
+Previous: ../../minrun/v170_blackjack_out/out  build a7fa9e8f33b0deabd6f64ab5acf050cc21f83ac8624dddaa9adbb8d4c72dbfd8  DOUBLE OR NOTHING: dealer HITS soft 17 (99.9077% best play)
+Now:      /home/claude/fix/labpack/blackjack/out  build 381595b2ec0103398f92886e7429afc9624c3a53d6e68ebcd7e86fde01f2708c  DOUBLE OR NOTHING: dealer STANDS on all 17s (100.0910% best play)
+
+SIMULATIONS (same seeds)
+sim_P0_100_3001.json       IDENTICAL  rtp 94.265% -> 94.265%  hit 69.344% -> 69.344%  crypto u32 2714194 -> 2714194
+sim_P0_10_2001.json        IDENTICAL  rtp 94.309% -> 94.309%  hit 69.627% -> 69.627%  crypto u32 2712560 -> 2712560
+sim_P0_10_2002.json        IDENTICAL  rtp 94.295% -> 94.295%  hit 69.596% -> 69.596%  crypto u32 2712874 -> 2712874
+sim_P2_100_3201.json       CHANGED    rtp 95.034% -> 95.142%  hit 35.003% -> 35.121%  crypto u32 3496154 -> 3494950  (differs: sumCents, sum2Cents, hitRate, cryptoU32, histogram)
+sim_P2_10_2201.json        CHANGED    rtp 94.574% -> 95.179%  hit 34.990% -> 35.099%  crypto u32 3494494 -> 3492198  (differs: sumCents, sum2Cents, hitRate, maxCents, cryptoU32, histogram)
+sim_P2_10_2202.json        CHANGED    rtp 94.592% -> 94.858%  hit 34.826% -> 34.826%  crypto u32 3490402 -> 3487976  (differs: sumCents, sum2Cents, cryptoU32, histogram)
+sim_P3_100_3301.json       CHANGED    rtp 97.997% -> 95.027%  hit 0.068% -> 0.064%  crypto u32 4262438 -> 4264812  (differs: sumCents, sum2Cents, hitRate, cryptoU32, histogram)
+sim_P3_10_2301.json        CHANGED    rtp 70.656% -> 73.626%  hit 0.057% -> 0.057%  crypto u32 4263438 -> 4262314  (differs: sumCents, sum2Cents, maxCents, cryptoU32, histogram)
+sim_P3_10_2302.json        CHANGED    rtp 102.093% -> 98.714%  hit 0.069% -> 0.070%  crypto u32 4265906 -> 4265696  (differs: sumCents, sum2Cents, hitRate, cryptoU32, histogram)
+sim_P4_100_3401.json       CHANGED    rtp 93.433% -> 93.775%  hit 49.535% -> 49.664%  crypto u32 3819374 -> 3821412  (differs: sumCents, sum2Cents, hitRate, maxCents, cryptoU32, histogram)
+sim_P4_100_3402.json       CHANGED    rtp 93.140% -> 94.003%  hit 49.360% -> 49.549%  crypto u32 3826444 -> 3828196  (differs: sumCents, sum2Cents, hitRate, maxCents, cryptoU32, histogram)
+sim_P4_100_3403.json       CHANGED    rtp 93.777% -> 95.440%  hit 49.660% -> 49.559%  crypto u32 3825524 -> 3821628  (differs: sumCents, sum2Cents, hitRate, maxCents, cryptoU32, histogram)
+sim_P4_100_3404.json       CHANGED    rtp 94.590% -> 92.988%  hit 49.672% -> 49.627%  crypto u32 3836282 -> 3831700  (differs: sumCents, sum2Cents, hitRate, maxCents, cryptoU32, histogram)
+sim_P4_100_3405.json       CHANGED    rtp 93.241% -> 93.992%  hit 49.596% -> 49.494%  crypto u32 3822400 -> 3817526  (differs: sumCents, sum2Cents, hitRate, maxCents, cryptoU32, histogram)
+sim_P4_100_3406.json       CHANGED    rtp 93.849% -> 94.378%  hit 49.630% -> 49.684%  crypto u32 3830122 -> 3825862  (differs: sumCents, sum2Cents, hitRate, maxCents, cryptoU32, histogram)
+sim_P4_10_2401.json        CHANGED    rtp 94.702% -> 96.092%  hit 49.720% -> 49.690%  crypto u32 3830634 -> 3824856  (differs: sumCents, sum2Cents, hitRate, maxCents, cryptoU32, histogram)
+sim_P4_10_2402.json        CHANGED    rtp 94.797% -> 95.117%  hit 49.643% -> 49.176%  crypto u32 3837992 -> 3819624  (differs: sumCents, sum2Cents, hitRate, maxCents, cryptoU32, histogram)
+sim_P4_10_2403.json        CHANGED    rtp 95.073% -> 93.477%  hit 49.836% -> 49.591%  crypto u32 3831140 -> 3820338  (differs: sumCents, sum2Cents, hitRate, maxCents, cryptoU32, histogram)
+sim_P4_10_2404.json        CHANGED    rtp 93.372% -> 93.510%  hit 49.564% -> 49.668%  crypto u32 3824602 -> 3825076  (differs: sumCents, sum2Cents, hitRate, maxCents, cryptoU32, histogram)
+sim_P4_10_2405.json        CHANGED    rtp 92.783% -> 93.281%  hit 49.498% -> 49.833%  crypto u32 3819750 -> 3821684  (differs: sumCents, sum2Cents, hitRate, maxCents, cryptoU32, histogram)
+sim_P4_10_2406.json        CHANGED    rtp 93.852% -> 92.939%  hit 49.898% -> 49.529%  crypto u32 3821708 -> 3810026  (differs: sumCents, sum2Cents, hitRate, maxCents, cryptoU32, histogram)
+sim_P4_10_2407.json        CHANGED    rtp 91.873% -> 94.037%  hit 49.425% -> 49.568%  crypto u32 3813010 -> 3814744  (differs: sumCents, sum2Cents, hitRate, maxCents, cryptoU32, histogram)
+sim_P4_10_2408.json        CHANGED    rtp 93.954% -> 93.464%  hit 49.467% -> 49.612%  crypto u32 3819416 -> 3820726  (differs: sumCents, sum2Cents, hitRate, maxCents, cryptoU32, histogram)
+sim_P4_10_2409.json        CHANGED    rtp 94.528% -> 94.981%  hit 49.733% -> 49.786%  crypto u32 3819566 -> 3818218  (differs: sumCents, sum2Cents, hitRate, maxCents, cryptoU32, histogram)
+sim_P4_10_2410.json        CHANGED    rtp 93.495% -> 94.034%  hit 49.703% -> 49.665%  crypto u32 3815044 -> 3809352  (differs: sumCents, sum2Cents, hitRate, maxCents, cryptoU32, histogram)
+sim_P4_1_1401.json         CHANGED    rtp 95.461% -> 95.075%  hit 49.774% -> 49.743%  crypto u32 3826886 -> 3822396  (differs: sumCents, sum2Cents, hitRate, maxCents, cryptoU32, histogram)
+sim_P4_1_1402.json         CHANGED    rtp 96.022% -> 95.252%  hit 49.735% -> 49.321%  crypto u32 3820714 -> 3811312  (differs: sumCents, sum2Cents, hitRate, maxCents, cryptoU32, histogram)
+sim_P4_1_1403.json         CHANGED    rtp 93.283% -> 95.534%  hit 49.551% -> 49.715%  crypto u32 3819608 -> 3821094  (differs: sumCents, sum2Cents, hitRate, maxCents, cryptoU32, histogram)
+sim_P4_1_1404.json         CHANGED    rtp 94.279% -> 92.837%  hit 49.653% -> 49.629%  crypto u32 3814488 -> 3808670  (differs: sumCents, sum2Cents, hitRate, maxCents, cryptoU32, histogram)
+sim_P4_1_1405.json         CHANGED    rtp 93.534% -> 93.197%  hit 49.733% -> 49.785%  crypto u32 3818496 -> 3816576  (differs: sumCents, sum2Cents, hitRate, maxCents, cryptoU32, histogram)
+sim_P4_1_1406.json         CHANGED    rtp 93.775% -> 94.729%  hit 49.555% -> 49.764%  crypto u32 3823538 -> 3824152  (differs: sumCents, sum2Cents, hitRate, maxCents, cryptoU32, histogram)
+sim_P5_100_3501.json       CHANGED    rtp 94.089% -> 94.395%  hit 69.418% -> 69.571%  crypto u32 3490036 -> 3489064  (differs: sumCents, sum2Cents, hitRate, cryptoU32, histogram)
+sim_P5_10_2501.json        CHANGED    rtp 93.783% -> 94.040%  hit 69.573% -> 69.590%  crypto u32 3492328 -> 3489840  (differs: sumCents, sum2Cents, hitRate, cryptoU32, histogram)
+sim_P5_10_2502.json        CHANGED    rtp 94.482% -> 94.386%  hit 69.354% -> 69.296%  crypto u32 3488118 -> 3485390  (differs: sumCents, sum2Cents, hitRate, cryptoU32, histogram)
+sim_P5_1_1501.json         CHANGED    rtp 93.763% -> 93.848%  hit 69.147% -> 69.195%  crypto u32 3486552 -> 3484708  (differs: sumCents, sum2Cents, hitRate, cryptoU32, histogram)
+sim_P5_1_1502.json         CHANGED    rtp 94.558% -> 94.597%  hit 69.525% -> 69.567%  crypto u32 3487806 -> 3486690  (differs: sumCents, sum2Cents, hitRate, cryptoU32, histogram)
+sim_base_1001.json         IDENTICAL  rtp 94.308% -> 94.308%  hit 69.564% -> 69.564%  crypto u32 6781240 -> 6781240
+sim_base_1002.json         IDENTICAL  rtp 94.924% -> 94.924%  hit 69.678% -> 69.678%  crypto u32 6785396 -> 6785396
+sim_base_1003.json         IDENTICAL  rtp 94.287% -> 94.287%  hit 69.502% -> 69.502%  crypto u32 6783102 -> 6783102
+sim_base_1004.json         IDENTICAL  rtp 94.439% -> 94.439%  hit 69.476% -> 69.476%  crypto u32 6784726 -> 6784726
+sim_base_1005.json         IDENTICAL  rtp 94.351% -> 94.351%  hit 69.634% -> 69.634%  crypto u32 6788752 -> 6788752
+sim_base_1006.json         IDENTICAL  rtp 94.015% -> 94.015%  hit 69.311% -> 69.311%  crypto u32 6784764 -> 6784764
+sim_base_1007.json         IDENTICAL  rtp 94.087% -> 94.087%  hit 69.354% -> 69.354%  crypto u32 6784586 -> 6784586
+sim_base_1008.json         IDENTICAL  rtp 94.340% -> 94.340%  hit 69.588% -> 69.588%  crypto u32 6785794 -> 6785794
+
+Summary: 11 identical, 33 changed, 0 new, 0 retired.
+By policy: P0 $100: 1 identical / 0 changed; P0 $10: 2 identical / 0 changed; P2 $100: 0 identical / 1 changed; P2 $10: 0 identical / 2 changed; P3 $100: 0 identical / 1 changed; P3 $10: 0 identical / 2 changed; P4 $100: 0 identical / 6 changed; P4 $10: 0 identical / 10 changed; P4 $1: 0 identical / 6 changed; P5 $100: 0 identical / 1 changed; P5 $10: 0 identical / 2 changed; P5 $1: 0 identical / 2 changed; base: 8 identical / 0 changed
+
+EXACT POLICY VALUES (best play; P4 cut at eps 1e-12)
+Policy  Bet      before (v170, dealer hits soft 17)   after (S17 double)   change (pts)   hit before -> after
+P0      $1         94.36791%            94.36791%          0.00000    69.529% -> 69.529%
+P0      $10        94.36791%            94.36791%          0.00000    69.529% -> 69.529%
+P0      $100       94.36791%            94.36791%          0.00000    69.529% -> 69.529%
+P2      $1         94.28086%            94.45376%          0.17291    34.732% -> 34.796%
+P2      $10        94.28086%            94.45376%          0.17291    34.732% -> 34.796%
+P2      $100       94.28086%            94.45376%          0.17291    34.732% -> 34.796%
+P3      $1         93.50097%            95.22993%          1.72897    0.067% -> 0.069%
+P3      $10        93.50097%            95.22993%          1.72897    0.067% -> 0.069%
+P3      $100       93.50097%            95.22993%          1.72897    0.067% -> 0.069%
+P4      $1         94.25200%            94.48246%          0.23046    49.649% -> 49.683%  (cut mass 0.018% -> 0.0184%)
+P4      $10        94.25199%            94.48248%          0.23049    49.651% -> 49.685%  (cut mass 0.019% -> 0.0188%)
+P4      $100       94.25199%            94.48248%          0.23049    49.651% -> 49.685%  (cut mass 0.019% -> 0.0188%)
+P5      $1         94.32439%            94.41084%          0.08645    69.529% -> 69.529%
+P5      $10        94.32439%            94.41084%          0.08645    69.529% -> 69.529%
+P5      $100       94.32439%            94.41084%          0.08645    69.529% -> 69.529%

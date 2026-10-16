@@ -1,0 +1,115 @@
+{
+ "build": "/home/claude/fix/labpack/builds-final/card-run-blackjack-classic-launch.html",
+ "steps": [
+  {
+   "name": "base round reaches the run bar (four 20s v dealer 17)",
+   "ok": true
+  },
+  {
+   "name": "felt line reads DEALER STANDS ON 17",
+   "ok": true,
+   "detail": "DEALER STANDS ON 17"
+  },
+  {
+   "name": "double panel reads WIN PAYS 2X · RETURNS 100.1%",
+   "ok": true,
+   "detail": "DOUBLE OR NOTHINGWIN PAYS 2X · RETURNS 100.1%"
+  },
+  {
+   "name": "dealer soft 17 (A,6): stands, no third card",
+   "ok": true,
+   "detail": {
+    "cards": [
+     "A",
+     "6"
+    ],
+    "total": "17"
+   }
+  },
+  {
+   "name": "the sentinel card queued behind the dealer's 6 was never drawn",
+   "ok": true,
+   "detail": 1
+  },
+  {
+   "name": "double won: the bar offers $40.00",
+   "ok": true,
+   "detail": {
+    "cash": "CASH OUT$40.00",
+    "dbl": "DOUBLE OR NOTHING$80.00",
+    "half": "$20.00DOUBLE HALF/BANK HALF",
+    "bar": "CASH OUT$40.00DOUBLE OR NOTHING$80.00$20.00DOUBLE HALF/BANK HALF"
+   }
+  },
+  {
+   "name": "dealer hard 16 (10,6): hits (third card)",
+   "ok": true,
+   "detail": {
+    "cards": [
+     "10",
+     "6",
+     "2"
+    ],
+    "total": "18"
+   }
+  },
+  {
+   "name": "DOUBLE HALF won: RUN BANK $20.00 chip, CASH OUT $60.00, DOUBLE OR NOTHING $80.00",
+   "ok": true,
+   "detail": {
+    "cash": "CASH OUT$60.00",
+    "dbl": "DOUBLE OR NOTHING$80.00",
+    "half": "$20.00DOUBLE HALF/BANK HALF",
+    "bar": "RUN BANK$20.00CASH OUT$60.00DOUBLE OR NOTHING$80.00$20.00DOUBLE HALF/BANK HALF"
+   }
+  },
+  {
+   "name": "hard 16: every queued card (incl. the sentinel) was drawn",
+   "ok": true,
+   "detail": 0
+  },
+  {
+   "name": "CASH OUT toast",
+   "ok": true,
+   "detail": "BLACKJACK 20× CASHED OUT PAID $60.00"
+  },
+  {
+   "name": "rules: dealer sentence",
+   "ok": true,
+   "detail": "DOUBLE OR NOTHING is one hand against the dealer: beat the dealer and the amount doubles. You choose HIT or STAND on hard 12 to 16 and soft 17 and 18; the dealer hits 16 or less and stands on all 17s. You win ties on 19 and 20; any other tie deals the hand again."
+  },
+  {
+   "name": "rules: no mention of the dealer hitting soft 17",
+   "ok": true
+  },
+  {
+   "name": "rules: DOUBLE OR NOTHING best play row 100.1%",
+   "ok": true,
+   "detail": "DOUBLE OR NOTHING, best play\t100.1%"
+  },
+  {
+   "name": "no page errors",
+   "ok": true,
+   "detail": []
+  }
+ ],
+ "ok": true,
+ "bar1": {
+  "cash": "CASH OUT$20.00",
+  "dbl": "DOUBLE OR NOTHING$40.00",
+  "half": "$10.00DOUBLE HALF/BANK HALF"
+ },
+ "bar2": {
+  "cash": "CASH OUT$40.00",
+  "dbl": "DOUBLE OR NOTHING$80.00",
+  "half": "$20.00DOUBLE HALF/BANK HALF",
+  "bar": "CASH OUT$40.00DOUBLE OR NOTHING$80.00$20.00DOUBLE HALF/BANK HALF"
+ },
+ "bar3": {
+  "cash": "CASH OUT$60.00",
+  "dbl": "DOUBLE OR NOTHING$80.00",
+  "half": "$20.00DOUBLE HALF/BANK HALF",
+  "bar": "RUN BANK$20.00CASH OUT$60.00DOUBLE OR NOTHING$80.00$20.00DOUBLE HALF/BANK HALF"
+ },
+ "afterCash": "BLACKJACK 20× CASHED OUT PAID $60.00"
+}

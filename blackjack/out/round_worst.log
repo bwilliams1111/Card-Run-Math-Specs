@@ -1,0 +1,101 @@
+{
+ "lambdaInfinity": 1.0330394344979417,
+ "error": 0.000035906284762846114,
+ "lambdaHat": {
+  "maxSolved": 1.033032451525,
+  "atA": 130,
+  "extrapolatedTop": 1.0330753407827045,
+  "used": 1.0330753407827045,
+  "note": "lambdaHat = max(largest V*(A)/A solved, extrapolated limit + error)"
+ },
+ "monotone": false,
+ "exceptions": 10,
+ "largestExcess": 0.000035774097000063065,
+ "rounds": {
+  "1": {
+   "bet": 1,
+   "ammoValues": 36,
+   "ammoMass": 0.6952890182535305,
+   "expectedAmmoOverBet": 0.943679143241529,
+   "massWithExactV": 0.5953113476162999,
+   "shareOfExpectedAmmoWithExactV": 0.7255092575193077,
+   "exactSumKnownPartOverBet": 0.7072349154735845,
+   "restMass": 0.09997767063723062,
+   "restExpectedAmmoOverBet": 0.2590311886919109,
+   "upperBound": 0.9748916524937732,
+   "mixedUpperBound": 0.9748336490048293,
+   "estimate": 0.9748217924060508,
+   "estimateWithLambdaInfOnly": 0.9748577684817312,
+   "cashOut_P0": 0.943679143241529,
+   "alwaysDouble_P3": 0.9522993254403811,
+   "solvedAmmo": [
+    30,
+    40,
+    50,
+    70,
+    80,
+    90,
+    100,
+    120,
+    130,
+    150,
+    160,
+    170,
+    200,
+    300
+   ],
+   "unsolvedAmmoCount": 22,
+   "smallestAmmoCents": 30,
+   "largestAmmoCents": 2000
+  },
+  "10": {
+   "bet": 10,
+   "ammoValues": 36,
+   "ammoMass": 0.6952890182535305,
+   "expectedAmmoOverBet": 0.943679143241529,
+   "massWithExactV": 0.10615856740796804,
+   "shareOfExpectedAmmoWithExactV": 0.03374830359500615,
+   "exactSumKnownPartOverBet": 0.03289929909673881,
+   "restMass": 0.5891304508455625,
+   "restExpectedAmmoOverBet": 0.9118315730191385,
+   "upperBound": 0.9748916524937732,
+   "mixedUpperBound": 0.974890012129915,
+   "estimate": 0.9748677909811752,
+   "estimateWithLambdaInfOnly": 0.9748577684817312,
+   "cashOut_P0": 0.9436791432415289,
+   "alwaysDouble_P3": 0.9522993254403812,
+   "solvedAmmo": [
+    300
+   ],
+   "unsolvedAmmoCount": 35,
+   "smallestAmmoCents": 300,
+   "largestAmmoCents": 20000
+  },
+  "100": {
+   "bet": 100,
+   "ammoValues": 36,
+   "ammoMass": 0.6952890182535305,
+   "expectedAmmoOverBet": 0.943679143241529,
+   "massWithExactV": 0,
+   "shareOfExpectedAmmoWithExactV": 0,
+   "exactSumKnownPartOverBet": 0,
+   "restMass": 0.6952890182535305,
+   "restExpectedAmmoOverBet": 0.943679143241529,
+   "upperBound": 0.9748916524937732,
+   "mixedUpperBound": 0.9748916524937735,
+   "estimate": 0.9748722529160244,
+   "estimateWithLambdaInfOnly": 0.9748577684817312,
+   "cashOut_P0": 0.9436791432415291,
+   "alwaysDouble_P3": 0.9522993254403809,
+   "solvedAmmo": [],
+   "unsolvedAmmoCount": 36,
+   "smallestAmmoCents": 3000,
+   "largestAmmoCents": 200000
+  }
+ },
+ "powerLaw": {
+  "slope": 0.004569235396783747,
+  "intercept": -0.003646993292482366,
+  "rule": "max over all states of V*/(S+B) = exp(intercept) x room^slope, room = cap / (S + B) at the maximising state (S + B = 2 cents)"
+ }
+}

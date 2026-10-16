@@ -1,0 +1,1181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Card Run Blackjack 20×</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&family=Barlow:wght@500;600;700&family=Anton&family=Chakra+Petch:wght@600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:wght@400&display=swap">
+<style>
+/* Layout: one phone-width column (top bar, paytable, pills, felt table, action bar), matching the Card Run classic screen. Single dark look by design. */
+:root{
+  color-scheme: dark;
+  --night:#07102a;        /* page ground */
+  --navy:#0c1838;         /* app ground */
+  --panel:#16244d;        /* paytable shell */
+  --cell:#1b2a55;         /* paytable column body */
+  --cellHead:#262b3c;     /* column header bar */
+  --line:#2c3d70;         /* hairlines */
+  --pillLine:#3a5fa8;
+  --felt:#1747c9;
+  --feltDeep:#0d2f97;
+  --gold:#f5c84b;
+  --goldDeep:#b88a2a;
+  --teal:#3fe0c8;
+  --win:#2fe089;
+  --loss:#ff4d5e;
+  --ink:#f3f6ff;
+  --muted:#8c9bc4;
+  --dim:#5d6a92;
+  --cardInk:#151a2b;
+  --cardRed:#e0242f;
+  --joker:#7b2ff2;
+  --blue:#2d6bff;
+  --f-ui:"Montserrat", "Segoe UI", system-ui, sans-serif;
+  --f-card:"Barlow", "Arial Narrow", system-ui, sans-serif;
+}
+html,body{height:100%}
+body{margin:0;background:var(--night);color:var(--ink);font-family:var(--f-ui);-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+button{font-family:inherit;color:inherit}
+button:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+.phone{position:relative;max-width:460px;margin:0 auto;min-height:100%;height:100%;min-height:720px;
+  background:radial-gradient(120% 60% at 50% 0%, #10224f 0%, var(--navy) 55%, #091331 100%);
+  display:flex;flex-direction:column;overflow:hidden;
+  --cw:min(84px,18.4vw,calc((max(100dvh,720px) - 424px) / 4.7)); --ch:calc(var(--cw)*1.42); --so:calc(var(--cw)*.3);   /* cards also fit the height, so the table never runs into the pay table */
+  font-variant-numeric:tabular-nums}
+
+/* top bar */
+.top{display:flex;align-items:center;gap:8px;padding:10px 12px 8px;font-size:13px;font-weight:800;letter-spacing:.02em}
+.top .back{width:22px;height:22px;display:grid;place-items:center;background:none;border:0;cursor:pointer;color:var(--muted);padding:0}
+
+.top .spacer{flex:1}
+.top .snd{color:var(--muted);display:grid;place-items:center}
+.balpill{display:flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:13px;border:1px solid #33456f;background:#0e1a3a;color:var(--gold);font-weight:800}
+.balpill .cur{font-size:12px}
+
+/* paytable */
+.pt{margin:6px 12px 0;padding:8px;border-radius:12px;background:linear-gradient(#1a2b5a,#142249);border:1px solid #2a3f7a;box-shadow:0 6px 18px rgba(0,0,0,.35) inset;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.col{border-radius:7px;background:var(--cell);border:1px solid #2a3a6c;overflow:hidden;transition:opacity .3s}
+.col .h{height:24px;display:grid;place-items:center;background:var(--cellHead);font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--gold);transition:color .3s,background .3s}
+.col.dead{opacity:.5}
+.col.dead .h{color:var(--dim)}
+.col.dead .row .v{color:var(--dim)}
+.row{position:relative;display:flex;justify-content:space-between;align-items:center;height:19px;padding:0 8px 0 10px;border-top:1px solid var(--line);font-size:13px;font-weight:700}
+.row .n{font-size:10px;color:var(--dim);font-weight:700}
+.row .v{color:var(--ink)}
+.row .lock{color:var(--dim);display:grid}
+.row.hit::before{content:"";position:absolute;left:4px;top:3px;bottom:3px;width:3px;border-radius:2px;background:var(--gold)}
+.row.hit .n{color:var(--gold)}
+.row.hit{background:linear-gradient(90deg,rgba(245,200,75,.18),rgba(245,200,75,0) 70%)}
+
+.pills{display:flex;justify-content:space-between;margin:12px 16px 0}
+.pill{height:26px;display:flex;align-items:center;gap:8px;padding:0 12px;border-radius:7px;border:1px solid var(--pillLine);background:#0d1a3c;font-size:10.5px;font-weight:800;letter-spacing:.06em;color:var(--muted)}
+.pill b{font-size:13px;letter-spacing:0}
+.pill.bet b{color:#5aa2ff}
+.pill.pays b{color:var(--gold)}
+.pill.pays.bump{animation:bump .45s ease}
+@keyframes bump{40%{transform:scale(1.12)}}
+
+/* table */
+.tablewrap{position:relative;isolation:isolate;flex:1;display:flex;flex-direction:column;justify-content:flex-end;min-height:0}
+.felt{position:relative;margin-top:auto;height:calc(var(--ch)*1.25 + var(--ch) + var(--so)*5 + 120px);max-height:100%;
+  background:radial-gradient(90% 70% at 50% 30%, #2257e0 0%, var(--felt) 40%, var(--feltDeep) 100%);
+  border-top-left-radius:50% 70px;border-top-right-radius:50% 70px;
+  box-shadow:0 -2px 0 #1d2f63, 0 -6px 0 #0b1734, 0 -8px 0 var(--goldDeep), 0 -9px 0 #f0cf6d55;}
+.felt::before{content:"";position:absolute;inset:0;border-top-left-radius:inherit;border-top-right-radius:inherit;
+  background:repeating-radial-gradient(circle at 50% -40%, rgba(255,255,255,.025) 0 2px, transparent 2px 6px);pointer-events:none}
+.emblem{position:absolute;left:50%;top:-14px;transform:translateX(-50%);width:68px;height:30px;border-radius:0 0 18px 18px;background:#13254f;border:2px solid var(--goldDeep);border-top:0;display:grid;place-items:center;color:var(--gold)}
+.shoe{position:absolute;right:-6px;top:-22px;width:92px;height:74px}
+
+.dealer{position:absolute;left:12%;top:28px;display:flex;gap:16px;align-items:flex-start}
+.dealer .lbl{display:flex;flex-direction:column;align-items:center;gap:8px}
+.dealer .lbl span{font-size:11px;font-weight:800;letter-spacing:.1em;color:#b9c8f2}
+.tot{min-width:46px;height:30px;padding:0 8px;display:grid;place-items:center;border-radius:6px;background:#0f1d44;border:1.5px solid #284a9a;font-size:17px;font-weight:800;color:var(--ink);position:relative;transition:border-color .2s,box-shadow .2s}
+.tot.on{border-color:var(--win);box-shadow:0 0 10px rgba(47,224,137,.45)}
+.tot.dealerturn::before{content:"";position:absolute;left:-12px;top:50%;transform:translateY(-50%);border:6px solid transparent;border-left-color:var(--teal)}
+.dcards{position:relative;height:var(--ch);width:calc(var(--cw) + 70px)}
+.dcards .card{position:absolute;top:0}
+.stamp{position:absolute;left:-6px;top:30%;transform:rotate(-12deg);padding:2px 8px;border:3px solid #e1192e;border-radius:6px;color:#e1192e;font-weight:900;font-size:20px;letter-spacing:.04em;background:rgba(255,255,255,.75);animation:stamp .35s cubic-bezier(.2,1.6,.4,1)}
+@keyframes stamp{from{transform:rotate(-12deg) scale(2.2);opacity:0}}
+.tie{position:absolute;right:16px;top:98px;font-size:11.5px;font-weight:800;letter-spacing:.08em;color:#c8d6ff;text-align:right}
+
+.hands{position:absolute;left:0;right:0;top:calc(var(--ch) + 60px);display:grid;grid-template-columns:repeat(4,1fr);padding:0 10px;gap:6px}
+.hand{display:flex;flex-direction:column;align-items:center;gap:10px;position:relative}
+.hand .marker{position:absolute;top:-12px;width:0;height:0;border:6px solid transparent;border-top:7px solid var(--win);opacity:0}
+.hand.active .marker{opacity:1}
+
+.htot{width:calc(var(--cw) - 2px);height:30px;display:grid;place-items:center;border-radius:6px;background:#0f1d44;border:1.5px solid #284a9a;font-size:15px;font-weight:800;white-space:nowrap}
+.hand.active .htot{border-color:var(--win);box-shadow:0 0 10px rgba(47,224,137,.45)}
+
+.htot.bj{color:var(--gold)}
+
+.htot.bust{color:var(--loss)}
+.htot.win{color:var(--win)}
+.htot.loss{color:var(--loss)}
+.stack{position:relative;width:var(--cw);height:var(--ch)}
+.stack .card{position:absolute;left:0}
+.hand.busted .card{filter:saturate(.35) brightness(.92)}
+.hand.busted .card::after{content:"";position:absolute;inset:0;border-radius:inherit;background:rgba(80,115,225,.42)}
+
+/* cards */
+.card{width:var(--cw);height:var(--ch);border-radius:7px;background:linear-gradient(#fff,#f1f3f8);box-shadow:0 2px 0 rgba(0,0,0,.08),0 6px 12px rgba(0,0,0,.35);color:var(--cardInk);font-family:var(--f-card);overflow:hidden}
+.card.red{color:var(--cardRed)}
+.card .ci{position:absolute;left:5px;top:3px;font-weight:700;font-size:calc(var(--cw)*.2);line-height:1;display:flex;gap:1px;align-items:baseline}
+.card .cc{position:absolute;left:0;right:0;top:50%;transform:translateY(-42%);text-align:center;font-weight:600;font-size:calc(var(--cw)*.56);line-height:1}
+.card .cb{position:absolute;right:5px;bottom:4px;font-weight:700;font-size:calc(var(--cw)*.15);line-height:1;display:flex;gap:2px}
+.card.deal{animation:deal .32s cubic-bezier(.2,.8,.3,1)}
+@keyframes deal{from{transform:translate(160px,-260px) rotate(18deg) scale(.6);opacity:0}}
+.dcards .card.deal{animation-name:dealD}
+@keyframes dealD{from{transform:translate(140px,-60px) rotate(18deg) scale(.6);opacity:0}}
+
+/* action bar */
+.actions{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px 18px calc(16px + env(safe-area-inset-bottom,0px));background:linear-gradient(#0b1638,#081028);border-top:2px solid #1a2c5c}
+.actions::before,.actions::after{content:"";position:absolute;top:-2px;width:34px;height:34px;border-top:2px solid var(--goldDeep)}
+.actions::before{left:0;border-left:2px solid var(--goldDeep);border-top-left-radius:14px}
+.actions::after{right:0;border-right:2px solid var(--goldDeep);border-top-right-radius:14px}
+.btn{height:50px;border-radius:25px;font-weight:800;font-size:15px;letter-spacing:.05em;cursor:pointer;transition:transform .08s,opacity .2s,filter .2s}
+.btn:active{transform:scale(.97)}
+.btn.hit{border:1.5px solid #6c98ff;background:linear-gradient(#3a76ff,#1b4fe0);box-shadow:0 4px 14px rgba(45,107,255,.45)}
+.btn.stand{border:1.5px solid #8d7a45;background:#121a30}
+.btn:disabled{opacity:.35;cursor:default;filter:saturate(.3);box-shadow:none}
+
+@keyframes fade{from{opacity:0}}
+
+/* lobby */
+.lobby{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 24px 28px;overflow-y:auto}
+
+.betrow{margin-top:12px;width:100%;height:46px;border-radius:23px;border:1.5px solid #283764;background:#0d1530;display:flex;align-items:center;padding:0 8px 0 18px;gap:6px}
+.betrow .cur{color:var(--gold);font-weight:800;font-size:16px}
+.betrow input{flex:1;min-width:0;background:transparent;border:0;color:var(--ink);font:800 16px var(--f-ui);outline:none}
+.betrow button{height:30px;border-radius:15px;border:1px solid #3a466e;background:#141d3a;font-size:11px;font-weight:800;letter-spacing:.06em;padding:0 12px;cursor:pointer;color:var(--muted)}
+.betrow input:disabled,.betrow button:disabled{opacity:.45;cursor:default}   /* the bet box is locked while a paused round waits (RESUME ROUND) */
+.play{margin-top:22px;width:88%;height:52px;border-radius:26px;border:1.5px solid #6c98ff;background:linear-gradient(#3a76ff,#1b4fe0);font-weight:800;font-size:14.5px;letter-spacing:.06em;cursor:pointer;box-shadow:0 6px 20px rgba(45,107,255,.45)}
+
+#heroD .nw{white-space:nowrap}
+
+:root{--mint:#2fe0a0;--mintDeep:#0d8a5f;--cash:#ffd75e}
+
+.tie .as{display:block;margin-top:4px;font-size:9.5px;color:#9fb2e6;letter-spacing:.08em}
+
+@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+
+.actions.ready .btn{animation:btnIn .35s cubic-bezier(.2,1.5,.4,1) both, btnGlow 1.3s ease-in-out .35s infinite}
+.actions.ready .btn.stand{animation:btnIn .35s .06s cubic-bezier(.2,1.5,.4,1) both, btnGlowS 1.3s ease-in-out .4s infinite}
+@keyframes btnIn{from{transform:translateY(14px) scale(.9);opacity:.3}}
+@keyframes btnGlow{50%{box-shadow:0 0 0 4px rgba(108,152,255,.35),0 4px 22px rgba(45,107,255,.75)}}
+@keyframes btnGlowS{50%{box-shadow:0 0 0 4px rgba(214,180,90,.3),0 4px 18px rgba(214,180,90,.45)}}
+.hand.active .htot{animation:totPulse 1.2s ease-in-out infinite}
+@keyframes totPulse{50%{box-shadow:0 0 16px rgba(47,224,137,.8)}}
+.hand.autohit .htot{border-color:#5aa2ff;box-shadow:0 0 10px rgba(90,162,255,.5)}
+
+.stack .card{transition:top .28s ease}
+.mcb{position:absolute;left:8px;right:8px;top:14px;z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:14px 10px 16px;border-radius:16px;background:linear-gradient(180deg,rgba(5,20,34,.82),rgba(5,30,26,.86));border:1.5px solid rgba(231,194,90,.7);box-shadow:0 10px 30px rgba(0,0,0,.45);overflow:hidden;animation:mcbIn .55s cubic-bezier(.2,1.5,.35,1) both;pointer-events:none}
+@keyframes mcbIn{from{transform:scale(.4) rotate(-4deg);opacity:0}}
+.mcb .rays{position:absolute;left:50%;top:50%;width:520px;height:520px;transform:translate(-50%,-50%);background:repeating-conic-gradient(rgba(255,215,94,.12) 0 9deg, transparent 9deg 18deg);animation:spin 9s linear infinite;-webkit-mask:radial-gradient(circle,#000 15%,transparent 60%);mask:radial-gradient(circle,#000 15%,transparent 60%)}
+.mcb .l1{position:relative;white-space:nowrap;font-size:clamp(28px,9.5vw,40px);font-weight:900;line-height:1;letter-spacing:.02em;background:linear-gradient(180deg,#fff6c9 0%,#ffd75e 45%,#c9902a 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 3px 0 #6b4a0e) drop-shadow(0 0 16px rgba(255,215,94,.5));animation:l1In .5s cubic-bezier(.2,1.6,.4,1) both}
+.mcb .l1.sm{font-size:clamp(24px,7.6vw,32px)}
+
+.mcb .l2{position:relative;font-size:15px;font-weight:900;letter-spacing:.14em;color:#9df5cf;animation:fade .35s .2s both}
+@keyframes l1In{from{transform:scale(1.8);opacity:0}}
+
+.actions.run{grid-template-columns:1fr}
+.runbox{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;animation:btnIn .35s cubic-bezier(.2,1.5,.4,1) both}
+
+#pt{grid-template-columns:repeat(2,1fr)}
+
+/* ---- Run Game + SO-style buttons ---- */
+:root{--so-gold:#e9bc57;--so-ink:#1c1a12;--so-dark:#14251b;--so-cream:#f3efe4;--so-green:#356b41;--f-so:"Anton","Impact","Arial Narrow",sans-serif}
+.runbox{gap:10px}
+.so{min-height:78px;border-radius:9px;border:2.5px solid transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:8px 4px;cursor:pointer;font-family:var(--f-so);line-height:1.05;transition:transform .08s,filter .15s}
+.so:active{transform:scale(.97)}
+.so:hover{filter:brightness(1.07)}
+.so .t{font-size:clamp(15px,4.9vw,21px);letter-spacing:.03em;white-space:nowrap}
+.so .a{font-size:clamp(18px,6vw,26px);letter-spacing:.03em;white-space:nowrap}
+.so.gold{background:var(--so-gold);color:var(--so-ink);box-shadow:0 0 0 3px rgba(233,188,87,.18)}
+
+.so.wide{grid-column:auto}
+.actions{min-height:calc(112px + env(safe-area-inset-bottom,0px));align-content:center}
+.so{min-height:76px}
+.hands.three{grid-template-columns:repeat(3,1fr);padding:0 26px}
+.htot.push{color:#ffcf5a;border-color:#b98a1f}
+
+.hand.settled .card{filter:brightness(.82)}
+#pt:has(.runpanel){grid-template-columns:1fr}
+.runpanel{border-radius:7px;background:linear-gradient(180deg,#1c3324,#14251b);border:1px solid #3d6a49;padding:10px 12px 11px;text-align:center}
+.runpanel .rt{font-family:var(--f-so);font-size:24px;letter-spacing:.06em;color:var(--so-gold);line-height:1}
+#pt .runpanel{box-sizing:border-box;max-width:100%;overflow:hidden}#pt .runpanel .rt{white-space:nowrap}   /* v166: DOUBLE OR NOTHING on one line; JS shrinks it to fit */
+
+.runmode .pill.bet b{color:var(--so-gold)}
+.mcb.runwin{top:auto;bottom:40%;animation:mcbIn .5s cubic-bezier(.2,1.5,.35,1) both}
+
+.runbust{position:absolute;left:0;right:0;top:calc(var(--ch) + 96px);z-index:45;display:grid;place-items:center;pointer-events:none}
+.runbust span{font-family:var(--f-so);font-size:clamp(54px,17vw,76px);letter-spacing:.05em;line-height:1;color:#ff3b4e;padding:4px 20px 8px;border:6px solid #ff3b4e;border-radius:14px;background:rgba(20,4,8,.72);transform:rotate(-9deg);text-shadow:0 0 22px rgba(255,59,78,.55);box-shadow:0 0 34px rgba(255,59,78,.4);animation:bustSlam .5s cubic-bezier(.2,1.7,.35,1) both}
+@keyframes bustSlam{0%{transform:rotate(-9deg) scale(3.2);opacity:0}60%{opacity:1}100%{transform:rotate(-9deg) scale(1)}}
+.felt.shake{animation:feltShake .5s linear}
+@keyframes feltShake{10%{transform:translate(-6px,2px)}25%{transform:translate(6px,-3px)}40%{transform:translate(-5px,3px)}55%{transform:translate(4px,-2px)}70%{transform:translate(-3px,1px)}85%{transform:translate(2px,0)}}
+.hand.dead .stack{animation:handDrop .9s cubic-bezier(.5,0,.8,.4) .15s both}
+.hand.dead .card{filter:grayscale(1) brightness(.6)}
+.hand.dead .htot{opacity:.55}
+@keyframes handDrop{to{transform:translateY(46px) rotate(var(--tilt,0deg));opacity:.55}}
+
+.hands.two{grid-template-columns:repeat(2,1fr);padding:0 64px}
+.runmode .hands{top:calc(var(--ch) + 96px)}
+.feltprint i{font-style:normal;margin-top:3px;font-size:8.5px;font-weight:800;letter-spacing:.16em;color:rgba(200,214,255,.8)}
+.feltprint{position:absolute;left:0;right:0;top:calc(var(--ch) + 36px);text-align:center;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:2px}
+.feltprint span{font-size:9px;font-weight:800;letter-spacing:.3em;color:rgba(255,226,140,.75)}
+.feltprint b{font-family:var(--f-so);font-weight:400;font-size:19px;letter-spacing:.14em;line-height:1;color:transparent;-webkit-text-stroke:1.2px rgba(255,226,140,.9);text-shadow:0 0 14px rgba(255,215,94,.25)}
+
+.runbust{top:calc(var(--ch) + 120px)}
+
+#pt.c3:not(:has(.runpanel)){grid-template-columns:repeat(3,1fr)}
+.col.m21 .h{color:var(--win);background:#1c3030}
+.col.m21 .row.hit::before{background:var(--win)}
+.col.m21 .row.hit{background:linear-gradient(90deg,rgba(47,224,137,.2),rgba(47,224,137,0) 70%)}
+.col.m21 .row.hit .n{color:var(--win)}
+
+.hands.one{grid-template-columns:1fr;padding:0 120px}
+
+.mcb.pushban .l1{background:linear-gradient(180deg,#fff,#ffcf5a);-webkit-background-clip:text;background-clip:text}
+.mcb.pushban{top:auto;bottom:40%}
+
+/* ---- Run Game table clean-up (v6): one message in the panel, one rule on the felt ---- */
+.runpanel{padding:14px 12px 15px}
+.runpanel .rt{font-size:30px;letter-spacing:.07em}
+.runpanel .rm{margin-top:8px;font-family:"Chakra Petch",var(--f-ui);font-size:clamp(11px,3.5vw,14px);font-weight:700;letter-spacing:.16em;line-height:1;color:#e6efe8;white-space:nowrap}
+.runpanel .rm i{font-style:normal;color:#8fb59a;margin:0 .35em}
+.feltprint{top:calc(var(--ch) + 48px)}
+/* same type as the other felt messages (.tie): Montserrat 800, 11.5px, .08em, #c8d6ff */
+.feltprint b{font-family:var(--f-ui);font-weight:800;font-size:11.5px;letter-spacing:.08em;color:#c8d6ff;-webkit-text-stroke:0;text-shadow:none;white-space:nowrap}
+.feltprint b u{text-decoration:none;margin:0 1px}
+/* the dealer rule sits on the right, beside the dealer's cards; it drops to two lines once the dealer holds four or more */
+.runmode .dealer{left:6%}
+.runmode .tie #tieTxt{display:inline-block;white-space:nowrap}
+.runmode .tie.wrap #tieTxt{white-space:normal;width:104px}
+.runmode .hands{top:calc(var(--ch) + 96px)}
+
+/* ---- end-of-round toast: transparent and informational; every button lives in the action bar ---- */
+.etoast{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);z-index:46;min-width:62%;max-width:88%;padding:12px 22px 15px;border-radius:14px;text-align:center;pointer-events:none;
+  background:rgba(8,12,30,.5);border:1px solid rgba(255,255,255,.16);box-shadow:0 10px 30px rgba(0,0,0,.3);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);animation:etoastIn .3s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes etoastIn{from{transform:translate(-50%,-50%) scale(.85);opacity:0}}
+.etoast .eh{font-size:10.5px;font-weight:800;letter-spacing:.24em;color:#c3c9de;opacity:.85}
+.etoast .et{margin-top:6px;font-size:28px;font-weight:900;letter-spacing:.04em;color:var(--gold);line-height:1.05}
+.etoast .et.plain{color:#e6ebfa;font-size:24px}
+.etoast{width:max-content}.etoast .et,.etoast .es,.etoast .eb{white-space:nowrap}   /* one line each: the toast sizes to its content (max 88%) */   /* v165: a cash out at or below the stake: shown, not celebrated */
+.etoast .et.busted{color:var(--loss);font-size:36px;letter-spacing:.06em;text-shadow:0 0 18px rgba(255,77,94,.4)}
+.etoast .es{margin-top:6px;font-size:11px;font-weight:800;letter-spacing:.1em;color:#d5dcf2}
+.etoast .eb{margin-top:9px;display:inline-block;padding:4px 12px;border-radius:9px;background:rgba(53,107,65,.55);border:1px solid rgba(157,245,207,.5);font-size:14px;font-weight:900;letter-spacing:.08em;color:#fff}
+
+/* the one BUSTED toast: stamp, with the banked chip under it when there is one */
+.runbust{display:flex;flex-direction:column;align-items:center;gap:16px}
+.runbust span{background:rgba(20,4,8,.55)}
+.runbust .eb{font-style:normal;padding:5px 14px;border-radius:9px;background:rgba(20,50,30,.72);border:1px solid rgba(157,245,207,.55);font-size:15px;font-weight:900;letter-spacing:.08em;color:#fff;animation:fade .3s .35s both}
+
+.so .t u{text-decoration:none;margin:0 .35em}
+
+/* outside a run the centre message sits just above the hand labels */
+#game:not(.runmode) .feltprint{top:calc(var(--ch) + 37px)}
+
+/* banners sit above the dealer's BUSTED stamp */
+.mcb{z-index:56}
+
+/* the action bar sits on the table: felt colour carried down behind the buttons, no gold corner border */
+.actions{background:var(--feltDeep);border-top:0}
+.actions::before,.actions::after{content:none}
+
+.actions .runbox.slamin{animation:barSlam .5s cubic-bezier(.2,1.7,.35,1) both}
+@keyframes barSlam{0%{transform:translateY(34px) scale(.86);opacity:0}60%{opacity:1}100%{transform:none}}
+
+/* lobby: bet, PLAY and the review toggles sit at the bottom of the screen */
+.lobbyfoot{margin-top:auto;padding-top:24px;width:100%;display:flex;flex-direction:column;align-items:center}
+.lobbyfoot .betrow{margin-top:0}
+.lobbyfoot .bru{margin:0 0 14px}   /* BUILD x RUN = WIN strip sits right above the bet box */
+
+.play:disabled{opacity:.45;cursor:default;box-shadow:none;filter:saturate(.4)}
+
+@media (prefers-reduced-motion: reduce){*{animation-duration:.01ms!important;transition:none!important}}
+/* (short-screen card size now comes from the height rule on .phone) */
+
+/* background space between the pay table and the table */
+.tablewrap{margin-top:38px}   /* the emblem rises 14px above the felt, so this leaves about 24px of background */
+
+/* Reduced motion: keep every state change, drop the movement (shakes, spins, flights shortened to a cut) */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .rays{display:none!important}
+}
+
+/* run bar, v170 look (the same as the shared run-bar module): ONE column. CASH OUT pill (RUN BANK chip on its top edge) / full-width gold DOUBLE OR NOTHING / DOUBLE HALF text link under it */
+.runbox.rb5{position:relative;grid-template-columns:minmax(0,1fr);gap:8px 10px}
+.rb5 .cpill,.rb5 .dbl{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:999px;font-family:"Chakra Petch",var(--f-ui);font-weight:700;-webkit-tap-highlight-color:transparent;transition:transform .08s,filter .15s}
+.rb5 .cpill:active,.rb5 .dbl:active{transform:scale(.97)}.rb5 .cpill:hover,.rb5 .dbl:hover{filter:brightness(1.07)}.rb5 .cpill:focus-visible,.rb5 .dbl:focus-visible{outline:2px solid #e9bc57;outline-offset:3px}
+.rb5 .cwrap{justify-self:center;position:relative;display:flex;align-items:center;transform-origin:center;white-space:nowrap}
+/* RUN BANK tag (v150): a small green pill sitting on CASH OUT's top edge. It takes no layout space, so the bar never grows and CASH OUT never moves. The amounts are half-tone (v162). */
+.rb5 .bkt{position:absolute;left:50%;bottom:calc(100% - 9px);transform:translateX(-50%);z-index:2;display:flex;align-items:baseline;gap:7px;line-height:1;padding:4px 12px;border-radius:999px;background:#163a2a;border:1px solid #2f6b4b;box-shadow:0 2px 8px rgba(0,0,0,.35);font-family:var(--f-ui);white-space:nowrap}
+.rb5 .bkt i{font-style:normal;font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#7fd8a4}
+.rb5 .bkt b{font-family:"Chakra Petch",var(--f-ui);font-weight:700;font-size:14px;color:#9ff0bf;opacity:.5}
+.rb5 .cpill{flex:none;height:44px;padding:0 22px;gap:12px;white-space:nowrap;background:rgba(9,16,38,.94);border:1.5px solid #4f5d8c;color:#c9d1ea;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.rb5 .cpill .t{font-size:14px;letter-spacing:.16em}.rb5 .cpill .a{font-size:21px;color:#fff;opacity:.5}
+/* DOUBLE OR NOTHING: full-width gold, pure black text; fixed line boxes so a shrunk amount never changes the bar's height */
+.rb5 .dbl{height:66px;padding:4px 10px;flex-direction:column;line-height:1.05;text-align:center;min-width:0;overflow:hidden;background:#e9bc57;color:#000;box-shadow:0 0 0 3px rgba(233,188,87,.18),0 0 18px rgba(233,188,87,.35)}
+.rb5 .dbl .t{font-size:clamp(12px,3.6vw,15px);letter-spacing:.05em;line-height:16px;white-space:nowrap}
+.rb5 .dbl .a{font-size:clamp(16px,4.8vw,20px);letter-spacing:.01em;line-height:24px;margin-top:2px;white-space:nowrap}
+/* DOUBLE HALF: a text link under DOUBLE OR NOTHING: the stake in half-tone over DOUBLE HALF (gold) + /BANK HALF (grey), underlined; 44px tap area (v161) */
+.rb5 .hl{all:unset;box-sizing:border-box;cursor:pointer;justify-self:center;align-self:start;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:44px;padding:2px 8px;font-family:"Chakra Petch",var(--f-ui);font-weight:700;white-space:nowrap;-webkit-tap-highlight-color:transparent;animation:btnIn .35s cubic-bezier(.2,1.5,.4,1) both;transition:transform .08s}
+.rb5 .hl:active{transform:scale(.96)}.rb5 .hl:focus-visible{outline:2px solid #e9bc57;outline-offset:2px;border-radius:8px}
+.rb5 .hl .ha{font-size:15px;line-height:1;color:#fff;opacity:.5;letter-spacing:.02em}
+.rb5 .hl .hlt{font-size:12px;line-height:1;letter-spacing:.08em;color:#8a94b8;padding-bottom:4px;border-bottom:1.5px solid rgba(138,148,184,.75)}
+.rb5 .hl .hlt b{font-weight:700;color:#e9bc57}
+
+/* v129 board dim (GR-UX 1.1): while the run bar is up, the board sits under a black overlay at --dimA.
+   Blackjack declares 36%: the top of its measured window, 24-36% (tools/dimWindow.js), as the product call (v138). From 24% the gold call to action outshines the white cards; up to 36% the lit pay-table figures keep 4.5:1.
+   The dim fades in after a 1.2 s win beat and lifts at once when a run starts or the round ends. */
+#game{--dimA:.65}   /* v164: 65% (v162: 50%, was 36%) */
+/* v163: ONE whole-screen dim (a single scrim over the whole phone), not element by element; only the run bar sits above it */
+#app{--dimA:.65}   /* v164: darker, 65% */
+#scrim{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none;z-index:900;transition:opacity .2s ease}   /* above every board layer */
+#app.dimscreen #scrim{opacity:var(--dimA);transition:opacity .35s cubic-bezier(.2,.8,.3,1) 0s}   /* v164: fades in with the run bar's entrance (0.35 s), no 1.2 s beat */
+#app.dimscreen #game .actions{z-index:auto}#app.dimscreen #game .actions .runbox{position:relative;z-index:901}   /* only the run bar sits above the scrim */
+#game #pt::after,#game #felt::after,#game .actions::after{display:none!important}   /* the old per-element overlays are off */
+@media (prefers-reduced-motion: reduce){#scrim{transition:none!important}}
+#pt{position:relative}
+#pt::after,#felt::after{content:"";position:absolute;inset:0;border-radius:inherit;background:#000;opacity:0;pointer-events:none;z-index:45;transition:opacity .2s ease}
+#game.dimboard #pt::after,#game.dimboard #felt::after{opacity:var(--dimA);transition:opacity .45s ease 1.2s}
+/* the button ribbon takes the same black overlay at the same opacity and timing as the board ("double cover"); the buttons sit above it */
+#game .actions::after{content:"";position:absolute;inset:0;border:0;border-radius:0;width:auto;height:auto;background:#000;opacity:0;pointer-events:none;z-index:0;transition:opacity .2s ease}
+#game .actions>*{position:relative;z-index:1}
+#game.dimboard .actions::after{opacity:var(--dimA);transition:opacity .45s ease 1.2s}
+@media (prefers-reduced-motion: reduce){#pt::after,#felt::after,#game .actions::after{transition:none!important}}
+/* Lobby hero: BUILD IT. RUN IT. (the shared Card Run lobby pattern) */
+.lobby .hero{width:100%;display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:6px}
+.bir{margin:0;white-space:nowrap;font-family:var(--f-so,"Anton",Impact,sans-serif);font-weight:400;font-size:clamp(34px,11vw,46px);line-height:1;letter-spacing:.01em;color:#f2f5ff}
+.bir span{color:var(--gold)}
+.bir-logo{display:block;width:min(70%,252px);   /* -30% (was min(100%,360px)) */height:auto;margin:0 auto}
+.hero .bir-sub{white-space:nowrap;font-size:13px;margin-left:-14px;margin-right:-14px;text-align:center}
+.bir-sub i{font-style:normal;color:#5d6a94;margin:0 .25em}
+.bir-sub{margin:8px 0 0;font-size:12.5px;line-height:1.4;color:#c3cbe6;font-weight:600}
+.hero-ic{width:62px;height:62px;margin:18px 0 6px;color:var(--gold);filter:drop-shadow(0 0 10px rgba(245,200,75,.25))}
+.hero-t{margin:6px 0 0;white-space:nowrap;font-family:"Chakra Petch",var(--f-ui);font-weight:700;font-size:clamp(34px,11vw,46px);line-height:1;letter-spacing:.03em;color:#f2f5ff}
+.hero-t .g{color:var(--gold)}
+
+.hero-d{margin:14px 0 0;max-width:330px;font-size:13.5px;line-height:1.5;color:#c3cbe6;font-weight:600;min-height:3em}
+.bru{margin-top:16px;width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1.1fr);align-items:center;gap:6px}
+.bru .bx{border:1.5px solid #2a3a6c;border-radius:12px;background:#0f1a3a;padding:9px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0}
+.bru .bx i{font-style:normal;font-size:9.5px;font-weight:800;letter-spacing:.12em;color:#9fb0dd;white-space:nowrap}
+.bru .bx b{font-family:"Chakra Petch",var(--f-ui);font-size:clamp(15px,4.6vw,21px);font-weight:700;color:#f2f5ff;white-space:nowrap}
+.bru .bx.win{border-color:var(--gold);background:#2a2208;box-shadow:0 0 0 1px rgba(245,200,75,.25) inset}
+.bru .bx.win i{color:#e9cf87}
+.bru .bx.win b{color:var(--gold)}
+.bru .op{font-size:18px;font-weight:800;color:#7f8fbf}
+
+/* ===== lobby brand: same logo, size and tagline as Kicks (63% of the lobby, max 357px; Saira tagline) ===== */
+.hero .bir-logo{display:block;width:min(calc(.63 * (100vw - 32px)),357px,100%);max-width:none;height:auto;margin:0 auto}
+.hero p.bir-sub{display:block;margin:8px 0 0;padding:0;font-family:Saira,system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:400;font-size:clamp(10px,2.7vw,12.5px);line-height:1.3;letter-spacing:normal;color:#b9c3e3;white-space:nowrap;text-align:center}
+.hero p.bir-sub .tg-nw{white-space:nowrap}
+.hero p.bir-sub .tg-dot{display:inline-block;width:4px;height:4px;border-radius:50%;background:#8491b8;margin:0 .6em;vertical-align:middle;flex:none}
+/* EBG shell: the Parlay window bar carries the game name and close, so the game's own lobby door is hidden (not clickable; the host clicks it) */
+#backBtn{display:none!important}
+/* EBG shell: while PLAY AGAIN (or CHANGE BET) is up, the whole game screen dims to 70%; the end bar and the end toast / BUSTED stamp sit above it */
+#app.enddim #scrim{opacity:.7;transition:opacity .35s cubic-bezier(.2,.8,.3,1) 0s}
+#app.enddim #game .actions{z-index:auto}#app.enddim #game .actions .runbox{position:relative;z-index:901}
+#app.enddim .etoast,#app.enddim .runbust{z-index:902}
+
+/* ===== PLAY AGAIN (and CHANGE BET): the shared end-of-round button ===== */
+html body #game #again2{all:unset;position:relative;z-index:901;box-sizing:border-box;cursor:pointer;width:100%;min-height:78px;border-radius:999px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 18px;text-align:center;
+  background:linear-gradient(180deg,#f9da80 0%,#efc356 50%,#e2aa3c 100%);border:1.5px solid #f7de90;color:#141a29;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -2px 0 rgba(150,95,10,.25),0 6px 16px rgba(0,0,0,.35);font-family:Montserrat,Rubik,system-ui,sans-serif;transition:transform .08s,filter .15s}
+html body #game #again2:hover{filter:brightness(1.05)}html body #game #again2:active{transform:scale(.98)}html body #game #again2:focus-visible{outline:2px solid #fff;outline-offset:3px}
+html body #game #again2 .t{font-family:Montserrat,Rubik,system-ui,sans-serif;font-size:15px;font-weight:800;letter-spacing:.16em;line-height:1.1;color:#1d2230;opacity:1;text-transform:uppercase;white-space:nowrap}
+/* rules (i): top bar, left, where the hidden lobby door was. It sits above the 65% / 70% scrims (z 900) so it works at every moment;
+   the 44px tap target overlaps the bar's padding so the bar keeps its height. The sheet itself is fixed at z 2000 (rules-sheet.js). */
+#rulesInfo{position:relative;z-index:903;margin:-11px -6px -11px -8px}
+/* the heading takes the place of the removed grey CLASSIC line */
+.hero-d{margin-top:20px}
+html body #game #again2 .a{font-family:Montserrat,Rubik,system-ui,sans-serif;font-size:28px;font-weight:800;letter-spacing:.01em;line-height:1.05;color:#141a29;opacity:1;margin:0;font-variant-numeric:tabular-nums;white-space:nowrap}
+</style>
+<script>
+/* EBG shell: RUN BANK shows on the run bar only. Removes it from the end toast, the BUSTED stamp and LOCK IN as they are drawn. */
+(function () {
+  function strip(root) {
+    if (!root || !root.querySelectorAll) return;
+    root.querySelectorAll('.crk-chip, .eb').forEach(function (e) { if (/RUN BANK/.test(e.textContent)) e.remove(); });
+    root.querySelectorAll('.crk-lc .crk-rb').forEach(function (e) { e.remove(); });
+  }
+  function start() {
+    strip(document.body);
+    new MutationObserver(function (ms) { ms.forEach(function (m) { m.addedNodes.forEach(function (n) { if (n.nodeType === 1) { strip(n.parentNode || n); } }); }); })
+      .observe(document.body, { childList: true, subtree: true });
+  }
+  if (document.body) start(); else document.addEventListener('DOMContentLoaded', start);
+})();
+</script>
+</head>
+<body>
+<div class="phone" id="app">
+  <div id="scrim" aria-hidden="true"></div>
+  <div class="top">
+    <button class="back" id="backBtn" aria-label="Lobby" title="Lobby"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 4H5v16h5"/><path d="M14 8l-4 4 4 4"/><path d="M10 12h10"/></svg></button>
+    <button id="rulesInfo"></button>
+    <div class="spacer"></div>
+    <span class="snd" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 010 6"/></svg></span>
+    <div class="balpill"><span class="cur">$</span><span id="bal">1,000.00</span></div>
+  </div>
+
+  <!-- LOBBY -->
+  <section class="lobby" id="lobby">
+    <div class="hero" id="hero">
+      <h1 class="bir"><img class="bir-logo" alt="BUILD IT. RUN IT." width="1100" height="167" src="data:image/webp;base64,UklGRkCBAABXRUJQVlA4WAoAAAAQAAAASwQApgAAQUxQSEtMAAAB/yckSPD/eGtEpO4TEttGkiQpFVm7PXuR57/BlfX0WBDR/wlwC4x0Kxtsg12AJcmmH2NERAHYprf6YjmGW9lQVQVSAd6UN9XvjIX0DQbvaLMbGxLYzklCbadc+Yih9YaBmqQNRYT0EmNovZCkXNwdUWonXbO30IoruUB39EJkuvucSdr6W3waLbRhLwQPw1e4UMUEVgGOpvSKWlAJ+EjZGWzAPrB0IklXQLMB7+hLtJg76SjVXhkX1AOZPPoGnUV0VW/9HvBGZqYW5XfiRBufC8uGEyy4k5kZik6CzBfiKF4Z5RU7ovcRqUwyI3Y0xhdlo/nGsPSTdUnbSJDLPW7UvTjRxUz7K568UJO/rq4hjSGd/IyJxU+XNyTgDQ6iUzt5A5BHsrW7NaZPTLH5FaixpCbH0e+eJIbueIP/VmRmRdZJbdWZwY3dPNKE9LOwd56Js9+JHQIgyNQJ3vhl3pobyMb//k2P5EUBNenk4UhtFK3tlFQFpdXc6ZX5Iz3PnmQbdIUFartgjghVJ4EOciezqcVnK7diQpI2xiPZSEOiPQpa643M3zG6TCZJnXcypb9HwFNVW+5AkqYxRpMp/DMNkCLkxW5jqKKqMnMMqKIyqVlV1HqqRiqAqnJVUa5WEoANWDGKOVMGXKoC7xWAZ6wIioO2kSQpSfFHPTP3MIiICUAZSSJIopIEqtuGCglMh4VMFRhAdLdSAKvk05Iye5QAtq1W5UstQI/qUoDHeVNINtfTz6wjXyqSfZSWsK0WPf+QoMql1EPZCTXSFy8/q6BUTivUbetclT35oC9A1CxOz20DKI52WIMEbqYXTRUNhsiuPAvooUB1aIe3BDIk2V3xwgYwEkCA8UEWmlCBDj0w7dCLMJ0IIjXcFATGOSQYwIRxbtr4/z8kSbY+339kVnfPzlrHtm3r2rZt27ZtH9u2bdvYc85iursq4v95EP+IjIj897lPI2ICPNu2JUmSJEnnAHv3/38bDeMZIAAgILJEjCNiAjzZ2uZIEuYwz2ueVd1TuYMeQ28AU2wCY+wBB2tQa+kxNoEdaK1lVbg9A7PISnsj6h9HxAR4w7Z/kdT4/6779a6eGSQEYhB3d/fNJpusu/t+3N3d3d3dXSLrrnE3AiQrJFgEWJiZ7q73+37Q1VVNz+zziJgAHrz+qZAEayUZdFUJY+B1RQ4BFXFeq0DqeDdle2Fv2Ewwljc8DVeScTGdkI+RLvBHuq4rNdNtffwdgDE+eMt4zymBMT5GAlGgAxEcHn5VDcJrvCgDYygo90hIE7DWh7ff8ygSH7xtoRTtApQKf8bIkBLAaXSq3/qyyPF3fN75ZghYJTCs3+tC5T4QZT7GcIwh1HVdBVDryz//rlQOH++/Zbnxnj8ewhXV5JRYKxlKSpXo7TcZgdd8oQmojjEGheM/fobEdVUQDJUq7lfX9dt1VU4p/UE2zOzcw1J+4fMrlAS5rusKVEQQVOCqooIxxvj5sSjqVH/8GSJbRl7/yhioZlwjAaoAdIyB6u3D76+R+Ute/a5US0mscyGl1DpakwzDqRJDP7+D0aPmSD+Dq2AIUREFY/zodVn09D46vvBFA9WqiKgOFQloTuXf/W/Of8h7PIxIJXIFDg0EqHUSyin/tjUK8jWnay5SSmmoQIBev79XJaE6dKBIV0LCRRGghmrFOn3BV0SO/5L/9l7jEEJECFAEgkDRkKncVWla6+hC/+f+uaq7hTzn3/6C8ZSQASgkgUSBoizW8fwv/tpAKLzwYz7njgrBjBHWAETm5p/+1eL57uf9p2elFGUpEDJPALXenr/4N728mJt/9NaPgwndgAAlBIhUrcPX/kpz6Gf6vf+Y8xCCNCWuQmZyl26KwoQIASY/67eR4/HUf3jdx5XpVBjghJQEhRLa4/mf/5VSy/QL/93TFGaoAoGKUMRSkIAk6qIuQAUpuS6W5z5+ArFUhulD/kY9QQJYXdwwmSASRV2EY+jQikB/5H/8iynbnP/Bb/s5xgCBJGENCGEgomM+9fcBDLzLl7zQSBIQa9VQoFYlhaEUk6h+/OOJ/N7vrMPEICAQiSJwDAk+/7nPnke0iPrz/gpJVAxzUZlEyJ1/+ff/xZhHSn3Xj3qag/5KKJJffPMaBcvqd72+uYL3/oWGqx+867+qTlKmN/1NEo5LpuGXP3icEN/y5z0Y4Xgtv/ze4wK/6LXHEzsL8ee/5RcNqS96N0oUZD9Wi+/xhpzq9KuefXtiXlrvZ8ydSHD4gsq+nijTa78VJwpr+RVDTfiNr3N3IjyO00KAHM8XXY+WivwGxsKV/7c/wJalvtHves5MOC75tW/qQAo/7w3GE/tHWXfObcrVO8ni7mAtjw89+Py3oxbwq6mQwq733/q7/ywcDW/09MNTy2Z2ZLo5ZyYjzl+3rychyBPt+Ql99VfnGoY6Dgfy5ipnpdr/1g9OAKZH5xpyCqk+LISEu4dOCk4vrxGecZr2AvSxAMPjAdnQVgEPR84/lu3DE4fv7t3eQXIo8OGDeojTKw1w6zRBHn04NwyUYpZwhbqLOy3cEZzuf2jiZXB6OBrWHAEfDxDg5dVpI4EsQAwBDaoMcrabtzqX42k/pQYQyHbz/3L8kaehdU8eujSUAUJkpwhEs/SAPoeVqxxKyXFk6pp2SS+8rhOENDkeSETmJfmFLD1JaiWhhiwInUqGgYCFDQXwgqGQI0pOuURaTaUvMPJoDLrZ4RKOmakWoCQhbAr0pe0AFLF0YmJW9EC+KIz3Ht1lC0tYwumcbmjeFrLRxZlRMY0RcWyUVidk94z7XAmr5WkaAojROUmIsSm05SRvXx0GcgXhUoEAJ23IvheQe9v2dgOBUGCQeUABAm7C83ZgEqASmjLtDEE2lqWrQmVWhGYTZ9PeA24rR48HYSJCJayVaR+QnjVr6fTRkVdNW4QECOdzao2sTMN9plQcu95qEw5ZcMwgFAsxg0T7OClfTrmKiwMgawknz11H7u1faGUjLAbw6xaTgPI0AuGzbdUaZcLWZkeQprlEdgWCgDmX0Izs20o6xh0ezBxF5pXVsuwNJ/f+PwThMbmsHQpLmbnOzILbGLBjSsrhRxKSxhx0vgcIFEYrQO3sxLdLgeRwXhCey3EbAQxk6qpNe8Uaf0FoJZLQNhvCF7bBfKLtBh1BEi6Wv+mNeSCYPegm5wU4nY5GDlK22G3LWxPZ70gsHanlWgRsIYiXZVaZBrgmLLqRxah64q0H9apTEaAmc4hxLgchSCNBewH7W2bgGmsjC9e9+lAszRIIoGvILwACAQkJQFDONhGJWZKnLmQmsQLEFfLHM2uGq04SnvXgWDVL+YwLAWwNmU244B4t5KPSmGrpQOXQ7uyLbGlCfsVJEwFnQGaVLK11VQCDgFLoLus2MOfSKCFxx6WeCB+nQsgxQAbjDi87y1mHKAN4DSF0URy0AeGMC7P5YhEgQ5KA5gzd5sKCvD4LSSv8E9Pq4rMGfIHw5REIpwhUFuWv62uAk/D2YkJi1gmET4elk3uE1IqzzSUL63MnedgiOJ8yAgLGS2TuFnw7BWFbAS/CQAE1CBd2SOYyl86kIE9ysWIOCwkJQZ2FwjAPSksEGx+sE7Cij9JNhZu6cL5EXCF/Xw2x/J13AcL9wr7h6+XgQtidHq/EGeuKGkbrVk9Hl9BEgMxcIwDTLP6iAfbkSoX0ArvsBgiEuRwx0gyBBGxICMe1RTetpCPAjx9FzVAaAEMnNaKlE9xLPirIzbDOC8IXxzU5iAhA6UDRjHzkKbTxgrB2L00CCCSbwYXmMaK1EPgBBBDasl6HdNNGe56ELNVEyKl2QghDJEcgCO1hln+QB7xR6eiM//XoKXLQCgERwH9Co5cOF9jESd9qn8A1dU34+sjy6RiCwERvWpRXXdAqF6x267jMg4RNebNJdJZve7M13V2L6QWYL/8YQBrKEQVBmqeB8wJJCKfZEes4KxAPEY7XCSQdEUnLUaUaZr0tS2laE/50AMYpK6orwtmUWda5g40RUbXxSCzNJdgTyqqPTxAIO8YFjzHLZJzlWuinAfNjjwhhXo8BgkCAIQcI0s4hQnSB4H5y3Ex0Vrh/pqR4DBqhv14ewl9PwsNphYJZwunMoKzZ2YBSm8MtgnOrjCfzhDTLawRwugJFrSW9aCw8KiQQMEAKgATk4DnIvBG6KV0VCPz3GysCpILQ0L4s6briitMC4ZkVgAMgHDaHE0KBxviO5JOPJjRmfa7I45jRWE4WczhVLtJRAcKLX0ISADlinhUPhiC2ZCxkybnhe4AdQYDwQ9PSGJJCEkAwPRBCnnDb8pyTK0LpwNu+nwvcEhafvK36sHMJxt6t2tCJXOdSFRggnbk+2lKdNxxPZ4XwBq9FUw4aMG5uK2Bg1UVCNocDZuBrhS5/uxgFQBqgDDNRunpVQkKS9AF47tkyq1I7eJ58blsgAKHWcQ1jxaMdVFzg41yxYqOzXt+7UrDiHd/wa+kMJOF5z0Gg1oN8Uh6zJzArwlxQsia8HelOEoBhTgVpTQnJVAGD6UBm5ZoqQLh+XXHCklBrWmLezuENpETBRVGaYFzIBtvXO2FeusP1rSkSvP574D/p8/RjFPBALsLdckXgrgASAHkJPSB2BxD4x984LVpDoQzK/4+64O7GgJXa6LaZHNqGWnHG4UUgAS5cuz1z6W7I6IkEL755WBZ37xsG++PE//7ywqE3gBNsSEYGj7sEiaRl8MHaI3D8g7/jONScEylDAeyK1xTSjblU/lEiFSzp4g+OC1JCXn86QfNwDN+BO112tijBZf+y6IXhuk2LQ3o03vs3f0Sw6lEQRQDpIOH//f9hGuYEGCnhepAHHLsk3H9Cjk2xQSxCrDTTCa+r0FMb5g998DSg4OIh/Qshg7D1UBsqM+cjqeGmkc3azXOzYJlV9kFA5qMkwRl/vc+L84PCg4QOO978mz8MOIIlsnfSKSA/fvwR5wUnhNCaLTlbsUMwr8H5Kae7BY2gkNDRek1Z0F4AU3lNwmGjnuRIBAFCr7mYYgBzJhD2vs9ZlFka2IVtSlKw6se3e7DQHw7EXXTZ8eZf/JHZpNggIhBC6TTAFM/NBVvkaScgXYIUFCtCmKcXwetxRR+XqECOsuui1CJxxmyRGT0jeyfMhrSUhLV2wA3Tc0qiescdzguD4XAwqOpNVDsESDi0E1SyNijKCCmIDHrNnCtv0o6ApNDrWZCca5IaSl3oZJBcT9bYgzQCZ0IpBxGdfVmcReFTjjXNAyH7BBkNxTVr+innonj2td98Gf3oYeTeV/rcTrFHhVLACHaIAAlAzk0FPr6HnHMRtALmA5xMk00BoZyxTz4aaClW6lRKkm4QKNcDA4K9WDm0UlFjIs3SAPNHkepDziawGZU9TSBvJURwSTsBORR4xZu/+zoGUQECa5NiqtLjMwd3BhAGoVFFru93aBwfINJomJOHuRIQLSfSqVkwco5ug6YBpBfkmqSAzHsSzkAJZMkh8D8Q4rtZHkVYFyMaKzvLWtDYDGUV2IuzEZmbvv1aaiUx/n6i1tij4XAq/WPQOS7WFBgyfWKrdQq9toAGkLlWIHT1imBgsQ9pwACkSGOgfDmbOE+5Jc6gjGi3sim04OGqa++J84Ci5vw3X8mwJFqKuxlNdxLKTA/iwtaW4JKSjE2p4aGcTLfSUB56my70dVbCNmcC6FMECAme2RdnrM5i1J2W81ywJrOs8qpinznxixQ1Z77vlTGkoq2r+aex0mkBzSEAIVXPU3It2gHZi003aq9yFWhBE02Prjq9CinZFAZ9aWu+URzl5ONpOmhF+Tq8otj4wdcqZU79tvccWhy0t75UmuxQAVA8jIgwZ3okoTDMWGrDu1FOvRrfCiongrN0J9djn4IUjtjkYjsdGR9PPOYOeeWFY7KTqHC/lXC5eiWxeT++RAmOee9bD3MddN9M5FoF+9MUchhAZEqnVCdLUkI2OnG3dkquAm0BAgUB0wed2TU3KTu6NyeNEsa1k/OqY+ASplTWgtfXKyjW4vwCVbD2h965IfdDdDaPIie84ewYEVIRpXoikJbyWMcx3rSEr80mIYROCiCQawnznFxjQJ/wJvsWBCW70xp3cS9jjHvt59sRzLp5DiW7K9Uc/ObvuKj/9TPAR+K1JEbyhiDLuBiEjuAyLdEIV9cYJYCTmAu4l/GmIEB9IVQuAgw0zctJO3gtcJ9br0e5gKsKmvzsNQrMu2NscNpRFobs1CLj3OixUdk2x7BxqRypg1LNoW/+tgvojwHIU1fPn0Ywhm9pe31PwnEhDPZzYsUEZLQIgZGSYhpTAQRoEvDtXXUxVcUjYI+0wpXbWK5crTxO2TKGpsf4vf268cjU8SnhQub/3+SYGlQfcSoCELJDrCGnQrESuAPMZeQIsnE1hyQ1KQ3zUe9719kMSZwtPDgruC5a7anKMq7QOkI2huIahLQ0Lui2zJCHud7VXeby10PgRNu8jPQy59oyzwyU7Bbxe1H7M+sbyADmz02hRjDn0yhh+1iG5AikChgxbJqrceohQCNVXR/0jd9zIgMlJm3uo4IRSAoMpkyXEGoTXjEV6iI0GBQPQ/YLWyQHK95Pzzwn0sD87kA8k1WHdAXXh/ySsGQ+Wsaf1xTausVSTofeEJUKIOkHEmOrPJx78zfCIILJy3eQmkoVKeGpqX82YodAsAKygLTOWu02ASdWyOFk3zOlAQQoLAaBvF69rtWva0sNwQM81cVzzT4pO7BLnDOX1QrcLohH3FgxFSZjAFtZIsdivWnZdlOVh7Nv+CYYRDBJacRp/8MEBFJgywt7nt9eoiEVgkX7MEYJEJBUwGSCsyCB6xZHWzxIg1CZ5yiVey/qMaCqlmfV8UR4vmTUTCDNNGRyuqZJgJzC+ph6MxzBjfiie01y5rkZXeGTjmUEtLXrBE8ERA63A9xkAjAtiZSwfzGfYhqAhaHkeiRRr379N8CAlUxSWMSWZxAkVBb965Uvuvbyb9jLDJCG2jbZwKA2LKVTAC24BxCHm91UCqVxrXUmdMooWr+5PMXl92gQKGz5PddVWU8f9fcynT+V7LfrJ+YLJ7Vl1GsvaAhz3UVuzgo3p2MqAvK1P/vS2YXTEeaFLbc/R0mqZ77+vdBnJWUScvcIj7+QgFFhCpu/KuKuO3+JUnue1kj33PAOm7B6SnL3j7/tdOej9yv1MO3EwzzpHadAfdYfeqvy1FPnOCdkvf/ir5kCYPriV2SsSYahJIR6O33mp6Rejx3y3V8F/NYvGDySPbHlnrSkDS5ivLKxTsBD2xzanNV86ge9JPfPxXGqISU5/4a/NnHQevr2v1/q7TiN1SQUcCk771PxzGu/72r6Slh0l/27qYDQmmMm2/927jU7solYkoQso0L2V0dhEqlVwGPTXMt588oPZwQ+998O9SC68/jZGB2hUCPtgGxzPf7eX0lh6jD+/m9ldZArz5JjkHIznV7x18cIZBdvAUPao1WA1F2sAhQOmUOBQWlUAfOVXPyhH/owHkO+/7+xZcpr3vCN12gxEiDaeutBGt5JGknLAiDmFmgeodANEALpCHligxCqB6+Pjw6sz3l0rpS7P/EFw3QEYazqSXiWDjgFIIUoQiRAuCl1eHZOFWwJhVC9og9IOJnWVKc65hWPC/u72M2xPpRlIlgWnHqEA4YV2WMcUgZ2ADMsacS0ynC+Y+45uBtKhUhWlDLzph+4hAVVdJaHAaXa/AgaodIwxMJKLWMDxFPzhG2wAYLAB62b1Ew95S0l4gRYb26/GY8AunocngdIGoYyI0BAwMSY+8YUhIRamQcI4ES44m+Ew2lUUAvO3AfBvXBSoMX1BUK7m1QfeyaCsmJbd9ch4CIt0qxcmEwPbzOrvJ2GiZXCisMu+daXx2JU6EAFYO57PjE9MoXRYOu5LAm1QRBMAM8N1ot0ZBdLur0pjA4QJJgzR131QD6bUJqskOdRp6HTyFwqAQTwmi48RWYiMJnZAR8UBvFlq8aXdMFIFpJtluPc4LSPLg/jHYeduFjVt/3YUeRcrAhAk4v5PdZIuVNTZUJtAiBAkMoQYNAaBEiHvCn3sOaQoKFpBT3EWdkfJVkjaw1MaS3MBZAefvD2UxFFgBUQkjZxEQYXdk6DObOZ7aYJZxZ4GbFyw0suOuv0QxKubaSYUExjeD9lxJooYCpjh6yWIAIC03SsoTxUeo2ZR2Tq5g1XR5B8ite2RklD+jmO2RIEtOFOMoAxZqcFBJB7zmWB8Z1Aqs6ezWJqZbMAoXAAqK9UJ9qe8Fjj6uNOv/jCM46aAyiZ1CAOlOqLj9I4S4QMciqkQeamMwBzslVWD8mkPRNSATg5ajNmgTOXnLkf/D7zQFp0G2DeKZBmeHLK5roLDGRIGu6Tb2cplcb4qKMRYyPsKvPcc8+5KCEbTUuFdQspyIa04aSTTzlh/bFHr6Y04EbMzSO7VEYsgcEaWpumG3zUMqkex4yvXy2yNHY9C2IzEFrlvJQaOnu9s44LiGRh99AO4DmpFiYwrpbxqg87AVEbeyYJNmRzXJDjVnhzCwIpwfHvfurdN5196qXf+C91g9uML9yZE0tRWz6bjlhenwjv/KeZz8Bb34n1C0m00e0hkd9451pJ3Ic17iNQCa2zik3oL9W5TKkdrx96tyFAIL2Znnbe/Tfv+U+ViaXyAG74VjMAedzYEK7FpbRuER/NE5u0RGcnZVquEl1dLTwThJ4J1ngKRn5XF3ju4GlwaeeKTBOlmTeQnRU3qE0eERcBpyNAenLOc9dHT7aDUOdCmuV50WjUyWnXw5SGj5o1eTxYc4pdUsQ8XHLsIyBSWZ5QaMDPwifG3IwSdDFauiCghQQoIUv1C9dlQQTsTZysbm2NyU1hpdspAuO44Cnng+1EzgtMxBtIS2Nw6UF1KzuFcc4lNI5T4bp2yYm6bZ0WYPOQ3TRWuIU2f0VuCDa441nhprnodkFo/IjQAgwELLgPDhvbKYG+RUTFXQx5bM84NgatnYnryHFJ1qBnFKjAVMnm/PwJQQTQMwIIOGmPfOJ5pRF2TwlJwYsJAUJhNiIAAcTOfnRpXfjCIGgcVAYGAaYtA7sUQRQh5xKAWfMODbfOOxEn1uxHEkj4GWs4ntSkL+BX5H7BriKCJbIfS22bwPXcRZTZ5T2Rwrmp1GPNZSuywPP7ZCYv7kdTBVxs0xJWi5groTGsj5pBimzlFsh63gVTWc5XUKaBELJI0tI5aZW+ynjmpEfLA9iAUELrGEsq3Aw0g6RoVFwEh6jMG5jisWbDZmRmFhcpdFULV8/eS25Kg8gakpq5zCKcDT5qqgIWHZdN/z9WyPfcIQWjIECAEGo7NmeV/eDEMjpR3U2aAqdhySPC+FjggxzbByBo3RkrHQAviX0NniuW494cj5U7AAu17E5tizZulptKsyFUiRS3qsSegBDQgoC2dBVbDyAF0F4K3EMARVEgQFH8KZdiR8IHLuSokJ1Wl7J0PBdZLloHIYN2qZx0rGcAdwGZ5+x5cXpuXdhaQRbmVTgQ8Llh0Dw7tgECAayAaY8CwpBmKwAnhNZyw1rtO2nfvOiMAASwxo5ZMbfS1Rj04Lggc6/CU8ElNYGQOisfeibD7OKegOfeqA07itQLyN0kjRP3MP6eLYM1YU2F1AYxVzumy6hwBimRNmJTaJXUDJqsaagDKBJWadbrVPHUFxh8dHAP63PAFeE0+Az9MgFk2/OyJV2ARwj3O9BJ57KrdDvglEB0cimMdXr+ccqYH4+CLG7YFU7qVeTHOsJ6VQDem3QQj0Vkf9SAk9C654zb01TRX7MC9sTveMu6PQOUrAE/kzvr/djt03K/gDibusnDAI93AN5OBzKO9Z5QbwgxwRQep00b8Zj7zrnt2KRERJBgTQEMPhoEUjMhZJScFPmegCwDqWhvd2Nrj/QsO4/FhX67IbgnIBdmn1DCV8Zu4TKfCEkodbHHTac8Pe5HYJ6zAoE6EiAhZ2I9kc0ePUJI6mK2bsFNhbv6ibFKZXZSshWksdtQb1hJkK3nBAGSlh4IBJAbabjrojc6oT4RwouHMWgVe6bincOuCnvLhjEPKBAg3DsInQOYS7vy8W9wewDS0HxmTXDxy3YrG8vtMygmmA95z7el0gRfQONGCWRhNu3jsWXd4qOBgLSOrmsVaII3eWDDZopO62ZNS6fgumyZx44EbQDyqq7ZtxDm/sqbAuF8ngTEOvK6t/EI7/WCzmXBc9tnBOmuMnvuX567p/JIqfY+Thl3jSqxrjNUb5d2yPpoSZbaNkAC4s/bEkcVQHAZpOQCOhFGaA1Buim/4N7L1WSfLASoIr/cRhtmsG1YZSAvKXiX8yw7yXVudHSLg1kEN4Vlm3A+UblUkpyOZdP6W1RGHE9twi2CDaYx7VNLIGRjAcwAiAJpSIDZUdg42wJQlrXKbAgImvS25eKesAYSsSAviM0AWSA1KXT2gbQGatV9WozbJbs+id0MiBxSIAQgizUCMr/9nf9NCGfjC5UFcXFQvj4ZQQJ3Avr+i+jN8B7G/idBGzkvRCBi4aiY6YCASq0L3IZKgVCqCRGpTJqFLCvAFtowjU0LgmurLQWDvGpIQpMA6YtM0iAQQMJitlkPYtPbssV+KTQ9wOomY8EWBGT85f8hHA7wXxDTOjCvl1wj3E1UYiKS/3cupcSxWysD5kdJbagU1CxQr/plfl4dQghoRZjoopCGKchAcu7jcjyWkgtIxV+WgxLQvER4KlQ0S18gHSHMw5E1b3LQBxnIrB4kSDKuTe8C/Cnz2H38A+L9jc7svnKObmb0Y2uVpMQnlcGpvo5oExsIXnc+db6M+gJySGESQOkUSRakUwG+EwrLTguEGJMe7V+ExlwFUib6IADCVLAPsmuNkM6ED2yAYMODxL7PwCeAjFgBAvl4jTWHFHxvnvtgF87eL5NYczCSRAcjVh1GAlX8R9HIM8ehFkk6fPHrqBJ5hvOCTFapnbKV1s0H4Lmp4ixAGLfisUYFlEAaQJy8qHtAYKFU2kHiImjIsXkZ+iLfqBQJUEI72ekCVJycdaecZnALasMk1uEmhPPxwcexvhDr3jLqtGIlwQRdWL2SBCB96oFepvBICloOWksB1PM5WYXg1BaeWSLrhRRLqbcXowitss4LxFlJQ/KqdCZ9gatj2YWw3AMXd9n0xP7QumNVD2Qj4bracOn0Cx7bVHzU5NvusqrHpGdXkhBA2vuv2OYhUpukRQHYdMokMm9qFZekKpRmUyoInWg2tcEbtGh1i54lS6t0Skp9YtmotlZGe7vxuvdWadXG4ewI/Us6omd+ztXZbvUd0Vqml4onFDMIMRr8366qBHe1u3nDXvwVwpyxZSuMgB0CkgYhWAMOztos9G6YhpPRIW4E6hMBrlQYpwOYhhA6GyQFwtTQXHI83OvINAlQW8OSft02oNYVe+J5jm16ZC59JVqpsK5XmIgY1CA1KTZ/OnL1/MNEm4fviL/JnCHTYEpE4MoECyDAxAaWCCnBM+IMmD8aAlmXAANn93pCeoDOBFAaxd7ATaWps4yVeY7QRsXbK9w1Rsm7Ap+FD0aLjDMB8t1WMutnjSeCCgLRXPHeMu9PzorlKzMuREGqA4xBZ56EVIAglR1D1voTPXavrzlYVxwURgQseLFDiPWJBAUS753rbGUvgOLtg05LKQnAje/raA/SAnqEADd8qQQaR3VMykxQMoXGcRFHPDH075BaCXk7fwIKBCCWJCRcqYHwQCoTIrFi7oltpfS6vsbOi6E0j82Kpr15nHBFeMwt03P+8mks6563BfQFgUoIhF5R8r48sR8KXfFHXZEjQA1yHIKFPU4ICSDnpvHq8atefHmHkfBewnWJU8iI1KoApkMBJq2DQFISb0dGSdfv18YXtEPoGPqbuk/shtd6nXu3T//l95oKkB3Wt4gPCihAKGs8hXMikM+pvweZ59b9CVlpnnvsFwQSwOoVSEAHsJgf0KnSmXu3HoU68Gb4r9M9hMbsQpbWADJJhblICK2+RblK+G1SD1+4TQVIJwSUHvvyqEiZftdvn84wFi70UFxElx+QGRBYh0fEeBN+VV69z9AEdKSbguADWW16t9z0BRUQYvUGJAnR2gDzC3i0lSr+4eYIWl/vw5n8PxFUcDAgp37xNpACAjBpLHakxPdgAJ6Li+XVoh+Y8vIGW7ArdwXEMpWRAS84fwFXvC+Nilz01bpMFPllefXYEXxFsOesN1CUfVntqf78G5+urBHWrqGpq2FHn0L3xHXvpMN4IxJ4A1BWIRA6sxGlVfptCOKse0GaJdjxSXltQZTjkSd3iAnkIM7qrUW5Qn9N3ki8Lu86VsvLvv7nnDIoYMNaJhxsn2eyUqJjxttA4LWfLegCI9TuimUdHapLaL3O7HuTKgh/MApSmjyhNvdUfNraKqtyZBDecOz70qvruf3w8IeoSgFH5tx1xXY3OeWnh+HJIJZpG7Lu3XDTM8riUI4mcIHvJedj0ZLaxAcPKmW4AKyoEz7xM3UI7AjQneCxHCFZlcbp8XF88N2CMzuzKQHwxXwlwHHC7QrP70Wmcc1Zq4Yy3W1+/nsGrWofgBKfP+aK51IBAqEESMc6PjotIt64eC7oWWb7+hMbyDFpwYrrkYIPvvtCa+ivvN/TbU53EAEPzePbUgBk7or0Y5V3WUeOm7Yl2L4HC1Bw7OkUYU+A//Gf0CJ6WfSp9dfviIkFCCKdDryBHWIRzmVKpc8At1QmpToBeVkVdcePxOkETRqA9KY6JSnj3XcgQSqDDvhGCGDr4nQhFKYl4qiAPjNt3eOJ57BtVHPyqSiACbDtXxN6p45U77hxQYV5QiAJqfD27dAe0dgAJ3YVykU6lvIoiZ4hIP/UMShNd2aHp5xlyfMfZbglAjklCONAb4AAGyQJ3QzJITtEj9yF2jJtbZ69t59AMkUnrC0g0dnB1u1Uj7UbThvvYwgkCRASjhjEOiApGASwZVywcN7b82wo91xY0gR+lBwVlIM5JngukgpC+iJYsCYHLizcMNwVDKFTZ+0cT2OEWC/r6cXxQVLxqiKbprUTj99JEKDgiGtnShVM0MHG3Vh1O6UXWFqJE5ZTyAHmzj57BWAiFmR8IEipz9bGKg3R6ickr7EUH5wPOfcRKk2wL5PSJJQ6/iynW4IU8iQ5M050iKQhTo08sd6gQDfTtSRufxqBJLP+VLKQpC4l9m3sy1SP0kcBZnWPhMwBwgGbAQJpKsbmplEdHyBAKnAHmnBRGssHobMzCujMW869GMawo8O2nHWVVngEIKHV2bVFi3ALkAmwNjqdTV7MSS9Mo7MNLzy4R8VAmJOOBDFJ8dxGwpSLXcCMphmQeThsi3lWhDUV90Frr82TEmkhrW+gIHSr7BSEWnvkq62Nw5mE1socknm0Q7ODQQBn6ZSbo2lYdqSNg4anHqYqBpR7F65DtJYkwPDUVmSmvIRONqH7C0cNIAYQUDT3ACENQI79XjDY0SFEVGRuR+dCetKVNW8jlBejQICsOO1YufV2hllXXcnPtxEXR715xKXH41vB2MBRl/aGorOgVDyyDTP1A9oTOzc0hXqEqcwj7LAqPkBIB/7s0kbOuTPojDcFafbHk1igpY78nNMV8Oo0A4SVHho/CBFt+UosZ9KZ7QJbPm/p+dt3iUaz4RSy3EJqADT/8DxmCcR0BVOBEJjqUQDlXnROl9r5EyHjXJOxy8fd0gK6dnym/L/VCnZFyIvJ2ueda2YGkhXHZXqxLaczgwwAduqx8cRd1Jec+NxnSJYgak49BIlxolmGpx8nmSUBdqHZSL0lKEzmMDIvtILeyLwBRs7NBbJdM1OxGVrbCd2Tqd/pkNgjpCvv9UExLJc1+bp25LtZ0edQOD/jZgGCRzpjx56PPkgyIFhz+bpatDRjS4/7HkcsyVl3BUGqHLgJERrdSAruE4KUFuB293wQjwno19qCOuM35LTgbCF0VvJKqkvheWdCM0DWdIafKSR02AUMwDOflZ0HRwX0iYMn7yqRDYqaS6+KLEktGinw7Me2Yy+N0N/k3gkDSQ4hYkwTOwwwESwQMkkLv+zd+Ean43NcO3I0xkcAzwB3TQZCevJGfepBQltA2inodnfDF0IBcJau7F4AHvET4EZteABk/MeOoVTl7idIxTZi7fVnYZnOLj3u/BRRWKKmR9RXpczcT6ayjKQBBKRRTJBKJ9d++SApkJ/xtdo5LviFGKdktlhO/Ny0jO/6v+4zpDXXRmgR+eoAWGe9/kApla1jIafHWBkyPHHrc5QCULjoTXN1iAkWdn9kM2GWajUHcS3BMR/1xQnhuK1AG2SdFfew5tz8va8KY9UbLTyGgefAUyCVCRlm6ch4KVfV93vVh9+zrOKwTfhQAeiRLkKjm/09pyuoZ8uH7iAZY2VOPYacwJ0cbPxEVmHpTiptK4AcUxEuJ8BI0VTchPMyuzI2rclOgR2AbqVk3bla6UhAK+aZ2ZFv+EK7QaGs9jDfH6C8b+mpfLAED92yAwo44KDTV2cBomtOPPIlBrmyHDOo3kfRoZ4KIBAYWnMLAgPAY+DmJpAG1rQwkF0EH2gFK3nBboI+MZCGwyFAUlJnPf0OKHrM/e51lVAf6VNKILzpcHTVI60OG7DHlF759D2kAqDMJddQBxM08cJ9u7Fc1SQUZv3pn/Vyec0v2FNu1oDYIY+JAIlUPutMstiSgb31J42BbFviCpw8lhdOAOak1O58sMpxOaRMZunIcdXNBljevPtJsz/s0mDx5Ed3gwHB2leejQHcpfS483NE4bpDp9nEEP5x9Q/OkgGQUKtsQ+mOaUV5CO6gIHcFWAtpHTzXJ4AdHQjdQdKXsQE8BHqZzwhTXVEbfWEa35StKRCwV/H3i0fyDF+4n1QAInPpDSv7YoJGL3zofsIs8Y8SSJ4Zpvp3Xv8xD+HmIkDRCwYYCanIxobEAG4md6ld1fogQB4GaT0Q9mmZ2x03hwUwgGs2lRQh4Rojx5Tn49z1hgMeClyp3jqHIdPbfOvTCEDisNefj4MJlh73fNJhsdT/OB1mEUfR7j7qmTUMhAywIlzPVPBcUPgeOjMWGwIQtvSmTHO1dC1Soj87CshzrchnCc/S4Sx75ApK5ULdRiHheTcUEHMcZ18OCYJf59UkAUh2ug7EvgACdEzysDf83Y+TCkDUXH59GqYQoHZF7PrPB4nC0vujYIEhA7gKAI8ECRcISXJM1pEVIKExrN+xQlIDJGyjsjlIKmjRmgMX8odFnsk+XMMGgeAeXsFsUC5XNwASwk2tBUD0I+Ctj8iqvPEAZCcfHf89o5Fac3e+4gcIkBIcfuNpODRKa5eKj38qq9jLwEVrAWTRGGAAGIKn5tcQCKIFeXJRmmvpdQtVXCWUxtcdbHbKDg58dgx+026SA8rm0Ucg8sx9E5T9jrQCn3gARBAtyVVIyB5xvAcRx33Qjh+94RNVNigy17wi1SG6l8TmmzeSDDZfM4VAKTWsWUJoTdiGBHJK9iEd+6Rl2gLZTTtCFwHSgDuekd56ok8S/D0B4ahsLXv+p3NAMimo6MQykMeeIQknXZNwhRJ29lmL/eCUgKN+5ASoBMSQs99+OpkJmjT/m4cTwTJ5Y0kC4YgWd6XhqRCk0Y1YIily3E0nWuDOgNDYtXNcW65H4O73LYflcAK/+YOngRInQNw7FmfVL8piBjmwPI6Ra6y413h2NF5VQBUSglWvfwnDkLvlHp+9EhLL5mOmQVABKE2JzAWwQnAuISEVEwI3pU4IY5TUu93wBjxHjsUHoTN6bdYc1UXN7ypnrlAYfV2gFJZxutmLdgQmMD5YPWJ5+Y+FqxwBdZX3B55qVrHsEBFCSjVXvPZQO+ieg6f//06SWEakNAFiSmQJIK1TEKmVdZZEAZKWcRPc4kGrk7hojfcnLy3NSiD2Y1Jaa4x7uDUlhFJcHI5PdipkbM7Ky7+dawwT4UJ5Ojjp5KuSEKTgqDdcxCAAdzAVH31/JvhaLASEKgApn+wTO56n4unokK0lV1rTBFIib+YJvhS62NHfu8QTwHmFl9EWBUh4Nf7wDZACmL4LQT3Wxj043E6rTiFBVMSrX1llic4uPT7/L0+RCsvrqDCY0WmRCXLbo4ggoyObIPbQAQzb3FuQllaWgB9QsMMzvQHyRKrDV3wJj57/Myt2npB5nrgV2+LtwiI9kplw8z01CuiRJHjZN70VxAdQBVd99ESGAUjtSsXmv/8EYUBaRuZHgcEYgyM6QIRZI1O2c9J5EeCiNCEQLRDKCbIRzXIBabhmMrEixxEl+cQtpYM/n4JA7MbjVBrmk/868KGnukM9CBcrx5TpL6034oR83VzgwTf9VJGmB4KQywTc6wQIUOzkIRKc9/cD9xMg2hdpx//+/5AwUMEKLRvjIqcMCCMAkQ5ArAE3Mq0IFySEdBDWUHoCstE6lBZxv0EL4JQJz6VVX0gJoRkgXbhPkQTgppzqwHs9XbMdW1vKwz9RC5B5E4771Pd9NwvHDkgueB5Vz74biYN/YZ/rfoiuztXw5r/YQZUNyRzxz79DWi4ujgsCMlcsyCJIkcSopwOuAARLgEByzoDZ00ZGhwhpVAAPoCdimicI2MC56hOmeAOiix5b/l7X7zX++T1sWLuhPG5n2S3cCRcSOj3ve4LiJSAkZE2PpO0SCWUuedkq1wHgVu7bd94EKRtEjt/92/n8H6SX49xiI9NIZQhAisSoQFOyl06dIL2eZaM0CKQAkKN3pAk+CaV1jm82rgtsYtKD1ADX5KbUSRsnjwT35KGyDJA0kHojxtNXubzoyO6aTChz8fvOZ5BEV+dZb/neVaQAiMzVb2Ca5MkRCM3AeBB2zZJptAHPuXl0lDlpdj0ja7KinYAVCTZylLYUVSDAXRg11wNXcSWeC4pd04HRcnF/zBQVa0/QTmkNtCXq1j35xMcmW2UWogcQS9ANAB+k5QME2Z0UmbO/9fWzQ4nOda/3zE8dAZWAVFj7uhu45UHVXuTc+tSpZXzGkpAEYmrdBDwG3thUGiTYIhuEV3S/fUGQvH2yZ1vNBRQfDLj+L210MdjRRDnZnntntxYL23I47K9rs7e9x3ZXnoxkM6FuErVlCx8Ye9BFUXPyt7/5oLrIdM0xu/sv/wuqkEh27xUvn8s8AOnmrAmBTIfZZ2kUETTaWCHrjdLopFjOrbkQxEsI1sm1yjJmCa3u3Nu45xhQ4Y4dgHRAfFcEZLMj0CLZ5FWBNEjtfeXLUSazo2weu7K1O5SsKK1UwcrXv3FdXYdoL+eq1/+Hv4YqkFIQN33TWdTBBBPxCVMQ0KrQG3JDMaWiyPs1rtcsZoNCAVtyWN3SGy4ghOKtQDaHcTyIYlc6OKgVmLNj7tg4Xosyy4ECMI4FmBg8zKSzlSBDw0v2s8bGbjDtS1Fvbv6DaFxKsOrlrznSdRJj3OAyk+Zv/lOoLCkS3PRd16kfkpCJbv6sCQHq1JMwqtBILtOyDaQiWea0AfJwg4tTceF4FHaE2WOXVLghmw6UTzzuhMeaBejGcwHDnb4AOcy1bLPHvJr7J7bvqbHrKjB4pKXlUmYp937wP39HbkoVnPKD91zLsAqJsbZx7rH3v/8OKvpSVHDtLTnVESy7/78gQDgBYRg6QigPATZ1VlOpjAuktuQd0lLAr2vDVg70s4FAHVhD4xgbuwJD8FyEW0/GuMsnnTV52Jm5DCQJR1SBfGLfJGburaNBXbKfHqejRzIzfPnD//WZeQQSqiq49q+220NEx5ITO/7udyBpQFCJ4/9s6NpJagj242dB+3wHeKZ1k6IkC6CQapSQBshgmw7KRa5YXk62UJMGTOQYjh1UOTil1J027sr7cR87diKn5jPxDE6YuXU6Myg0s8pD+4B4Rpo1s2l75ZFptVG4XuNSqop7f+g4IIUBhTPXfNcbZhhIGvG4spi983dPg0QBRfG6N72iKiXxNT0KuWvkkMgggNZIGIFRR1gnQBqye1G53FlCQhpyVLcQPNAruy28fXLlIro48KvCEzOeWUd8Oa0jixKy3XJh55eZqrZXVGrN8uxn/n0NpCQESrno+m9/7UzOIWAEPJLLrHf+ydlQpQKk7DVvft9x5KB96ce3jsAImLssjYFQK8AITOCO/UTeb8QFssUDSAOhfWrkAPsGHUhaXs4pApG1diJfFCCt5kppQLnVoTRqK2t8J7A0xiw+wtSH6Wqyq1i4838/8iikAESkIatv/MaX9eoSAhDNppRZnvqVMyElgaJ47du/5TwGiI5DP753IBVDbjnvM5iiDQiFhcMrcu4QEibpsEmOap2sNo35QE4LJLTTOr6cDC9dTTyG3F0Qe3Dx1bftVum4X7V1PAFslRXyvvOrXDd/dKqCBOp+klXSSCkpsf3mf/n8EIUQKKXM0e946yUalBSMimYXetz7t/8FVQpJ4bLiLT9wPgMFnTvy0RAIIxjrAT4dqZ2tUi2hWepAzu1vSr0RsAKUcIVs6k2ORZaDr3GY35sKiAA9GiEddWRpzgFC2qSPafl6APHZRCUVZ/KyEO+OgMfQ1MTSI7hGgHNU7L/n1v/ZAskFICrg5K9/77H0nYRaldLT8DN/cet+qkpS9OTZl//gtQwUuNsJe9FtsMVl1kR92svquQLDGxlSKQjaIQJIoUZmhqECAeTiCYg3hRHKqQyV4dGvf+9pOEYBchcMsSdvUPlo8Y+9sOOaJC13/c7JJMXn00TeFycWBNjyQjLgqcoRsoZSE9SP3HLrfQOSbUApYPXL/vLVG1hUAhoE4BwVL3zkbz+SqYqkqOCgV3/zi9JACYnuA9181NxMkPH0HEIa5iKQcwJR/eY1H4V8w4W5R9IBBEnBU2cBQpqfbtkxgBNzDJJhrI+BD/x355pjcCF3JeY+SU2dEYRKgLB/R/jyHjShxMn40G/NnT56iz/gmLwvgUljRHrmSY1M5USg7FdxwTmX1GPzx26+fTeRSsEQgrjk5+8b2P0IGkdApcwwvOOD//MYEcUoKjj6hx48l6Erxktq09GfFUkYbm+p/Pn6SGh8gEgojXzk/27fN3tEjxyhN7QGQSrl6pu/6UyJ6jQJQ4l1qkKYPvP7ivEncj7w1F/67jKdnv/LnjcNHLN4WPxROS3y3Ssw5gHJzA7RTsxHydzPlLtf+I9e40XPe8+Pee3qzS+gNdX8A5QRTwvCeb9RVJzq6PXKXX/0ynt3QUWxDOHC2nd+YJ89XEy0FS7M8ORt///ZPknFED04/pe+ZA9IYrxBksakH9MhIHzMfxnq6ef9/mnQKQcWCIP1HjQnLdsSUt78l3+sGCaOKYNteE0RIf/Au9Z0sZ0gQIx4zH2OtgEhwGiRT6eefuARr/GsKZROpEe+iswOPeyX60E9WFysrefv+fgXABI2oKCGC17zlnPJWQFu4UKVePRv//VpqFyAiCHHvOdbj2egREvl4ZNcYmfcyIMMhvkUqjwGIYEJjFCazaAzZKntIieBLZxN914DhHqY6XJR64O4y80gCPP1eq/frTIKsnvJtezLPXQG+Mw9qGdwKhxvEQEE3MoNCF8zHaWNcoDFfX3bez5+y70BVBSDlTSE01/8mqvWMSAEbUrRLM9+4X9v20lFMZCcOevdbz2ZQVR4nLxcpktOl3pNYJ2VgzgLVvEIENrH5iohIRYBM2JbMhaaHgRZQ/GglYCo8gc7lcWey5sBGV/69AQmKUavAKEIBNQy/aDpQnxXBvfWZQeCmLB7rKGwVah8748NHmN3AndKdv+x//7uS3oQFWUISGRYf/2brl2PBxGMNeDMTOx/4P/f/zBUxTTWcfV733A4/VQBGrftCacXPDAUEkKgrsLhLUIZXvUT2aaCx0AgHFYCdUL6HEhRe8h2i9WHAdvkscn3A6gTgMyZhqCYCuPu/f9qAaGUIdSZWBShKNR7H1WSHSa2CDg74Gfyjy22FQ9sBstPflvqzMPIiOxq9n/mx284DFCv5Iyk0BDWXvi6V5yGB4REm1Kqis0f+u/P94kopnnVK77+htmymCpaa+/k6Ff9odtSSkICNVTXpT9CERiZ/u5nlU0m+iwJTtKrwJIqW553SQp6mHYH0AMep2H6f/NMadDN2/Q3Md2QsH1KAr/iBXWPB2mQwV2a1HTlsQBu5izgdPctOMOjwGN2LtwxA6hKMZSkYAiHX/yy686eoU8IxPjsKrHzkzd/fBskF8SovOIv307dTz1Qq8m6Yf/zR7krVdphy0Lq897rX2eTaro0AWFS+0QCDFpd5HVdCBBAesU9WijPrfm9eJ6NWkHs31SlGYkH5g6e2fMG8KtcsUjNQD6ba9m71TogX0tpHPhuL6hJIQApGBYOv+am60+pGOQUAKK5OCV2333bBzZCohhATWsud7+qmMod+nlcJuaZbe5Q2VZJn0IEATsUJQQ73ODrYAuCQNKpuhFCEidTElf0JPQGKrWRmNZKaSLNgJAdsjQKSNIhA9C9bHe12eyds6+/Kx7M/RCjUeVcWH/9DeecAoMiSYxzISUW7r/tlkdrIrIZqxHoKwlQOx0wYoiRuAvoNr0OiSWEXicgpWGdrwQuRSn02sk8PVIc+2EfRjpwRK1qYW0a+y6AO4wl4KkfEK7REQGFa/ZMDuJGIKHRa8LKt/3Agvu0MxwAiBTAhitvugAY5hCiWbi4Fyzc/4kP3r2AwoXWGlECxFSOjcgSANk5uk36JMAQmnaJnQ1k8bWaoTA/dauNgI5YI7vy+eRYAA25B4KsDFtmISTbZRH5WveApGN+JcvJHm0hO+FqEMiTbOSN3wkcfvZrqc7wROyeD5AohhOue+WlJ0IfBeAxxarsXbf82OUrgRR0NqNCeDp+NrRKQtg9bFvotZDS6nEEJqUJyHsMIiH2aR1C+EywZVs+P0KpEQTE2rBxADmk4Jfsy5e7XSyHoyZHNi+QT2eLeRUofiNy7GGvUIYV51z14ouOg2EJ0bIUqgp23/btZwCkJCZrxPS6sZ20hE5snfSpzDoe1hs7GPwhrvyjPeYKYn5a2jnZKZQGWHNxb+nIIQfcSMhndgxEvtFysF0lFbPqypdfefbBeEgI0+xi9YJ9jz/2qTuASCEO4DTtFgUIhHY45Ea9LmCmUTu1f0wscOaNZCGdaiEI4N/wic9KYzfukVn2CbvbEBf3OVt+CVnnSITCIOM61AQI8m2vGg7gVjaL5AKzZ77q1Rf3qDNJjBpsUyV46r6P3vPIfogqJAhNxoYAeUquDRkn1od5j7bXHgVgukMF7M50+fmQwngnbel0LAMkTtqAQBv7ASQVAzfgDGHfACQ75UQLPncBugi9DVlyoJiOAsh3f3+pLf26/bKJohKw4ewXX3PBWgYlQjSaYnoBz2z6/P2f3wpEWJIiVUynAE/GSRvggpAkrOyBZCOwT1IFQo8TgccEPAZkSd6BDSC96cbvggg80nsdMkitkAFC6ODkuV8Qm78zU7IfuiuQDxplVl75TdhqleSCSBXQO+vbr77k+DkGOUIIsAuqAnY9fvs9d20dgMI2KFUBHHuwNCmjMWK8OqHAtSGjtJAN29vR/hRUQ6+lWiHgO2gP9LnYrv6OGz5BkgpBQJYeIHuJnzjcJPS60eGbQCquABRWWaKrpAKrL/yBm3eYPCwRQgY7JUF5YdMDX7j9S4ugZBdAIUF1/Nt/b/uvkCYlsEAcaPeALOy9S4cnxAwpsUuTKN9SwuS95tyfQOp3I04LFjwswOwgiQU4AW8yHqCZHSAtTsawRO4ppEMPJB3rbzIudFbWy5z99b/1uefsxf1SyLYjeoD3bn1g8/2PPLMPItk2luQCKy7/8fc/Y/vfiUk1ivHypB4n4AGeoNXgW/500SbNsCyX6f0+XSa4f85B7EErLSdiZ0DKqd6t+PvOAoh9dpTqbfmzJAG/KrhG35hfgzWL4IGkAaLUpD/KHVDrCg/oLMAUNu9JTLFPgqP+ZefhsJgVqBCRAi88t+UrTz702I7nACUVCiCRgfWXXvLSc1fDcDh3D7cKpY3D7tz8AemGb/2zvs3MnLX8mDJ+wKc27hWPIXNzVbGUCJ1NZrmxHkDBc/GmmBeYJYSTIrY4100gWcL5kG4BtwD7rDNg89TO5CmC3y1pxc1eKAYpVQHM79r4wD2bd+3oA4QwBhGUAqvOOv/Gi08KypBIvbgJB87XbbeIm6RTfzAw+upCmHRGMIwf/KG1THAiB4jQ9qru3gAB7AkJwD1+FnfbegzwjIuUytdDtQQe2F1CpdRUuyQVcMIFPAcYrL1fYgo8lXjj/J6FKglYfHbrl594dMuOrRlQgG1ACkqBOPHs668+fQ0MHZEYPW0XPgiV5jNPyBNyJPzui4cu1Zd+MmGAdAQIv/R9xlkOAdQK4vVNi3qLdDaQ8cG/+8bU3RJKD60SO2hrNJyvuGb6ijfnMxPL933LaUzSHfP4S5FaWZbXwxunYbsHf+fhnq/u3vXljVu+vH3bIkAI24wqIAO9E067+tIzjhY5E0I07/A347M+GRpnToRMrv7m+5IqvQ2+LjByXCuGylW7xTP9AcKL/mJl/1Ezzs1J697V4pEJvASPBMgt5Em+ylbNM3/ihyks2g3Hm3/7+cMU7sgCnhvRAA+hKQq3xJu/6zWXP//c7sJoBDY2EIJiYOVx51x39pnrhYeOoP0ONT7TBn3mCWkEBSGTe3/4g4GdMY9/lpAJplkK5oJXdS8k4o4uj97iBnogORXyM/CI3HfNBX3ubCUcMhDmDIcVEKEOX/0rC0lAxU7U6f6/+rODUEdcwmfNVIN5dL7yGPfzAaJRATYWo5Kygdn1x1583pmnHRK4tiQ6n+Jm2C0FF61glPhkwLgg2Zjc+4MfO2G6Qh4RdIIq4YgKUOt1yTIQuxPGKZFNNZ8BQuUwDs/ZEtvjPezpjtyVHFqp0/nLToWA0k25+Rd/VAUre8Y0xm3ZLsa7mTrhCalXpYIZK8BAHHbMJWefc9ohKyFnh0RbNYmEHbhLCnbNs5zJRvYmKxdAjDpXv/mXB2pXHCRxBDlmpjrT6wKUwX2gdEaYhMrl8niE891+BqeTnOuGW99acmSAZDOcyXJObMiMjGcKqKzU19LT3/vjJw2R9T1ZO0Y7tuBxuBWgk58HEh0FcdlFx5112hFrwTkjBdCuZQnZSL5ZEG58NJt11rB/HwXTBOKhpCP7Fj/vPDIXcgxtcHUCAnFDZwOVbUV9EFoH17Hhuak/QHfiKskJuQeQbOANiOmYCRZAAL0DWSkq+DoGX4Y4T9a9HuWOVuhmyyfdHb7oAwcDdZ+QAMTkZevhyhPxuFkBhWwi6YiE94MNHgEUXl5jJ8TgqwyVxQJkryBWpJPCIA+wK4bH4hYiPUqLNPPmLsA1KB2D3Qoh40C4R9jcG3T7j8k9AS1YfYctkBdWNK8CBZCygxu6CW53tIHs9B8vAYesXghJFeJAy+aOVXM7OTTgJmg3bPK6g8HYtA2kpg+s7aExSxD2DiBhnivzNqBRznRVZpCwDfKIMukWwAiQ2BE/qyANQHIABprZbUAx5XRaWZJHIy5ceeC5BFRCtugmRwsbdyW32jd8j+gJMWHhafErbkD3k9OFbatA+iB55alM9jmFLnr1kQCrDpoyCz2Uf/JzT2yvfK7J2SyQDh0rolGOp7XtXtw9t+ldJZekL4C8FJmrs1x0ckST2foVurgD/LyXhJisGOumPeWzY4tUZIeAPRAUjsHqFuBp0gFX6wCx0sMMs2sPmQq1M2vP7vBcPHYwnyAwpVVciMfktWdxv4iQ47bKmjCGPj7nJC0gJ45oaiItbul05YnuwogJlmw2xpdaiB2QzeimmMNMMCiFHs6CaD0dxJxmel379sTQkyNLdyDtZL1nQTfZvo/t9YgtN0Egpr8IkEPKtuczuSBlNp46saiQHGKMg/uXF3UTk852+B3Z9QMIoGeGrerMLgBiohI44bWVTABIJLO6XzeSRr2mgNxJN0S/5tCCLvmyZs2AeKh4KqZudKxn80jF2f6/gFzjSGwcuHfDVTeMWUCgHCGjxUOEp6FJXxMHsOyw66mx943nql8lW+sM1euyGE4siDyN11X6mLYB3G/ZcuZ1xH4GOjqfpUPd8sl8STz7gzdjV2YJHjpiAAHXdSJ26yXclEvyTMgxAe4k65Ij7JotLyTb+8T6+pY4oGH7NqrNJ1bdaCebgYbl7NUtW9hQmBgyvw+ouZaJZhYQjdYL4c0KBIUAMH6pWRoSiZbTPk3iLIAtD3mLVJvwuHkuifcE5CuxdgHMLrmguAPgfkBAOJ+Wcoms9gJA6iNchRpknm26qTIfJ3RFIh1Tm6e3yXS3EZwdOvABcY07dM02bgFglsClCz2hEvZ2I6auCxjwzD6wOZCWGe1s1CJgsCUExCYrRQKwZwJkrgBwSWBB4C3AUy2crRSgnC9qIRDnnTUJEFLCwXOIrmk12SyTi0C146O4S0FWFta7EAhkiV3lgAKF+c3gAmSFrBcYLwEeT+yaC+JxakRWSjguZvS42PsUBsm6zbOfUQvASavV1c3UZTkLztqucra/qdFETkUkezSROCsI8tzPIg644wrSMqty0c6COohcbAIj2vDWRHaVwBgxvtvcI7l4LoZyWrLl4nzelk4gIxU5elG3ba0ck1MJ2e3mpNv7QhYBsjY7HXI2AHIe2F+ACS/i7jFWoAlBVsRDxRjWR8YhmY9lDOIhllPjdoDEUdleE9p0HSKYnSDjiUSMXiJNXNmxZl75N1vNAU8yoGlADAi4Omij1uF5hE2LaJ+Ek/0iDC7R4mE2OC6Lxgim9ViyTgA31uO955ZcgYXAVrYJRJmcC+Z5YLiVseAKVxhWJ9s7VdxL1rubtLa8C/2emXxa8TRwL8jl9xmZZxRuggfRtIRpv2K6xdnJzYympq6qI+GINZrIzfkWw3KABBIC8AZ5y4WsS//9iWAKICfusVIg7AfiLBAyO595DhvPEB0AeW5aYQDPIcdEtvRU4eYRWJ5NYR7m+iBoOQubm0+/bzi8VxLsb5hdUJmEwT0mLfvevIq1DygLYb3shptndqHWuoFRh2oaBWske42UTRhuTu2nCZh1sV/rFB6cCJdKPua8yVYCxFrFWPPQVyOXY0y6X6VcDDKuiB4Eq2dwE7mKDHJmkoZkhRAMI2WVJ6cSsmBcykwQrt1jsl/7DW96FyKYgKCTC4YGBN2ZKrU6VUWKzubm29EUALW87LufVQYgpJyC1W6F/vw4CKhQ6zSOd4+nyW//kh+lZgvz/g1H5yoGEMJ1FehM4bquruc++qDseO7TLzd1Bum6fq9kDAemFLANlSBJddD1f6spASvPfD5aHn7czztXEU1Kcl1dBKiYVKCUBKlTnS5Sxs+w67oqAfjMPyyHL9p650sGRTEy1UoppSRMhUsExPBmwpOg6L6/eWn1H/ZbDkcFOui3ggFC4r3Pfk4msPWh7/8ARwG1Cup1/V6pQ0hKyfkTTmXc4XG5f9pgkj+BwMumgSM+xQ9vw/BrFzDlp/MNZZAN8/h/4zvnf7pqoSc3pZneMeBle5mvLKxgSr/ktrBp0a69pyYQ+z/gM8mC5fFX5z5H/PyEvuWXvYlBARK4DbkCBCvu11UqQJUKClRs9UFlGoLc/asXDiUSyuk8ME0T83TwkwBqHbVOVvhVHwqyZdHtP1MCAhTiYlfkIhg3vm2XCh7+xP2zpQjArgDHGA6BgAhQARJAxS6UECWPyQT8409+amIeILmADBiiMknKUAo61XGG/AyBKyGQ22/hCmDx+zbNlCqA4yQpQwPULmUY1TwUJmrt+caTVkkhDLy4RyTgFMrt0wRkPvFf/tdTkwBGmJEXAYIhYXhUCJvLf/3Yr/wKaoVS4lxnK1KQc3GkoQAi97/jf6dah2/4G7/lmREqpAxJBUpJtFprTcq5xJG/8umlbiE/cf15a0KCCEWIaZqqaUKtFI7xIxXZV33ZZ3xRZUPJ//lH/3Dw/TyEOlaTlAhWZ6WchkFf+TeIPG7+p26/956AmBTrNFVSSkmJTKMMQ2qdpunmSz8ldZ+iu77+1f1il/wbQ69Af34EGcexmlJ0On/fX9ZtYM+PnD5HvThOQCmitYYylBLDNFUZzufi8C3/KXUB+cu/8f40JEM5nc5DqmrVBMdpdLi3skc93Px3KhMBAFZQOCDONAAA8OQAnQEqTASnAD4xGIpDoiG/knmE7fgDBLGObbHBjmVAFDv6AfwDfswAP4BY4/wg/QD+S6AB/AIEz/AC7Woe+5/j14g8c+cPyv93/Xr+5/9r/hdWdyB3g/d//T9NhXvmYeM/oX+R/wX7X/5P///X3/d/5L2Z/pH/me4F/Sv6R/dP7Z/ff+j/pv//9nP9r+4HuM/tn/Z9QH8//rv+//sf7z/KF/fP9f/mfcT/Sv8J/2/85/svkA/lX9D9Y//Uew5/YP897Af8P/n/z//bx/vP+7/qP34+iX+uf63/sf5r98PoL/mP9W/2f59f7f6AP+96gH/I9ir+AfX/88/IP8YP0z+kHll+i/Kb9fffvzoeuPb79xOtC9t+Mf5X+D9rX9X4S/M3UL9neArt7tN8w73F+pf8fy6vsfM76/+wB/IP6P/v/tp+W/+r4ln0P/V/9P3Bf49/Vf9T/d/8f/5P9H9LH9R/5/8t+U3tQ/Qf9J7A38q/p3/F/wP+h/+P+n///hV/dX//+4v+rX+x/OkfPReC+fDB8jBqVjz9Z4EgXBXmIWY0DvpDtQhbqzFItBz0G44M5toWIS4IFiIEfEOrY0sLdOGz73JJoU8Cj3q7WlKY++9I9uTbDthTq6/OkQM734qPPLyM1aTX91PVx0mvu+371Yi83AzpfpbWr7OqwZhKVUQHt2ltlCwFMRxvuvuS9FkkQTtJLuLswBv/C7muc7b2xyrTz0hcTsucqH6qg3t6Rg+bUV4fo66a/H+jO4PnQM9QTw7j4+VJ2jrtHrKRPracrJnIHB/IakFKh3WzQs736Wj/KGQCMAirZxYiV71IPI4F0+bjB42VbxFzovVy7GVHvDVbcDsgXKLpoM+PiAjlh2kruWyYIiujeKl+hwSGtO7TNnZncsYJLhTpJK8DN6b4fbdu6gMDSS5Mc4MDNeLippAc2wUE60wMEJAuW8Mnq8+NJE33P5X6DNaV41i4V8LojeMXMfFaly2gU68bdJEU5MjauQYgqtwKaUb+dBDn/nr9YDk1cC90bNDemFSveeSzubkejt4gQRjuOUHgvNJha5LxCgay4Dacqztg9hz8Gc81giCiMVDKz8BLbUl8QNOEkiTz+rWcf/NVv93mG06CsnrlG3igRFM6l4gp9IbZFiogIJ8l7wg8pQrsk6tEN5sfvqN72oVqld/9c77zrtwo34/9jYe4EgWEI4JvZg3l8TlO5kMk1fezg9qj1Q+yw0N7LDoRCF4CFXxLPPi7azl6rV3LyrQn213ggUC9fhMnKA0aSydI2CcYo3Hmy0OU0t9XeiPLBvNlh8II6wMum3i+UrLCT7ax/usFala2gVJzldyGk0DSdvhR/JRcpdjaGBJOqIyhbQWi3Go0rwIR1gBcBNnT1b0crxLVpAYFE9gGq0DCI34Qz4JtCFzhcAenXQDJDWwRee7XMKnpbv32xlYpaoeVJ/CMZOGdhhsPfTO8kjsyjJ/+MaDlqoJXq/4W2Qv18c/2ZfQr/AMN8xFk6UgA5+I/C5t6+G/73ap1eztGuklYDqLMrMr/aG49PfYHm3OqfllJ9WepaHEMwA4ehTam3QTIlM+Uh33Z4dsenWUxak7EN/1fkMmR1cOSRIAMZ6hzIDrlKtSeZxx2eQfnCDDt4ARelTSLgPZO3rgxqc7TlkMbi8GwmNo2FSgpArC1qSaFtEeWQTmi2BvpNydaABwjCHkis1D2bWsqc09N6N7+JmZqPDUZFE4NRsJvJMyBywXY0XBgrBsBz7V4YbLVwuj+IlRGILQ7vPRqpxUHhiA0w+fp/2uPPFUuMHfdGSJkHDnABF6utv0WT4AdQBHoR7d2aKaoF4kDI/qchrxsRSpJyLDn2trOxQz2RL7i/yr9l1HaW1/adO40MOpyNMl4IUUbfEdlPlBMRdIgy8dMD5KaSIi+JQhpap7CFkU/Popq7ffdF+l5lFxWcA0m89REmEDiPnx2QPKzPQJfdA8oziOnp6tOQFbYDmAPZeMFuzjHSez2lmD5epww+6Qj9KDuCDHxWh/59WJUeiCVdu8bEBUsTLY0SnY9KG2gEQVT2u0NrEgdgboqLPwR3xcekg/kwp2ZxwsYLvQkzed98IROMYpN7CRXHxVs5GYPZgdRLQcbwHabQWINHuufJmvHJ6d9iUYQMmBzOcHJbPr/ahmiZMQTbG+hPW9UPPTHnWetqxp2wgYEQs/5UW99jQumr5allU64ZmVNtkRIVoUwMMkbEr+l3k9YfPxNRYxk3xWE+DM0tbuZozR7C06qGKfGzFkR/QfzM+3FhUrquz9bLF+bvvPKIu+vIQYsyhcZAFGctblRux4heGi0Ti62EpnPgSUvYBqzcs7uE/kI/cGnznLjJiKp9fXC55M4bA2PJNxHC/8pPBVW+GVLS1bp9RPOByoTQUhm9zu2nngG8zv4OaZ2e9Cv2gclhTCefUZofyENWn90eQ3jAAD+4rxiLcuiV+HojW+6XfUhCXnXtHF3BQj1uyMu6QxbrHdvS2GLkm4mbUpoGqWCGFUe2Ru9h9GBfgCSlITuL6m16UI3xbdAwrFMh/vS/oamooNJi8AH7bP0DlqeczFevxF2hVcQvkTUfIDgPUvIHgMbRc1jgb4FBtapHr31pXTeE3gMwwyq1jUs8FIWpq/rOEF1awz7PAQfj9vVR7Yz2XwnXiShr++vQ/Js8XVfVk5moarKxIZ+jVfC1ES55sAPqvnwtfti39Uceft2GPR17h1hg8CobKDE5pxKYO44HPwcM4L3r0qTgh0MzpQ83CC8UXD2UT9AkFX5Q0/44OPpGo2KISgCnRnrHu8CVd86jwCioSkOzhaZEHafBtcuc9z7KNCU6hPuLYfd+XHf1Kg0wTauO3oZ6Igrd0C2bO3TUksov4e4A3BnC39oAz/qtRRTQZd0EDX4lCmvOMOUN/67WZNi/6qCanPD0Txa+ePAFRsIH/TYBfm2g5AhK1Gx7pVxZAne/HfqkZKeE4XgYAI8RzU3LaWwsAMXYhm6q57i1RMSBUicHY3KCyn5O/ifts/U3x9CXLdsjnZH2wjM0C1MQGqK9QbyVEJW4hGdiAL7zJIBSNOgpD+0ga2xvQS2cwbtU/dFPJyvBRnGQuO3YlPzy2uICOZM2q364Rm+r4XeYShz2yh52CkmKLyObhYrT/uyBMW7Uuxi7qBGY3/ein8UrPbaF+CuizQfmEJQGUVHE+WOQH9t7ONRgUjjVCu21cgm2B6Ra+r1ClOuGwVkMvm3wIVUH0feav3jMrRSbMWk+r2lkLrdZtJpgm7RbgHBbtUolr4lDSwfnmxzF976ELw9sphWnu6gwJSJodnWz0XbSk7uO4qTZK+WQGh/2QSPIcfRTyDEO0oQ8Ya7atZxd3Sg92oE//a5jCg+r0N6dmBE9lnPvGn0UVqqL5gjG1DztDL/+ju0ewvr1rwpbaqL4E4yUj15DIFzxoQco3WEs04EB9vhVKfx6gMMI3cxZsOU75jtSLI63pQU7TuFlRa7UoFYqrmjdUefVi+gYpnnDZL1f5AVhSOMH/eIlUhW5ZrX5OtH2HkvgReHapH8pRrsG41OgLAFfX70RJ7GGts0qZWZSgIoT68UgdPoNmRGfg98G3zmKxbrB8OeeUVhcO0+AflexsRRhe42AW/26IHaZqdztXNARGmH6DZ5eeMCITHL+4XDgYdu0KUzfxFeY+MSaQZROScM39FoHbMQik6rTuFr+rEvoKxfW6ZmTsQ6esWJgvXXOMAthHnlRfiJ8CXqcKWQE3HHQR+kU2jzS990p0F5YkIRSuIxqXwienueuzxTDzcBHOZP7WwtGARvpB2jzHnZrzyXaCQ0knRpjpS5QM0MUyJSq29IsODSeOhqJE/8pd7iZpoJKeS5v76fOYlRIcsj1BNRVmYiOW01ixWrjNOss4BhZv4QeM4QoI3Tv5UyEgrFUVDHIZR0wSFcMQSh+iWBWFz9CaXTUHa7FU7Cu3uH5CxTFpd9iWzwUQu3l25GUM3X5OWwgeaEJGtBr5/w/g/PoefzhY01HLxyaMUQk4cxhzkCMEi2lu6s/I4LBw0jo4kLlJlb+xpZHX3j6Xr6ZO8f4YrkzovHenrZeF8rHM1d14+oBNHTqnJltiAB6JlvnLAFgXEGYnRhBSmecYb5GSGPigxPqPu/i3Hj+fdlwB09sdKNXc/6zF9cCIck4cWM7SCSNDrNXBaUAr6DyoGTldoNAMDibYP46sC53g/UakxxnKzB8vHJ/IIHf/E1Y7CePAQS9EIgh+k9OMPn+cUhYHbmO+oeXPa0CRKpCu/cix2I9zyMNmebY8kxkC7MZI5MX9fVWD3AgrwFjT1gBUNcmN1jKYE/zdtc8fNPOuBq0IlSJAAAEygm9xT2bD4WG7YsxpGkz4R6AesPdixyK/ijd9lXZE1xYFcCum9wMhTIZRyGsTwClAhBmED23hG6tADmYKWG9GCmTCgWiutN4XO/p6Duyqhrbi+ApPQfn92m6FDkBIYZaOPVEgPT2TeJ0Rd26QtvXI8KnVPrNwMiMBIcPToVjjRTdU4QsKb4YnaAlRM1DxHa8J/WRBNDLBV3M6BgB58GSkNGREKPI8SINJlINlGTXlPVRgW2+PUwPIB7ddKsfomoGS5LfT2H6T9/OQXeHdsbHnJq/TmS74NB65HhPzdgtPva7J1ZCcq4cVt2EPsNvXKFql9m16rAae2rM4tghf2EjpqnZrJ8mq0P3gpB8eGIwWpVG+pfewEHY9+oF619rS6ZnOTKD58HV1WXCoEwKYhEru6vxo8lNBqfFQ8S39WSu8C5UesAe2kKv4DSESfvyaM6sXIKC1Z0bGsETpBaKc/QkD/4hojGSVJTT0o8LUFQuZKPAp2bE0Nd0xUGevNS55azIK/uZUQN5fAll9mblVFVRRkg1aSCozO2V9lBEsMirQVj3LTXot8tHUZ/bWMNSI/P2tV6WtQVkXl22JD+s+4MXxwvrf8nZ90keEilqZDyofCv/4lMm03NbdlHkiB6K+nGZ3EYQR/x9W2PkGY2daHotfcBPOQvCXzBw6EWt0FnpImGNNJGUP4xFGugrH2ZGElbbUP/mnxnj2HylaRBnds8rPmtC1ps6CJiHV8ihp7g9Jyx6+1O0tPNc/mnwXVCW22NbM0oPUgjAJp3igMtYGGjfxCz01tAt2e0cX79niYxIAeAeF2hh8tu/LpYwoQnlS6+arK+IG5UjYMGHysccDMIRbBeqIJsMELScFXwahmQy+5bE9rKBFvAgkepdUHtTvLocbQ3LgOM5R4Ra9JUsMtaL+jzcTeKFMpaQMUl1708E/I23OQyg9Icx/zlx2Udexr56A2lrS2v6uzsfgi2y3vj0VwNu10uQKIVaez5QYn+MqQHJeCJwKb6p4kWbR/gx9hE+265XIN8+Psj2hVvhkcrAV8YJ79w2z2b6NSOT/qoIc052QZT5CwheT21gD16A1yJw8SbxxEemIhee9H20LAct4IOECjaktAmp22U+KrT5zfqZrNcFWTUiMLST+4rp9TcTx4/rhYRnro2NFIt5EAQJIB9CCwyXprj7VJh9BcESPwKiVR9J40pBd932Ik4UuPhX4Qox5goL7RJ/N+BMU3HtFSfxy++LmfLh9f7L41UR52TUkiuAgoAl4VOi+MJFs37JJy/FHE/O4z+qgSM+AKZGhpfS9STualuc6MPLcf6H26JxnSUkZ39YAKxi/QdU7HdiVvBBqyqTrLDdMTgovroAC+tcvFm5cpMtdrlU1owDpVmSKOPpfKg/saITf4qt9wPRAAM5ECynPJi0mqXCG6oE9WBvo9ecPlnmVmO0rhLEx7DhqGG9NvPLQcRMyuCFRtjTIsfT+xKTG4SPXhynsq2azVTaEB3+69ry80oOH56y0fGYqNk5YckJK+3J/iO8xkCcdsURF53WMzKdhVK03WqvhksW4ZrqELKcyW3nerJSvl7tsXMbGKYJH2/D8b2p18mfctvZ6P4BTYwq+crnPlxCXxYrqCjYJlzbD/IsrDgWdCWeoTJw6fWR3dIit4itv6/A2IUAPF5JAg6GtOjbmSUp7L5/PiHVxZ4ARdl302wFJWO3cASskxD8zeCnQMRpv2QBLesvFq+gLCcq2jswO5W7MJNZQgGW++hoK36MNPsThsJLjTDdMn27ADk+frOlkk2pGgTSopeLSvj3oQpDC21t+L3g4fHQB9rULGdEBlIRbAJ3XrYg5ls9AnpoLe9f0rBOJskppNtEMgvzUizqD7a7HcdyvcGhPgkovYTXza1SvSlXgmDt9L4Gfx8OUWKRAR2AWZ4+U3su4qn2EdZrpaiZaiBWUyHg2GGDPjNjor4Af7L5yX7bEBYK0APrg6EoUfQjveAiPxKQJpGR5oyy1U7499rhK743MGcx/e3rwhbP9n0JLe9k/eprs2c1sm4xJv1y0NKqNHe9PHXuK+tEB4wVp7V5V77/dfUz06pYCfL+nP2DRYpib2IikzXrP3BEgx8nyRUhbQvRhV06l/oVErKeO3SUv/B8n0XsDt/5/K9SlfbfGQe0AUdlyjpwf8cYo8idnmDE4yadyR/NfiChUnOmt1Bxzb8cPnfbfeGS6aZzBoJtod9O83NcOOxIl/cG5CdCDd92UD5wYHiOLKUA1YA+lNCWTLFyC9USXL4yVH56a6MODMRcQmXYZRDR3eyE3SLm/cdw3gKsDkjyVLSmIDCzBbd6iHPRiLgF1q+1S/9q4twTaYQBm7qwfQ1Rroi42SOU+tVk5IoufEBoT5wmu2/ZTQ7RJeO6FjpMNPuiiDNCZbWqN2FENLX7LLURojtfRNNsnbuIi74lTqhqi9XoIrqW88O+Sdu7Aet6J4KO6Yzv3XcZBcPRk1RoYeQDk36QMuCJiDB2fzUnzsmftR0zSxEdN0xmtlEAWR5wwYalmx+OamHcmH04ySZF/1lhu55UD/NpELvmZGCmTs6k0oRRFQSh5f95isCft3YBt4gDPUjNlHt5ENLWI45mC/8mWgFqsnYyalQny597Y9CbnBY48t2gOq0a7QcTWpGEIarbpeGCRHNnFfaJ29mlncbwK59Zs0jvcDyAxVUxbd2t9QPUQz+YDK49so4WH1AmJCew/aHpf+9Zv9i1GMGJ2B7cVZrhJvSq9uCjTqXUNCF8mCL1YQyi6eEppI6vsV2EItKNz1tBXanAKf4IbzqLqOlrtuqHCxx/3OQCDwKHxcvk6Y5RTJJSkqPJXy4Hpqd4MzLTWlT7t6cEPNf985q09RkrKVnmCwUi6i7WRQ1/w6i3ODnSZ9BmV55yjmqQfpu6P6eGUgXl6ULLpcvhXh7s4min2VS1c1sL7iSy9Qii6vaLandxiSjBG7xCkf7CF2orbbSQ8qiI9Nk73dQf6z1STyJ2uDMSfed9HYRPZYkY6PKjVk/nFTzm2kcSVNj7Q5YAD1XDFAL/zNnR6cEZ0aTrJxvC7JyZplTXV4nRnvrp8E3j3atgiH5Rug7LxLAzOnX7lIGjtokB6D4KtZ3iDXZBhCYl5tdGadHem1fjNfdfGcxPxxDyz6rdtsR+a9dg8eFZVWGPLJ5KH0PCKR/A2S/fftcySyuqU6FRDU7MIybws4CtU4t9jYKD2BfqLKbG3ii12NhlarR0ysA0gpQZOp5TLnuEkx3KXEXoK9fvuV8yMjMMrWRyOVhayJUmix3hCZ+6qahGd+w6w9OpxMc+HHcSjKz4wo6IwhylUZunZCMQpFC07J5Dpuw0WFpxkfrKbDxiuBUgSi0dPMwN8lC8SGrYP9G0XMDtqPEJi20dqMvN3Wq+Yc2G02Q9b+GgjvDdND3ztHwFqK1kuaQo+F9G87ZhaheGhkjPH5sxAoVYmQm7s/CrPwEzbdjptxtWCyE/GXsJE1rSUNLfTMPI/ND6rvtMPnk4QLmuL/ktZk/vDcZYccfBS+JkuvTNActqtOmHPvmjDxgLcZDhj5oD4pYWirWlH3OR3VDP7mMUCiSEVct/W9dUVzCqFlp5Z9LdMOxXrue/9VBmVaHhSOMxBDyzPerhauKn8tygKz+7LIQ5HPu9P/Y9JJ/1UFbHdsc3zIQiw1ANhf/U6AoEm5b3N4zEqVQxgp9lqoraOeiYYr3JcDDBB8gUfPYn3weLvLqB9ktrnmbFXzAAl8UzSo0GKr2ZTAgwLUPnuNlRXqboA7X4zRaqrIIBEklPa7ANL2UyApmyaIAR0L9g8sD9tl5Aje05ZjFXwtEbuSrqAyL2JKwfX5mxZ16D28dKKXTf3FVfhMA1o5KN9NhZWiajKDeEXYZRG5s88POnbHgzKE1UqGGi0w3feDJjsuw8Qq3L7miiPoaBIeRAmKtJh1Y9QOvjxVlLkTSZ5fwhMt8Y0dptfDpdJDQWaMkHZYha8puUJSW5SuMbmjrBbjErCm4O8pu6+SKRJ4AyU0XF0rMyK/hgHmpoTL8NVjP3+afkkPlbMO4owRQ9UvsuE/WwL7tmghR7toB/dHsc81PZXrO8r0M15kBMKJKjXKv9ynHFTUFjUlVhPVIc/aQijpFcx2fe64Nh5ZoQn8fmPKPctivWf5Ka7xtcupaA8bPwD+kUrNzLbXfGKiYEDRkvHb+BKY49/ktyJprv99pmljBP7dO6XRUVPl8DIHKGfWxTLM0O32TLYxzR3IXOEUUrA5a6OU/f/uHcRkXdIIRtEDotiMiOO2+kHLXFtcOSc0QI+zuD3PJpe3OXKi6MGV/F1z5KN1QFNTfIErWar8i6iTEqsvg3gFJVxkNYbXta82bpJiFU0xeq2rdE4Rs1n2yz4WgK+SMLMISVPUK0MJR7w62NMHZbOlOLyTdjxSinnxbTKujv5J8UJb1WZs523KVW7pB208EVWWQP3GIGh75s4/Tv8SaH53yrk/0FIAVVqvwkxtA31vR1/NtjYXgof/xLfMtykZlgK+Xxpa3VRAB7rRi5GWxD8P6jQ4PMl/ESegCRMg3X2xCP+ykqRMxxec5RQgY9wiNAS5PMXauIGr3ZZoAolLxofA7YxeFRq1BLB4j9KTx1SzDi4FD3CwS1YiHHDNIOGzFZ0rB/hO4GQBFmowpBgHJmb3EyxJGRM+1hegmVY9Y4phfgg+DN9tYrDLKN03csctgL/0RgULDz960gnfEv5mLd6ZwSHQCu2FWmpuMas9xlI1PpgtMVF31KB5+TiyfX+QkHCPnuIogiUljkWJdBIOOKEm6Q3IFwHav0rFf06sRddzkhGhECRIuzKGLFGYr7ztlRiN8C/8WB0vLNWwDsZOK385yZ9TnY6O9zgqJz1z68nHuLKd7vyXTVYauyZi6fKlMg1XN2xW2dMeg+rGON27dmNg8a5F9zK+9Cf9VB+r2TK7YJ+DTt0VAc7cfbQxDvCZC9ZLpjHZNRYpB+FACxjkgmB/cMoeCkJDN+/aLEmG2kLvSWOZzPG7RSNpF2Br/QCTsphQkag78Tyo+22nBPLKFEEAifd7XPrSMYoDgKLSp4ttTHgLeok464b5x+3Luly3APwbkG5OnvNrKKYe4QetAo4KU6Y2Yt7OQm1p/TTJIHEk+QPhGgBn/ruLFltabXWo9/bVZfknIUe9ZPqOiPv37HdD/wx1hnsiuAuTmmELp724M8VGcmM2vbXXSuKriqqdp8wnDGi0RBtm2VAPlvBKY2s2I5ETsUGxIW0CyM/vy8LSl7c3FEafWWnZg9haGr/PVeIJ3Sq/jVUm7q266bP+SOY0aN1TBd+rr4gGuHdYk9K4DNX2Ptbj00iXzHt1XjQKnDknPKxwUdce/0FFEc+pj7bSgGFVD813Phoex+FrXNYwniAzpYENvyAkj2QUJEJC21fcO673GqNu5rAr7ijMJJ/vJxQ+YdMDRYfLO92sPlyDOW9aIL1Cz19YTis/iY6AokjembeXAM8ZV5o4wZAk3Q2IgYGhhDbN5jBs1t82HlTWI9VIJw8EGFxs6ru0FLEDScOlwxsUtWcl3CcDiVgtfUal3V/TbKFcQC6h/O8sMDxwzPfjSZvPhq2SEaMcYM+S/7x89Mk/VviRHqb9Xt7HV/GCLnCPtT9+pkHtRRbMEE2v7vjPTlX32wwbMPjWWEAoCdY5Y3V1/43rmebpFyauAx2h9k5ifchgW3IFxys88C8bB9DRdTSmRjl1C+pZ5FHS/tdRf38cL+c3dUoxJRskLh3f7PLHl5GLMRFe2nkcaXu90aO5JFBlcP6MyzoMayFtFvFNWwjmXYdOiODCM0BU4gn0oDBFA9/1fO2Kxnz8zjqnrkzr2Wz1EbwfnFtp3nfu/Rg9tZyNKNFsHwRvB81TeZE804u9oqnGaPdomk1uDtlz5YX+h5NET9hgWSQduW6aff3DKfcfu45vWFrPlCmxFytbCi51e4yHmhZh1Ge7IGq6SMxpV4vzJGiL3SPUV9cI51SADEmHcAwu0Q+UBQN6elS7gDlCqiFkoMGocHv9Tl/en+icvTVEGcbzExQjn8EH9SsSR2rtB0gS4pjJkOw0e/TWZHq/K5lR4j233ySN0kQwJCQuco2gHmGQ+hir9Z+eQBWoCvWJz3jrnIDQ1/qd4/LiVyXG67YK9L3HFmtdZU50JGykYYuXtBvdLBiuVuqxah+LixNYZ0YNOxtssJAGRv/VQQ4k4xvO8YBHUr5FnDTH03Uwgf6nQCI0A7M/YkL73R7+bVADrClYjJArbIAMjPgDsbiWohoR3vJQDiXRSOykRUheui9/wDuFrvRjB+Ia2SYlCNBO2/pKB04wcUQfQ03TCSEuYZQ6GnaCcVxbDNhDdSW+uSAdLDaDSs3ImAZpNSKgXwiZx0ILWhGdWHRM3JOw23eM86YI4vjoDHh2MWPkRRAmBc7cSd2noxEtgp8PoruGYCdawJjclRPYB1PgahBT43RQG2cd2E0z82agc87pRtnBJDYOYBrR4oq8EWC0DquNrPBoUBM/lDyF/uo92VrrV3Wyk1jMyTIfbymtl+4opkyfmdx2AavDtzBTmZMOhU855yF+VARwrpcu6SCnivx0f/N/XNp85zCAPjA7Gt76MwIoGAAx11SR0PfC4kU/SE8RUuCKDul1KuyvL97IVqILH1z3TaxdAHyoKjVP//9JuSZLWvYMm24MPk5WBMuCEFf152kL4fiaNsDehLuSAc+9F52YP8uCQbQ8PoownWK5iLEnSXo6d/2mN9W3waIXrcu06u2fU9oVqUys5L7aKPLSPhWu5m/aUS8lp4Ro2i1ofYtGypkD/CzPTtA5uBnYyI0/Pb5dztpLKEBVyU+aZ4y1rVJ+EOVGGJHHzjDPrhF63gXmh6RPkbI4lLRJzv2IOovzAlV6+MG0A4iu9n4JiMHuNo3goFSrHcCARrxoPsHIcIuYqY4vWWd2/x5C9e70aM+J3dUV4SbuiHdaz2NEOD8kKApZ6Cn/XfNvO4HTYnI35Ia+sCoR38Umz9hG7duPrNjTrlFiOGSxIEkuAP7j5JcsS0laKDtlqmsE+vyiTzdB5XBToewON5I8dHDbZ9zyUQXmhV44ahh5qzhNzTqHeIqriiKO/F7UqwRgp0PQvAiVWSizAjRJ3J0suxGWk4Hdup9m48pWGx/NPOvF9i9yw5wYYN/n7ZrHMV2a7iOLZQE/ynyZ5aRlGE2xwQXXxz74eWh6YXpbzfQZPSEFpRtEwZhx9TlM+WXTR/pfE+B5srcKQAS5F795WutFfTvUOdFHGbaGKOStx7gV03SV5eLjkstvVsVA8rgG82Zao3xDlh/NZBR9KqUUfnrb134R3tmZm9eYj45z/yzeZ/mt0ZB8eTKmXZlB/3o0ZYtLQn+IsU/mXdrSbab3eej0kNX43GC4pOTNEDqSfu19yx/oc2I8QAFUV5YyBMzq6k6i164T0c41yPKXi3fbWMlQhKQbWeR7gA2JaRFxunBgpSznc9KJOdqjRnv7CAeb22GoX4vo7Z8AiX1nE0GSl0uI0hnqIB74naI/6r9wgBQOKjc4T8r3HcQP96UoAZ8aGBlISqK8db9f7ZcAPVFqQvFfR7V/pSsiJPwyFjVoBo6pVAsxPAxaizz4a5Yua+EV9s/wOBcmGMSRYRjC7nLytPE5CzmOFeZEbclTNa78YzHmh/Icc0c6dAl38HmJUzMhSMsfDHwR4e8/mUPZDQUT0nWqlpijp1t1hpWjsKmPtmYwcsl+E7dUGOQZYXs/8JP5Ta8sW5IgSZ9acMprXCEv3dQJJ+7A2Li7b3/VgZVE+yl+CIe1dF6NKa/G1FM2tcSs6obhzB2x7wm/tXiQFaf+Jxhs9DyOk8FBJcuD/+hKv1enISsibTi1VqT6rcjTOWhRQjeiL7/vEpShnZnHRV10FOo2IMN2pseCBLzfsagZ9sD4SU6reZxkSm3VzRnk999kAACv2DB0Xhpt1PEbgcWbikWWIJdA0B/BAzE7yFUHNPvJs6rmWlCEpe0+l8Ouwd9i+UMQ0YChkzla7tykdUFGX9dznxKFUkGH4rUUKfYKODbC3IMRSxfMaBn/ycgGCeTRv5z/pz8hlTBXntXJjlf/KHmKN7aqtmFFemLoZ9e7/cydA/Zly6oUDRUaYcOleVFRRA7DsB26MeZ6qhgf3yXjeMuOjqOOgDCN9AHqPcnCVoZtc535ek48XsrjYcvPqPT2vb7lZv8uqNt/gQ0rvOFc/lS4mbvlZi5PBQBf0JcM9yNY6irKaXl0JfAlBCHQmRC7jl9VkvGkRlax5PxPVIu68PprxeIHNvCtY+wYT3Sy1768i5vR4KnoP5nYZ3C+DgmbMnpQ7sTcQzUpmGZ3Y/jM2F5EqCGYzbv5IdPYbtnQAE1/s6Xo/7MOrffjAKW/CikbBLA2M0QvMAxTgmhcp3tzNbIG8P3fi/VdwpoBHfC65kZlvp8DcIsDlsfousEPtTvIs5fKCr65zNS/eENf/9kaNMrSheIGcNEKSlOA1S9h3w3m6DTlYDSmzstRtymulfLfER7keKukxD9bcuslBqthQZuyi69MUBa7yN9skEqX2lXufGHT+9PTr42nfLAaJli/CkqHKo5I+kPR68QXEmfuJRvyBvH1dAP9cDS47fsvHeQ2/FILZ6OeXgplSqiB3XIfchyPqjfUnUZU8dSGjJbdgnGq6W8Z/IW09/5+Edk2lxt8mU5v3+s0ekcCTpMQqpNHqhcQLJroHZNC98lKdkhiIIEUKeO1mOWlVVfv/s+4WJC9iz3wmdCXCEWgMhgoixg6K215nSw7mOy7tTl54pnf1eBnltGIgTm65xbdGjBw5AxPO4fnRIp/HoWfw6jHLeUKUE+lGxNIESikw0t3bDw/rRInBjnb25sDahNylYaMUrTnpU4b2hCLlHQbGPIix1mFCVqpg4wZ7lBRiOg1nLwR3R7jIu91IDDV3KvqRzyQb3APFkTJIHCbvfRdnt63GywkbmMdWQulGsJvyeGcSD8EO47QGBME+biEIlMbRDOWcjJFeHJnAkwHJ3P+kTld8JgYiagCRmMnmWowYChWbkJA1sXFVditjlh++RPw1KZxuKQAX3Zac5uLVL7EY33IAbyVUBSrKOPBHBadEadK18LsPGaoy5jpa/LZlQQbJKrLRzj44Eg7eua8YTe/rkjsWENK2IDGL4vetvLu/Y2TNQp8ipk54Bg8RdkQ0q04DfXH2YuhHXzcEsAbpuatVexqzxprUA2pzd6LKtzkE/55xmVvBTOzNz5DoQSFVw0+gQM0YSI1iZ9o2iOiahlOo8sh97CE1TU9UG+g0JsUKZ4yxHGX2//+m/bheM0JAG9ZNfZq9IodOtT2r34QsckGISURxM8sNZzxyY3Xica4d55ihb03cnd5jlP0D09ixaf9Yr0R2A6vfg8NSIDLHpukpkFttpsX0N1oPXesdtu0TO15+khPZT3ImlmLChIE8DQctIvs6sxDdnP3QoZzwz2p5UszvML/suhvIR6JZ0+MuQ3jAAYs4LguCWAHJbLPLcmplvHBUOjIWM3jgtLesxh6UNku03VH7vVtEwtAKVY1mhsJS02/e/E/pCJ99IB8ku3dZVrPqAmYmU8u1Ox8OnJs2NgdRDyfH8Dmted6/lJ4p2KAt6AGFFVJaKZGar4JXH2qOFda1k3W8x8wvocVjijnOEg23lx7eVPVfZaZd2IbZDmLjRZbxsk6CjsHN5rjXv2OnQ5Gs1rORLZMmJmf5zt/eMYisRY/Yr+vdWxaggwkYq1Q+XsnjOs2y9Yq9yTCCYE0MozZj5J3v7jIgw/WLs3z5qR0Zjdd9bHXrO/iC2VW6c4j3qR08oEnj/m/T8SpjhUbDdlt0SRxzpTLFGR15Xe3oUIQDZBJN7qQncIWc03hIWrowFK3hJXw7rjZxSWRpXD7rqBYGm7oBp3B9pt678jGiqsn6xLhFcF8wsMiomMXUN52Q7jRjxuexhtwbgF236K+Pte9LkvcoQXIv/R/CJA1BX9U/qZCEbnm0bA9ldktJ5gH6ehXp3ZHJQq2ISM5bV37zcLm4MY4cdBTLric5WWq7LFraPUTWgiRi5HsXsKqgac8aHog+gzKNuQaFzrqi4N0RKyvyoDjLErF7uucHOHf4kIhchXVMjSBDExPPrul4skBtUBO9ltnIxuJX44FkSMtdpsnRckb79P8SRO0MFIrh7R5Ti+lwYEy1nclwEgDTZ8xj3pgO0684Q+xRn61FZ0bgHY0piQNYY9GNM61RZ0P6jL7yCWZbcMCzT79g9ZiWhdMAz12LjRkQ9nPeO1MP5//l0SMVjKARoeWTt5ucZZsx3alVec6jvYWwSmG2S9Uru3fKohhAsHkuI4lCG+a128AeflZQQlwtVeTwQ/zMpL99cew7L3bMtNEVioSRx6d7xx4nn/VSDxeOp/Wf1Jvs+ZkRjNy4guJM/qoHCrIH82bpo7iXW7rr98uVNxSiEgdkjITZ1mzUuOgyECWNyms2v55JwL4UobZfmB76VLxSXlW3rrGhyIHSn9wNWRMvNSc1qvh2JnzWMSEs8Fvei0cS/kPgxj3fHpbwwelbaaG4HovdrmTzCjKjMviYe1COQXGEjI7rcFfD+uFIJ94mPU7f+wjVcvXdcHT5+XzQ0LMeVhh1cxvUzdrBVezBMOdruQaiocVpucoSoGTwmDta52ZX6fUJDsnL6qGGUQg+l5ZmCGYi1WedH5WxSZpmtA6P1HD6LhCoCEDkxqorbjSyPfiDUO+FxK4gc09D1T1R8E2c97QX/B1EQRBL4fIufqzQZ6SHmLfzv9grQozvHZ5DdXsq4kGq3eTWeEfcZKnjweL3MkUlnrqEASWsWwcZEr+VX4Ho1G70nwEHtJOzuddwIxp1mIpQ8Jg56oelhiTuPqbAJHs4B1tRjh0i1/+bRcr7FyxefG4VOTxcQ9YOrgdYQVRjs/dv7tjsIoJep/mks6GXsxJS4ec9C2/GUKs6RxdBBZtSCSA06qErHBRSV1LzD70MZ7yUbQFhaL2BA9K+n/jRGQC2h3fzembEUbnjlTWkVsLbd6VPUmpkd/VsPCa4auqo7wHI9045bUUU0MQ5CEBopo24c2Ny9IFwHZ5hNZyuvQmPUWwX2M/qFIOSdX1s1rbWmeXE81QEKS/EIAkbIfuqa6nw2e6OBXXEn49/IcJEBMIGL5PMt6QCZlq+wUQaK0XxXuRBMX917AvH5G6B8w9hcMRihAWK/FCOABSgZOgFViq2xzqcezk/q+IexHHjmqCuK9j89eMc52hOPiNN+clBKkF4gtwyxeqcbqe0pMLmMPV/XXNl2Yi538DfAIriMpJL86fumPYbj7G2wXOZj5+o8zIbsIK4rlxyCmqX+zujCoaxm56zVYhLGXIn03xG0MsrXqV5EAMlbUgkEddlWKeV4rQiFR86c86/ibqT6ILmy9vuHUxHTB+mA+f2tnNTRZftd6VyA9QZTaykfnU878SUTH0niN4FoTzTBpFqftnHIAKGWG7N9gDeUkgWuRPvuPMq7SJ9y7xS+LXzkOTwajz+P/jc+IEk1tItlwyZRACrlC3/Oa12+9jzj7vu1Vf642wwgl2ofFRDGG992M6uO2RyVSz9uXpVjWE0IjipzBPY+SI2YjlI6Ipr5LxOyM2HPm5LriecM21GCVpKm3L0ytYTLfNrECk8uJ9NN0pRKtNZc8940zd8KRcl95JCgDLSzMFGRdrhMK372ugBlFE2fRTluUDMVi4UeI3H4Xl6boCY2SpJmstxwq5CA65DOBDeJOBw6wIv+bgs+MHf0wi13qymEaT525McfgvvLhf05+fIUyHrse+EidpusBagBsfYWm6O5WxxjYrA+/v1f3SOId4HMq0Ho44h/oAolC9dCWl5lCoOskcg7gEeN5n+fGuws9bS22IwtUmdWfOZUzE3w6Rya2JAGKyEF0ShFyWH0AZ747t6S8BNInGoANHDQCZhwEYerpkg1yJUiWPxyxd9ZgxvLkQfHP6Rt0AW6U43HBKxXmclVvoSn5UsKzokcsJb6+7O2tnPQ4LzzJeYkwOxkuImR9Sr7uguvNXbdAWptyBgU6tYmi9hXllmgyMHn2sDyZNXGaRQ4SbFbECfu4Bkzg9fHyDFhS/YbAsDZyon3qKt/xLC1HITxRUm60xenjAf29tvBbgMn4qhH1RSLLfYq82MgotQYGxa3OYvhulQt+DIXiMXK5svNX2u/zePcBo5bDF0+leTxz/vdAX5K7qBNk/8HbDa5piA1F3Xi32TGAFIwSQ1wBJm2ojyoIaYICXZRqayrKUG7rSNummtmHOFXLoAvRS4D/zbjp6qpgxNn74vE4iGUsC//21NP+79WE6R5vQVcScIQ2sfEunrd+8JnX5k8GWnuV7pYmKZVN39mXUigCOfwrrZRaUpIWwETV1AhDxGhJyBcsN84zDWBaM3wXZFzyPYBKsm3uA7EGqwd1P/vtPT9DxKzC9/YJJCFJkBIzka4nSGc7Ri0T2SAooVCrhhMdwKXYqay74XOLG99i5S2BChpJDfdhmK2is5WNUspMsZjmW8oR3u5qJIAKfkiIzZS8iMS3HTP0VyixgRTfh4KlcLVeaufGFmp0BCm/Mrs4YhqPrG4NOJClyrC8FKSZmefx4Yu+WJ5k/87DfFTRmTzbRqDE87WfHAlb/TdGWc0NdTW+PeeTxSkx1UhrEk/AqzoF2baPhFcSVhJI59gv5UfdGqXZp8cjsslOXhkp5VQtznYSlwD1Cl+/v6MhS+yltLmYckmxEzSFbboqMR82/fxCDKZaQMC3tetb2+y8p7xnsTgukll2ue1ElfoQI/NXpQLzSL/VozJdn09BUCd3LVb//bNUAr8766tlvJXFl8+MMnqozlKREqp4KQTAMY/uTwZbP4CwRK3C49X0S6DSadqsPy0dsxinHUBaMfCqW0ffqOjWG0rqBFqjGPBW5po5RRD2vFE95QXivwiErm8a3cItO5jevR3Fw1aIpJ79Oz8TLgztIQaoDNycTwChl9K+7PT1YRxF0xQxTy19jtbOVBBcQj+9n5K1AO2EI1oGo5VH8zOWOy69SHJUt2eDZI1Z3TdPhPHZqzWNu2djA8yNQ6KTU7ZrgJFX/eGHYZHBHkcVNFyPpvIutN8s54lvmzPvz2EFO5N2Lr/E1dOUDn8nax1vDSd7+dNRjgnjsiSUNlQFES5U+Wrs3YkBo2jYfmt+QwTQKe4QeUh8JHocb1SicCjDvSsV85bz//eBO2oVE7/RdZB8yscD4TwdfaDVczmtRfwALcEjSg8XKk0FxPRMSpWJmt0VEEC0fPrUfn3trK6Pqakh+v3vgyWAkh7WT0QLgo0p+xxJNFyHdxNvKwEuDEYUcNk+hacrHGkjoAmroEkLusBeckv1aTKDkDbeQdc4WfTYgIkHTztS704Pl5xutUvrSQ66LoRNjg09fSI6luOifU21N4KRVqPrwjz0tmA0ah4XQ4/4xqrUDYQ+69UnQLvxp32mlRPdUw0sSi9L4O89SeUXi2MfzFvM6Z7pl9nL4d3+1d7vXtBTDzGNdz1YQNEcoW3k+Qhjr35bOP+WMdJcIGXTV/JofcYoy02GFMohc8vH9JYQBpsjiD2PGpaBCU0IgJoXL0XaHXsJrgHuj6suFll+AcQC0ZbDNaeMPvBTx8m2b4l/pch9XP/F/A/TJrNloOaZ2Bhugd4iFEi8eaAAAA"></h1>
+      <p class="bir-sub"><span class="tg-nw">Build a 20× win</span><span class="tg-dot" aria-hidden="true"></span><span class="tg-nw">then take it on a 1,000× run</span></p>
+      <svg class="hero-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C9 8 4 10 4 14a4 4 0 007 2.6L10 21h4l-1-4.4A4 4 0 0020 14c0-4-5-6-8-11z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M6.5 15.5C11 13.5 15 10 18.5 5.5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M14.6 5.2l4.2-.3-.3 4.2" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <h2 class="hero-t" id="heroT"><span class="w">BLACKJACK 20×</span></h2>
+      <p class="hero-d" id="heroD"></p>
+    </div>
+    <div class="lobbyfoot">
+    <div class="bru" role="group" aria-label="Build 20×, run 1,000×, win up to 20,000×">
+      <div class="bx"><i>BUILD</i><b id="heroB">20×</b></div>
+      <span class="op" aria-hidden="true">×</span>
+      <div class="bx"><i>RUN</i><b>1,000×</b></div>
+      <span class="op" aria-hidden="true">=</span>
+      <div class="bx win"><i>WIN UP TO</i><b id="heroW">20,000×</b></div>
+    </div>
+    <div class="betrow" id="betRow"><span class="cur">$</span><input id="betInput" inputmode="decimal" value="10" aria-label="Bet amount"><button id="maxBtn">MAX</button></div>
+    <button class="play" id="playBtn">BUILD 20× · $200.00</button>
+    </div>
+  </section>
+
+  <!-- GAME -->
+  <section id="game" hidden style="flex:1;display:flex;flex-direction:column;min-height:0">
+    <div class="pt" id="pt"></div>
+    <div class="pills" hidden>
+      <div class="pill bet"><span id="betLbl">BET</span> <b id="betAmt">$10.00</b></div>
+      <div class="pill pays" id="paysPill"><span id="paysLbl">PAYS</span> <b id="pays">$0.00</b></div>
+    </div>
+    <div class="tablewrap">
+      <div class="felt" id="felt">
+        <div class="emblem"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 3C9 8 4 10 4 14a4 4 0 007 2.6L10 21h4l-1-4.4A4 4 0 0020 14c0-4-5-6-8-11z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M6 15c5-2 9-5 13-10" stroke="currentColor" stroke-width="1.8" fill="none"/></svg></div>
+        <svg class="shoe" viewBox="0 0 92 74" aria-hidden="true"><path d="M14 30l46-26 26 12-4 30-46 26-30-12z" fill="#1d3474" stroke="#c99a35" stroke-width="2.5"/><path d="M20 34l38-21 20 9-3 22-38 21-21-9z" fill="#2a4ea8"/><path d="M28 36l26-14 14 6-2 14-26 14-14-6z" fill="#e9eefc"/><path d="M34 38l18-9 8 4-1 8-18 9-8-4z" fill="#3a6cf0" opacity=".55"/></svg>
+        <div class="dealer">
+          <div class="lbl"><span>DEALER</span><div class="tot" id="dtot">–</div></div>
+          <div class="dcards" id="dcards"></div>
+        </div>
+        <div class="tie"><span id="tieTxt">TIE = WIN</span><span class="as" id="bjTieTxt">BJ TIE = PUSH</span><span class="as" id="asTxt">AUTO-STAND 17+</span></div>
+        <div class="feltprint" id="feltPrint" hidden><b>19 <u>•</u> 20 TIES WIN</b></div>
+        <div class="hands" id="hands"></div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn hit" id="hitBtn" disabled>HIT</button>
+      <button class="btn stand" id="standBtn" disabled>STAND</button>
+    </div>
+  </section>
+</div>
+
+<script>
+/*!
+ * Card Run · RULES SHEET (shared by all four 20× games) · v1 · 14 Oct 2026
+ * One ⓘ button that opens a full-height rules & pays sheet over the game. No dependencies, no globals except CardRunRules.
+ *
+ *   CardRunRules.mount({ button: el, title: 'BLACKJACK 20×', content: () => html, onOpen(), onClose() })
+ *     button   an element to turn into the ⓘ (the game places it; 44×44 tap target, aria-label "Rules and pays")
+ *     content  a FUNCTION returning the sheet's HTML each time it opens (so tables show pays at the current bet)
+ *     onOpen / onClose  optional: a game that deals on its own (Crash auto-deal) pauses while the sheet is open
+ *   CardRunRules.open() / close() / isOpen()
+ * Building blocks for content (classes styled here): <h3>, <p>, <table class="crr-t"> (first column left, others right),
+ *   <p class="crr-note"> small print, <div class="crr-key"> a highlighted line (e.g. the 20× / 1,000× rule).
+ */
+(function (root) {
+  'use strict';
+  var CSS = [
+    '.crr-btn{all:unset;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;flex:none;border-radius:50%;cursor:pointer;color:#c9d1ea;-webkit-tap-highlight-color:transparent}',
+    '.crr-btn svg{width:24px;height:24px}.crr-btn:hover{color:#fff}.crr-btn:focus-visible{outline:2px solid #e9bc57;outline-offset:2px}',
+    '.crr-wrap{position:fixed;inset:0;z-index:2000;display:flex;align-items:stretch;justify-content:center;background:rgba(0,0,0,.6);animation:crrIn .2s ease both}',
+    '@keyframes crrIn{from{opacity:0}}',
+    '.crr-sheet{position:relative;box-sizing:border-box;width:100%;max-width:460px;height:100%;display:flex;flex-direction:column;background:#0b1430;color:#dfe5f6;font:400 14px/1.5 Montserrat,system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 0 40px rgba(0,0,0,.5)}',
+    '.crr-head{flex:none;display:flex;align-items:center;gap:8px;padding:6px 6px 6px 18px;border-bottom:1px solid #24305a}',
+    '.crr-head h2{flex:1;margin:0;font:800 15px/1.2 Montserrat,system-ui,sans-serif;letter-spacing:.12em;color:#fff}',
+    '.crr-x{all:unset;box-sizing:border-box;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;cursor:pointer;color:#c9d1ea}',
+    '.crr-x:focus-visible{outline:2px solid #e9bc57;outline-offset:2px}.crr-x svg{width:22px;height:22px}',
+    '.crr-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:6px 18px 28px}',
+    '.crr-body h3{margin:18px 0 6px;font:800 12px/1.3 Montserrat,system-ui,sans-serif;letter-spacing:.16em;color:#e9bc57;text-transform:uppercase}',
+    '.crr-body p{margin:6px 0}.crr-body b{color:#fff}',
+    '.crr-t{width:100%;border-collapse:collapse;margin:6px 0 4px;font-variant-numeric:tabular-nums;font-size:13px}',
+    '.crr-t th,.crr-t td{padding:5px 6px;border-bottom:1px solid #1e2a50;text-align:right;vertical-align:top}',
+    '.crr-t th:first-child,.crr-t td:first-child{text-align:left}',
+    '.crr-t th{font-weight:700;font-size:11px;letter-spacing:.06em;color:#9aa6c9;text-transform:uppercase}',
+    '.crr-key{margin:10px 0;padding:10px 12px;border-radius:10px;background:#121e44;border:1px solid #2c3a6b;color:#fff}',
+    '.crr-note{font-size:12px;color:#9aa6c9}',
+    '@media (prefers-reduced-motion: reduce){.crr-wrap{animation:none}}'
+  ].join('\n');
+  var ICON_I = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 11v6" stroke-linecap="round"/><circle cx="12" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></svg>';
+  var ICON_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  var cfg = null, wrap = null, lastFocus = null, injected = false;
+  function inject() { if (injected) return; injected = true; var s = document.createElement('style'); s.id = 'crr-css'; s.textContent = CSS; document.head.appendChild(s); }
+  function onKey(e) {
+    if (!wrap) return;
+    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(); return; }
+    if (e.key === 'Tab') {                                     // keep focus inside the sheet
+      var f = wrap.querySelectorAll('button,[href],[tabindex]:not([tabindex="-1"])'); if (!f.length) return;
+      var a = f[0], z = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); }
+      else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+    }
+    e.stopPropagation();                                       // game shortcuts (e.g. H / S) don't fire behind the sheet
+  }
+  function open() {
+    if (!cfg || wrap) return; inject(); lastFocus = document.activeElement;
+    wrap = document.createElement('div'); wrap.className = 'crr-wrap'; wrap.setAttribute('role', 'dialog'); wrap.setAttribute('aria-modal', 'true'); wrap.setAttribute('aria-label', cfg.title + ' rules and pays');
+    wrap.innerHTML = '<div class="crr-sheet"><div class="crr-head"><h2></h2><button type="button" class="crr-x" aria-label="Close rules">' + ICON_X + '</button></div><div class="crr-body" tabindex="0"></div></div>';
+    wrap.querySelector('h2').textContent = cfg.title;
+    wrap.querySelector('.crr-body').innerHTML = cfg.content();
+    wrap.querySelector('.crr-x').addEventListener('click', close);
+    wrap.addEventListener('click', function (e) { if (e.target === wrap) close(); });
+    document.addEventListener('keydown', onKey, true);
+    document.body.appendChild(wrap);
+    if (cfg.onOpen) try { cfg.onOpen(); } catch (e) {}
+    wrap.querySelector('.crr-x').focus({ preventScroll: true });
+  }
+  function close() {
+    if (!wrap) return; document.removeEventListener('keydown', onKey, true); wrap.remove(); wrap = null;
+    if (cfg && cfg.onClose) try { cfg.onClose(); } catch (e) {}
+    if (lastFocus && lastFocus.focus) try { lastFocus.focus({ preventScroll: true }); } catch (e) {}
+  }
+  function mount(c) {
+    inject(); cfg = c; var b = c.button;
+    b.classList.add('crr-btn'); b.setAttribute('type', 'button'); b.setAttribute('aria-label', 'Rules and pays'); b.setAttribute('title', 'Rules and pays'); b.innerHTML = ICON_I;
+    b.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); open(); });
+    return { open: open, close: close };
+  }
+  root.CardRunRules = { mount: mount, open: open, close: close, isOpen: function () { return !!wrap; }, version: '1' };
+})(typeof self !== 'undefined' ? self : this);
+</script>
+<script>
+(() => {
+  // ---------- paytable (multiples of bet): WINS / MADE 21 / BJ, all added together ----------
+  // ---------- RNG (v1, launch): the ONE source of every outcome-affecting random number ----------
+  // crypto.getRandomValues with rejection sampling: rngInt(n) is exactly uniform on 0..n-1 (no modulo bias).
+  // Fails closed: no crypto -> throws, never falls back to Math.random. Production replaces rngU32 with the platform RNG.
+  const RNG_VERSION = 'crypto-rejection-v1';
+  function rngU32(){ const c = globalThis.crypto; if(!c || typeof c.getRandomValues !== 'function') throw new Error('Certified RNG unavailable'); const a = new Uint32Array(1); c.getRandomValues(a); return a[0]; }
+  function rngInt(n){ if(!Number.isInteger(n) || n < 1 || n > 4294967296) throw new RangeError('rngInt: bad range ' + n); const lim = 4294967296 - (4294967296 % n); let x; do x = rngU32(); while(x >= lim); return x % n; }
+  const PAY = {
+    WINS: {4:2, 3:1.2, 2:0.3},                   // two wins pay a flat 0.3x (the showdown is removed)
+    BJ_C: {4:18, 3:10, 2:2, 1:0.5},               // Classic: four blackjacks pay 18x (batch 2; + four wins 2x = 20x, the top round and the 20x tab line)
+  };
+  // the MADE 21 column: hands that make 21 with three or more cards
+  const M21 = {1:0.4, 2:1, 3:2, 4:4};
+  const MODES = {
+    classic:{name:'BLACKJACK 20×'}   // the game's name: end-of-round toast header and the rules-sheet title
+  };
+  const MODE = 'classic';   // launch build: the only game (the other variants are removed)
+  const CAP = 1000;
+  // ---- the run bar (v109, v170): the build makes AMMO (the base round's win); the bar runs it: CASH OUT, DOUBLE OR NOTHING (the Run Game, 100.09% at best play: the dealer stands on all 17s) or DOUBLE HALF (doubles half, banks the other half).
+  const rStake = () => (S && S.stake != null) ? S.stake : bet;                // #15: the board's own stake (set when it is dealt), never the lobby bet box
+  // Classic pay in whole cents, ROUNDED DOWN, in exact integer (BigInt) maths: stake (cents) x pay (tenths) / 10.
+  // Every Classic pay multiple is a whole number of tenths. BigInt division truncates, which is a floor for these positive amounts.
+  function payCents(x, stake){
+    const sc = BigInt(Math.round(stake*100)), t = BigInt(Math.round(x*10));
+    return Number(sc * t / 10n);
+  }
+  // MAX WIN per round: one platform ceiling of 20,000x the round's bet. Operators may set it LOWER, never higher (no UI). Every payout stops at the max win.
+  const MAX_WIN_X = 20000;               // platform ceiling (x bet)
+  const OPERATOR_MAX_WIN_X = MAX_WIN_X;  // server/operator config point: may be lowered, never raised
+  const maxWinX = () => Math.min(MAX_WIN_X, OPERATOR_MAX_WIN_X);
+  const maxWin = () => Math.round(BUY.original*100)*maxWinX()/100;   // in money: integer cents x the bet that started the round
+  const capRun = () => 1000*(BUY.ammo || BUY.original);                       // runs are offered while the total is under 1,000x the ammo
+  const SUITS = ['♠','♥','♦','♣'];
+  const RANKS = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+
+  const $ = id => document.getElementById(id);
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const money = n => n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const fmtPay = x => Number.isInteger(x) ? String(x) : x.toFixed(2);
+
+  let balance = 1000, bet = 10, baseBet = 10;
+  const autoStandOn = true;                       // signed-off decision rules: always on (auto-hit hard 11- / soft 16-, auto-stand hard 17+ / soft 18+)
+  let BUY = {original:10, banked:0, held:0, ammo:0};   // one buy-in: the build (ammo), then any runs
+  let RUN = null;                               // Run Game state
+  let S = null;
+
+  // ---------- shoe ----------
+  // Continuous 104-card shoe (two decks): every card is drawn from the full shoe, so each draw is independent
+  // (each rank 1/13, each suit 1/4). pop() deals the next card.
+  function newShoe(){
+    return {
+      pop(){ return {r:RANKS[rngInt(13)], s:SUITS[rngInt(4)]}; },
+    };
+  }
+  const val = c => c.r==='A'?1: (['J','Q','K','10'].includes(c.r)?10: +c.r);
+  function totals(cards){
+    let t=0, ace=false;
+    for(const c of cards){ t+=val(c); if(c.r==='A') ace=true; }
+    const soft = ace && t+10<=21;
+    return {low:t, best: soft? t+10 : t, soft};
+  }
+
+  // ---------- rendering ----------
+  function cardEl(c, opts={}){
+    const el=document.createElement('div');
+    const red = c.s==='♥'||c.s==='♦';
+    el.className='card'+(red?' red':'')+(opts.anim?' deal':'');
+    el.innerHTML=`<div class="ci"><span>${c.r}</span><span>${c.s}</span></div><div class="cc">${c.r}</div><div class="cb"><span>${c.s}</span><span>${c.r}</span></div>`;
+    return el;
+  }
+  function buildHands(n=4){
+    const h=$('hands'); h.innerHTML=''; h.classList.toggle('three',n===3); h.classList.toggle('two',n===2); h.classList.toggle('one',n===1);
+    for(let i=0;i<n;i++){
+      const d=document.createElement('div'); d.className='hand'; d.id='hand'+i;
+      d.innerHTML=`<span class="marker"></span><div class="htot" id="htot${i}">–</div><div class="stack" id="stack${i}"></div>`;
+      h.appendChild(d);
+    }
+  }
+  function handLabel(h){
+    if(h.status==='nat') return h.bjTie ? {t:'BJ TIE', c:'push'} : {t:'BJ', c:'bj'};
+    if(h.result==='push') return {t:'PUSH', c:'push'};
+    if(h.result==='win') return {t: h.made21?'21':'WIN', c:'win'};
+    if(h.result==='loss') return {t:'LOSS', c:'loss'};
+    if(h.cards.length===0) return {t:'–', c:''};
+    const t=totals(h.cards);
+    if(h.status==='bust') return {t:String(t.low), c:'bust'};
+    if(h.made21) return {t:'21', c:'win'};
+    if(t.soft && t.best!==t.low && t.best<21) return {t:`${t.low}/${t.best}`, c:''};
+    return {t:String(t.best), c:''};
+  }
+  function renderHand(i){
+    const h=S.hands[i], lab=handLabel(h), el=$('htot'+i);
+    el.textContent=lab.t; el.className='htot '+lab.c;
+    const wrap=$('hand'+i);
+    wrap.classList.toggle('active', S.active===i && S.phase==='player');
+    wrap.classList.toggle('busted', h.status==='bust');
+  }
+  function addCardToHand(i, c){
+    const st=$('stack'+i), n=st.children.length;
+    const el=cardEl(c,{anim:true}); el.style.top=`calc(var(--so) * ${n})`; el.style.zIndex=n;
+    st.appendChild(el);
+    st.style.height=`calc(var(--ch) + var(--so) * ${n})`;
+  }
+  function addCardToDealer(c){
+    const dc=$('dcards'), n=dc.querySelectorAll('.card').length;
+    const el=cardEl(c,{anim:true}); el.style.left=(n*16)+'px'; el.style.zIndex=n;
+    dc.appendChild(el);
+  }
+  function renderDealer(){
+    const t=totals(S.dealer);
+    $('dtot').textContent = S.dealer.length? String(t.best>21? t.low : t.best) : '–';
+  }
+
+  // ---------- paytable ----------
+  function counts(){
+    let bj=0, busts3=0, made=0;
+    S.hands.forEach((h,i)=>{ if(h.status==='nat') bj++; if(h.made21) made++; if(i<3 && h.status==='bust') busts3++; });
+    return {bj,busts3,made,any21:made+bj};
+  }
+  const LOCK=`<span class="lock"><svg width="10" height="12" viewBox="0 0 10 12"><rect x="1" y="5" width="8" height="6.5" rx="1.2" fill="currentColor"/><path d="M3 5V3.5a2 2 0 014 0V5" stroke="currentColor" stroke-width="1.5" fill="none"/></svg></span>`;
+  function renderPaytable(flipWins=false){
+    const c=counts(), w=S.wins, done=S.phase==='done';
+    const cell=(label,text,hit,locked,wide)=>`<div class="row${hit?' hit':''}"><span class="n${wide?' w':''}">${label}</span>${text===undefined?(locked?LOCK:'<span class="v"></span>'):`<span class="v">${text}</span>`}</div>`;
+    const rowHtml=(label,v,hit,locked)=>cell(label, v===undefined?undefined:fmtPay(payCents(v,rStake())/100), hit, locked);
+    const pt=$('pt'); pt.classList.add('c3');
+    const bjDead = S.phase!=='deal' && c.bj===0;
+    const first=`<div class="col"><div class="h">WINS</div>${[4,3,2].map(n=>rowHtml(n,PAY.WINS[n],done&&w===n)).join('')}${rowHtml(1,undefined,false,true)}</div>`;
+    const m21Col=`<div class="col m21${done&&c.made===0?' dead':''}"><div class="h">MADE 21</div>${[4,3,2,1].map(n=>rowHtml(n,M21[n],Math.min(c.made,4)===n)).join('')}</div>`;
+    const bjCol=`<div class="col${bjDead?' dead':''}"><div class="h">BJ</div>${[4,3,2,1].map(n=>rowHtml(n,PAY.BJ_C[n],Math.min(c.bj,4)===n)).join('')}</div>`;
+    pt.innerHTML = first + m21Col + bjCol;
+  }
+  function currentPay(){
+    const c=counts();
+    let p=(PAY.BJ_C[c.bj]||0) + (M21[c.made]||0);
+    if(S.phase==='done') p += (PAY.WINS[S.wins]||0);
+    return payCents(Math.min(p, CAP), rStake())/100;   // integer cents, rounded down
+  }
+  let lastPays=0;
+  function renderPays(){
+    const p=currentPay();
+    $('pays').textContent='$'+money(p);
+    if(p!==lastPays){ const pill=$('paysPill'); pill.classList.remove('bump'); void pill.offsetWidth; pill.classList.add('bump'); }
+    lastPays=p;
+  }
+  function renderAll(flip=false){ for(let i=0;i<4;i++) renderHand(i); renderDealer(); renderPaytable(flip); renderPays(); }
+
+  // ---------- flow ----------
+  function setButtons(on){ $('hitBtn').disabled=!on; $('standBtn').disabled=!on; document.querySelector('.actions').classList.toggle('ready',on); }
+  const autoHit = h => { const t=totals(h.cards); return t.soft ? t.best<=16 : t.best<=11; };
+  const autoStand = h => { const t=totals(h.cards); return t.soft ? t.best>=18 : t.best>=17; };
+
+  // A round at the lobby bet. This starts a new buy-in.
+  async function startRound(){
+    bet=baseBet; if(bet>balance) return;
+    balance=Math.round((balance-bet)*100)/100;
+    BUY={original:bet, banked:0, held:0, ammo:0};
+    $('bal').textContent=money(balance);
+    return dealBoard(MODE, bet);
+  }
+  // One four-hand board: the round's board. kind is always 'classic'
+  async function dealBoard(kind, stake){
+    bet=stake;
+    $('game').classList.remove('runmode'); RUN=null; document.querySelector('.tie').classList.remove('wrap');
+    $('tieTxt').textContent = 'TIE = WIN';
+    $('bjTieTxt').hidden = true;
+    $('asTxt').hidden=true;
+    $('betLbl').textContent = 'BET'; $('paysLbl').textContent = 'PAYS';
+    $('feltPrint').hidden = true;
+    $('lobby').hidden=true; $('game').hidden=false;
+    $('betAmt').textContent='$'+money(bet);
+    document.querySelector('.etoast')?.remove(); document.querySelector('.runbust')?.remove(); document.querySelectorAll('.mcb').forEach(e=>e.remove());
+    barRestore();
+    buildHands(4); $('dcards').innerHTML='';
+    $('dtot').classList.remove('dealerturn');
+    S={kind, stake, shoe:newShoe(), hands:[0,1,2,3].map(()=>({cards:[],status:'live',result:null,made21:false})),
+       dealer:[], active:-1, phase:'deal', wins:0};
+    lastPays=0; renderAll(); setButtons(false);
+    const draw=()=>S.shoe.pop();
+    const dealerCard=async()=>{ const c=draw(); S.dealer.push(c); addCardToDealer(c); renderDealer(); await sleep(260); };
+    const second=async()=>{ for(let i=0;i<4;i++){
+      const h=S.hands[i], c=draw(); h.cards.push(c); addCardToHand(i,c);
+      if(totals(h.cards).best===21) h.status='nat';
+      renderHand(i); renderPaytable(); renderPays(); await sleep(260);
+    } };
+    for(let i=0;i<4;i++){ const c=draw(); S.hands[i].cards.push(c); addCardToHand(i,c); renderHand(i); await sleep(260); }
+    await dealerCard();
+    await second();
+    S.phase='player'; renderPaytable();
+    await nextHand(0);   // hands play one at a time, left to right; each hand's auto-hits happen on its own turn
+  }
+  async function nextHand(from){
+    for(let i=from;i<4;i++){
+      if(S.hands[i].status!=='live') continue;
+      S.active=i; renderAll();
+      await runAuto(i);
+      if(S.hands[i].status==='live'){ await sleep(150); setButtons(true); return; }
+      await afterHand(i);
+    }
+    await dealerTurn();
+  }
+  async function runAuto(i){
+    const h=S.hands[i];
+    if(h.status==='live' && autoHit(h)) $('hand'+i).classList.add('autohit');
+    while(h.status==='live' && autoHit(h)){ await sleep(420); await hitCard(i); }
+    $('hand'+i).classList.remove('autohit');
+    if(autoStandOn && h.status==='live' && autoStand(h)){ /* same decision rules on every tab, Carrot Hunt phases 1 and 3 included */ await sleep(450); h.status='stand'; renderHand(i); }
+  }
+  async function hitCard(i){
+    const h=S.hands[i];
+    const c=S.shoe.pop();
+    h.cards.push(c); addCardToHand(i,c);
+    let t=totals(h.cards);
+    if(t.low>21) h.status='bust';
+    else if(t.best===21){ if(h.cards.length===2) h.status='nat'; else { h.status='stand'; h.made21=true; } }   // a two-card 21 is a blackjack (only reachable here from the one-card opener)
+    renderHand(i); renderPaytable(); renderPays();
+  }
+  async function afterHand(i){
+    const c=counts();
+  }
+  async function onHit(){
+    if(RUN && RUN.wait){ const r=RUN.wait; RUN.wait=null; r('hit'); return; }
+    const i=S.active; if(S.phase!=='player'||i<0) return;
+    setButtons(false); await hitCard(i);
+    if(S.hands[i].status==='live') await runAuto(i);
+    if(S.hands[i].status==='live'){ setButtons(true); return; }
+    await sleep(250); await afterHand(i); await nextHand(i+1);
+  }
+  async function onStand(){
+    if(RUN && RUN.wait){ const r=RUN.wait; RUN.wait=null; r('stand'); return; }
+    const i=S.active; if(S.phase!=='player'||i<0) return;
+    setButtons(false); S.hands[i].status='stand'; renderHand(i);
+    await afterHand(i); await nextHand(i+1);
+  }
+  async function dealerTurn(){
+    S.phase='dealer'; S.active=-1; setButtons(false); renderAll();
+    const anyLive = S.hands.some(h=>h.status!=='bust');
+    $('dtot').classList.add('dealerturn');
+    if(anyLive){
+      await sleep(450);
+      do { const c=S.shoe.pop(); S.dealer.push(c); addCardToDealer(c); renderDealer(); await sleep(560); }
+      while(totals(S.dealer).best<17);
+    }
+    const dt=totals(S.dealer).best, dnat=S.dealer.length===2&&dt===21, dbust=dt>21;
+    if(dbust){ const s=document.createElement('div'); s.className='stamp'; s.textContent='BUSTED'; s.style.zIndex=50; $('dcards').appendChild(s); await sleep(500); }
+    let wins=0;
+    S.hands.forEach(h=>{
+      if(h.status==='bust'){ h.result='loss'; return; }
+      if(h.status==='nat'){
+        if(!dnat){ wins++; }
+        else h.bjTie=true;                        // blackjack against a dealer blackjack is a tie, not a win; the BJ column still pays it
+        return;
+      }
+      const t=totals(h.cards).best;
+      if(dnat){ h.result='loss'; return; }
+      if(dbust || t>dt){ h.result='win'; wins++; }
+      else if(t===dt){ h.result='win'; wins++; }
+      else h.result='loss';
+    });
+    S.wins=wins; S.phase='done';
+    $('dtot').classList.remove('dealerturn');
+    renderAll(); await sleep(900);
+    showResult();
+  }
+  const cents = x => Math.round(x*100)/100;
+  // End-of-round toast: transparent, informational only, no buttons. LOBBY and PLAY AGAIN go in the action bar.
+  function endToast(title, sub, plain){   // plain: a return at or below the stake is shown, never celebrated
+    document.querySelector('.etoast')?.remove(); document.querySelector('.runbust')?.remove();
+    const t=document.createElement('div'); t.className='etoast'; t.setAttribute('role','status'); t.setAttribute('aria-live','polite');
+    t.innerHTML=`<div class="eh">${MODES[MODE].name}</div>
+      <div class="et${title==='BUSTED'?' busted':''}${plain?' plain':''}">${title}</div>
+      ${sub?`<div class="es">${sub}</div>`:''}
+      ${BUY.banked>0?`<div class="eb">INCLUDES RUN BANK $${money(BUY.banked)}</div>`:''}`;
+    document.querySelector('.tablewrap').appendChild(t);
+    endBar();
+  }
+  function showResult(){
+    const p=currentPay();
+    if(p<=0) return bustToast(false);               // a board that pays nothing: the round busts (the RUN BANK only exists after a DOUBLE HALF, so a base board has none)
+    BUY.ammo=p;                                     // the base round's win is the ammo
+    BUY.held=p;
+    showControls();
+  }
+
+  // ---------- run controls: CASH OUT / DOUBLE OR NOTHING / DOUBLE HALF ----------
+  const MIN_RUN = 0.02;             // run-bar v170: the minimum run is $0.02: under $0.02 the bar is CASH OUT only; DOUBLE HALF needs half >= $0.02
+  function barSwap(html){
+    const bar=document.querySelector('.actions');
+    $('hitBtn').hidden=true; $('standBtn').hidden=true;
+    bar.classList.add('run'); bar.querySelector('.runbox')?.remove();
+    const box=document.createElement('div'); box.className='runbox'; box.innerHTML=html; bar.appendChild(box);
+    box.style.pointerEvents='none'; setTimeout(()=>{ box.style.pointerEvents=''; }, 350);   // input lock: a fast double tap can't land on the new buttons
+    barLockUntil = performance.now() + 350;                                                  // ... and neither can a repeated Enter / Space
+    return box;
+  }
+  let barLockUntil = 0;
+  ['keydown','keyup'].forEach(t=>document.addEventListener(t, e=>{ if((e.key==='Enter'||e.key===' ') && performance.now()<barLockUntil && e.target.closest && e.target.closest('.actions')){ e.preventDefault(); e.stopPropagation(); } }, true));
+  function barRestore(){
+    $('game').classList.remove('dimboard');
+    const bar=document.querySelector('.actions');
+    bar.querySelector('.runbox')?.remove(); bar.classList.remove('run');
+    $('hitBtn').hidden=false; $('standBtn').hidden=false;
+  }
+  function credit(x){ balance=cents(balance+x); $('bal').textContent=money(balance); }
+  function endBar(){
+    $('game').classList.remove('dimboard');
+    // PLAY AGAIN shows the bet it will charge (certification: a replay button names its stake). If the balance can't cover it, CHANGE BET goes to the lobby.
+    const can = baseBet<=balance;
+    const lab = can ? `<span class="t">PLAY AGAIN</span><span class="a">$${money(baseBet)}</span>` : `<span class="t">CHANGE BET</span><span class="a">BALANCE $${money(balance)}</span>`;
+    const box=barSwap(`<button class="so gold wide" id="again2" aria-label="${can?'Play again, bet $'+money(baseBet):'Change bet'}">${lab}</button>`);
+    box.style.gridTemplateColumns='1fr';   // PLAY AGAIN only; the door at the top left goes to the lobby
+    $('again2').onclick=()=>{ barRestore(); if(baseBet<=balance) startRound(); else goLobby(); };
+    $('again2').focus();
+  }
+  // The run bar (v170): ONE column: CASH OUT pill / full-width gold DOUBLE OR NOTHING / DOUBLE HALF text link under it. Every run button shows its promise.
+  // A button that is not a fair bet is not shown. Its numbers are those of the shared run-bar module's compute() (run-bar v170).
+  function showControls(){
+    let held=BUY.held; const banked=BUY.banked, MW=maxWin();
+    if(banked+held > MW){ held=cents(MW-banked); BUY.held=held; }                // MAX WIN: every payout stops at the max win
+    const total=cents(banked+held);
+    $('pays').textContent='$'+money(held);
+    // banked money is held in the round's escrow, not the wallet: the round pays banked + held in one credit when it ends
+    if(total >= MW-0.005){ credit(total); BUY.held=0; endToast('MAX WIN', `PAID $${money(total)}`); BUY.banked=0; return; }
+    if(total >= capRun()-0.005){ credit(total); BUY.held=0; endToast('1,000× RUN', `PAID $${money(total)}`); BUY.banked=0; return; }   // 1,000x the ammo: the run is complete
+    const hc=Math.round(held*100), half=Math.floor(hc/2)/100, keep=(hc-Math.floor(hc/2))/100;   // integer cents: an odd cent is kept
+    const canDbl = held>=MIN_RUN && banked+2*held <= MW+1e-9;
+    const canDblH = half>=MIN_RUN && banked+keep+2*half <= MW+1e-9;
+    // doubles in a row to the top: the run cap (1,000x the ammo; the last double may cross it) or the max win (never crossed), whichever comes first (compute() nMax; not shown)
+    const nCap = Math.max(1, Math.ceil(Math.log2(Math.max(1,(capRun()-banked)/held))-1e-9)), nMW = Math.max(1, Math.floor(Math.log2((MW-banked)/held)+1e-9));
+    const nD = Math.min(nCap, nMW);
+    const box=barSwap(
+      // CASH OUT pays everything the round holds (banked + held); RUN BANK on its top edge shows how much of that is already in the round's escrow. DOUBLE OR NOTHING / DOUBLE HALF show only what the tap risks.
+      `<div class="cwrap">${banked>0?`<div class="bkt"><i>RUN BANK</i><b>$${money(banked)}</b></div>`:''}<button class="cpill" id="cashOut" aria-label="Cash out $${money(total)}${banked>0?', including run bank $'+money(banked):''}"><span class="t">CASH OUT</span><span class="a">$${money(total)}</span></button></div>`+
+      (canDbl  ? `<button class="dbl" id="doubleBtn" aria-label="Double or nothing, $${money(held*2)}"><span class="t">DOUBLE OR NOTHING</span><span class="a">$${money(held*2)}</span></button>` : '')+
+      // the half bet: a text link under DOUBLE OR NOTHING: the stake (half-tone) over DOUBLE HALF + /BANK HALF, one tap target
+      (canDblH ? `<button class="hl" id="doubleHalfBtn" aria-label="Double half: $${money(half)} doubles, $${money(keep)} to the run bank"><span class="ha">$${money(half)}</span><span class="hlt"><b>DOUBLE HALF</b>/BANK HALF</span></button>` : ''));
+    box.classList.add('rb5');
+    { const cw=box.querySelector('.cwrap'); if(cw){ const avail=box.clientWidth-8, w=cw.scrollWidth; if(w>avail) cw.style.transform=`scale(${(avail/w).toFixed(3)})`; } }   // the tag sits above CASH OUT, which stays centred
+    box.querySelectorAll('.dbl').forEach(b=>{ const avail=b.clientWidth-22; b.querySelectorAll('.t,.a').forEach(el=>{ el.style.fontSize=''; const w=el.scrollWidth; if(w>avail){ const f=parseFloat(getComputedStyle(el).fontSize); el.style.fontSize=(f*avail/w).toFixed(2)+'px'; } }); });   // big amounts shrink a line rather than wrap or clip
+    box.querySelectorAll('.hl').forEach(h=>{ const cell=box.clientWidth-12; h.querySelectorAll('.hlt,.ha').forEach(e=>{ e.style.fontSize=''; const w=e.scrollWidth; if(w>cell){ const f=parseFloat(getComputedStyle(e).fontSize); e.style.fontSize=(f*cell/w).toFixed(2)+'px'; } }); });   // a half link shrinks rather than wrap or clip
+    $('game').classList.add('dimboard');   // GR-UX board dim: on while the run bar is up
+    if(canDbl)  $('doubleBtn').onclick=()=>{ BUY.held=0; runGame(held); };
+    if(canDblH) $('doubleHalfBtn').onclick=()=>{ BUY.banked=cents(banked+keep); BUY.held=0; runGame(half); };   // the kept half goes to the round escrow
+    $('cashOut').onclick=()=>{ credit(total); BUY.held=0; endToast('CASHED OUT', `PAID $${money(total)}`, total<=BUY.original+1e-9); BUY.banked=0; };   // one credit: banked + held. v165: the global CASH OUT toast (+ INCLUDES RUN BANK chip); not celebrated at or below the stake
+    $('cashOut').focus();
+  }
+
+  // ---------- the one-hand Run Game (DOUBLE OR NOTHING): its rules ----------
+  // Exact, continuous shoe (each rank 1/13, ten-value 4/13). One hand against the dealer.
+  // The player wins ties on 19 and 20. Every other tie (17, 18, 21, blackjack) pushes and the hand is dealt again.
+  // Player: auto-hit hard 11 or less and soft 16 or less; HIT or STAND on hard 12-16 and on soft 17 and soft 18; stand on hard 17+ and soft 19+.
+  // Dealer: hits 16 or less and stands on every 17 and up (soft 17 included). Optimal play wins 50.045% of resolved hands (100.091%).
+  const RUN1 = (() => {
+    const rank=(t,n)=> t>21?0 : t<17?1 : t===21?(n===2?7:6) : t-15;          // 0 bust, 1 stood under 17, 2..5 = 17..20, 6 = 21 (3+), 7 = blackjack
+    const TIE_WIN=[4,5];                                                       // ties on 19 and 20 go to the player
+    const hres=(p,d)=> p===0?-1 : d===0?1 : p===1?-1 : p>d?1 : p<d?-1 : (TIE_WIN.includes(p) ? 1 : 0);
+    // what the rules do with a hand: 'hit' (forced), 'stand' (forced) or 'choice'
+    const rule=(hard,ace)=>{ const soft=ace&&hard+10<=21, t=soft?hard+10:hard; if(t>=21) return 'stand'; if(soft) return t<=16?'hit':t<=18?'choice':'stand'; return hard<=11?'hit':hard<=16?'choice':'stand'; };
+    return {rule, rank, hres};
+  })();
+
+  // ---------- THE RUN GAME (v1.0) ----------
+  // One hand against the dealer, continuous shoe. Beat the dealer and the amount run doubles; lose and it is gone.
+  // The player wins ties on 19 and 20. Every other tie pushes and the hand is dealt again. The dealer stands on all 17s.
+  const runDraw = () => ({r:RANKS[rngInt(13)], s:SUITS[rngInt(4)]});   // independent, uniform
+  const runRank = c => RUN1.rank(totals(c).best, c.length===2?2:3);
+  const runOutcome = (pc, dc) => { const o=RUN1.hres(runRank(pc), runRank(dc)); return o>0?'won':o<0?'lost':'push'; };
+  function runLabelPartial(c){ const t=totals(c); if(t.low>21) return 'BUST'; if(t.best===21&&c.length===2) return 'BJ'; return (t.soft&&t.best<21)?`${t.low}/${t.best}`:String(t.best); }
+  function renderRunPanel(){
+    $('pt').innerHTML=`<div class="runpanel"><div class="rt">DOUBLE OR NOTHING</div><div class="rm">WIN PAYS 2X <i>·</i> RETURNS 100.1%</div></div>`;
+    { const rp=$('pt').querySelector('.runpanel'), t=rp.querySelector('.rt'); t.style.fontSize=''; const avail=$('pt').clientWidth-28, w=t.scrollWidth; if(w>avail){ const f=parseFloat(getComputedStyle(t).fontSize); t.style.fontSize=(f*avail/w).toFixed(2)+'px'; } }   // v166: the title shrinks to fit, never wraps or clips
+  }
+  function runSetLabel(i, text, cls){ const el=$('htot'+i); el.textContent=text; el.className='htot '+(cls||''); }
+  function runShow(i, cards){ const lab=runLabelPartial(cards); runSetLabel(i, lab, lab==='BUST'?'bust':lab==='BJ'?'bj':''); }
+  const runChoice = () => new Promise(res=>{ RUN.wait=res; setButtons(true); });
+  // Draw one card to the hand.
+  async function runHit(cards){
+    let c=runDraw(); cards.push(c); addCardToHand(0,c); runShow(0,cards);
+    const t=totals(cards);
+  }
+  // The hand's turn: auto-hit while it cannot bust; HIT or STAND on hard 12-16, soft 17 and soft 18; stand on hard 17+ and soft 19+
+  async function runTurn(cards, up){
+    const el=$('hand0');
+    el.classList.add('active');
+    while(true){
+      const t=totals(cards);
+      if(t.low>21) break;
+      const m=RUN1.rule(t.low, cards.some(c=>c.r==='A'));
+      if(m==='stand'){ await sleep(350); break; }
+      if(m==='hit'){ el.classList.add('autohit'); await sleep(420); await runHit(cards); continue; }
+      el.classList.remove('autohit');
+      const pick=await runChoice();
+      setButtons(false);
+      if(pick==='stand') break;
+      await runHit(cards); await sleep(300);
+    }
+    el.classList.remove('active','autohit');
+    if(totals(cards).low>21){               // a bust loses at once, as in ordinary blackjack
+      el.classList.add('busted','settled'); RUN.res='lost';
+      await sleep(450); runSetLabel(0,'LOST','loss');
+    }
+    await sleep(250);
+  }
+  async function runDealDealerRest(cards){
+    $('dtot').classList.add('dealerturn');
+    await sleep(600);
+    const drawsOn = c => { const t=totals(c); return t.best<17; };   // the dealer stands on all 17s in the Run Game, as on the board
+    while(drawsOn(cards)){
+      const c=runDraw(); cards.push(c); addCardToDealer(c);
+      const t=totals(cards); $('dtot').textContent=String(t.best>21?t.low:t.best);
+      document.querySelector('.tie').classList.toggle('wrap', cards.length>=4);
+      await sleep(820);
+    }
+    if(totals(cards).best>21){ const s=document.createElement('div'); s.className='stamp'; s.textContent='BUSTED'; s.style.zIndex=50; $('dcards').appendChild(s); await sleep(700); }
+    $('dtot').classList.remove('dealerturn');
+  }
+  async function runGame(stake){
+    stake=cents(stake);
+    RUN={stake, res:null, deal:1, wait:null};
+    bet=stake;
+    barRestore(); setButtons(false);
+    document.querySelector('.etoast')?.remove(); document.querySelector('.runbust')?.remove();
+    $('game').classList.add('runmode');
+    $('betLbl').textContent='RUNNING'; $('betAmt').textContent='$'+money(stake);
+    $('paysLbl').textContent='TO WIN'; $('pays').textContent='$'+money(stake*2);
+    $('tieTxt').textContent='DEALER STANDS ON 17'; $('bjTieTxt').hidden=true; $('asTxt').hidden=true;
+    $('feltPrint').innerHTML='<b>19 <u>•</u> 20 TIES WIN</b>'; $('feltPrint').hidden=false;
+    S={phase:'run'};
+    await sleep(350);
+    await runDeal();
+  }
+  async function runDeal(){
+    RUN.res=null;
+    buildHands(1);
+    const hand=[], dealer=[]; $('dcards').innerHTML=''; $('dtot').textContent='–'; document.querySelector('.tie').classList.remove('wrap');
+    renderRunPanel();
+    { const c=runDraw(); hand.push(c); addCardToHand(0,c); runShow(0,hand); await sleep(260); }
+    { const c=runDraw(); dealer.push(c); addCardToDealer(c); $('dtot').textContent=String(totals(dealer).best); await sleep(260); }
+    { const c=runDraw(); hand.push(c); addCardToHand(0,c); runShow(0,hand); await sleep(260); }
+    await runTurn(hand, dealer[0]);
+    setButtons(false);
+    if(RUN.res==='lost'){ await runBustAnim(); return runLost(); }      // busted: the dealer does not draw
+    await runDealDealerRest(dealer);
+    await sleep(700);   // beat before the result is called
+    RUN.res=runOutcome(hand, dealer);
+    runSetLabel(0, RUN.res==='won'?'WON':RUN.res==='lost'?'LOST':'PUSH', RUN.res==='won'?'win':RUN.res==='lost'?'loss':'push');
+    if(RUN.res==='won'){ await sleep(1300); return runWon(); }
+    if(RUN.res==='lost'){ $('hand0').classList.add('settled'); await runBustAnim(); return runLost(); }
+    // tie: the bet stays up and the hand is dealt again
+    const ban=document.createElement('div'); ban.className='mcb pushban';
+    ban.innerHTML=`<div class="rays"></div><div class="l1 sm">PUSH</div><div class="l2">TIE ON ${runLabelPartial(hand)==='BJ'?'BLACKJACK':totals(hand).best} · DEAL AGAIN</div>`;
+    $('felt').appendChild(ban);
+    await sleep(1500); ban.remove();
+    RUN.deal++;
+    return runDeal();
+  }
+  // The run can no longer be won: slam a BUSTED stamp over the hands, shake the table, drop the cards
+  // The one BUSTED toast, used for every bust (base round, lost run): the stamp slams in, the table shakes,
+  // and it stays until the next action. It adds "RUN BANK $N.NN" when the player has banked in this buy-in. No other bust message is shown.
+  async function bustToast(drop, keepBar=false){
+    document.querySelector('.runbust')?.remove();
+    const felt=$('felt');
+    const st=document.createElement('div'); st.className='runbust'; st.setAttribute('role','status');
+    st.innerHTML='<span>BUSTED</span>'+(BUY.banked>0?`<i class="eb">RUN BANK $${money(BUY.banked)}</i>`:'');
+    felt.appendChild(st); felt.classList.add('shake');
+    if(!keepBar){ endBar(); document.querySelector('.actions .runbox')?.classList.add('slamin'); }   // PLAY AGAIN / LOBBY land with the stamp
+    if(drop) for(let i=0;i<4;i++){ const h=$('hand'+i); if(h){ h.classList.add('dead'); h.style.setProperty('--tilt',(i-1)*7+'deg'); } }
+    $('paysLbl').textContent='PAYS'; $('pays').textContent='$0.00';
+    await sleep(600); felt.classList.remove('shake');
+  }
+  async function runBustAnim(){
+    await sleep(350);
+    S={phase:'done'};
+    if(BUY.banked>0) return bankedBust();
+    bustToast(true);
+  }
+  // A lost run with money banked is not the end: the banked money comes back as the stake to cash out or run again
+  async function bankedBust(){
+    const amt=BUY.banked;
+    await bustToast(true, true);
+    await sleep(700);
+    BUY.banked=0; BUY.held=amt;                       // the escrowed bank comes back onto the bar (it never left the round, so the wallet doesn't move)
+    $('paysLbl').textContent='PAYS'; $('pays').textContent='$'+money(amt);   // RUN BANK shows on the run bar only
+    showControls();
+    document.querySelector('.actions .runbox')?.classList.add('slamin');
+  }
+  function runWon(){
+    const prize=cents(RUN.stake*2);
+    BUY.held=prize; S={phase:'done'};
+    $('paysLbl').textContent='WON'; $('pays').textContent='$'+money(prize);
+    const pill=$('paysPill'); pill.classList.remove('bump'); void pill.offsetWidth; pill.classList.add('bump');
+    const ban=document.createElement('div'); ban.className='mcb runwin';
+    ban.innerHTML=`<div class="rays"></div><div class="l1 sm">DOUBLED</div><div class="l2">$${money(prize)}</div>`;
+    $('felt').appendChild(ban); setTimeout(()=>ban.remove(),1500);
+    showControls();
+  }
+  function runLost(){ /* the stamp and the PLAY AGAIN / LOBBY bar are already up (bustToast) */ }
+
+  // The door always goes to the lobby.
+  //  - Round over: back to the lobby as before.
+  //  - A win waiting on DOUBLE OR NOTHING / DOUBLE HALF / CASH OUT: it is cashed out first, so nothing is left uncredited.
+  //  - A round still being played: it is kept exactly as it is, and the lobby's PLAY button reads RESUME ROUND.
+  let suspended = false;
+  const roundFinished = () => !S || (S.phase==='done' && !$('doubleBtn') && !$('cashOut'));
+  function goLobby(){
+    if($('game').hidden) return;
+    if($('cashOut')){ $('cashOut').click(); }                       // pending win: cash it out, then leave
+    const finished = roundFinished();
+    if(!finished){
+      suspended=true; lockBet(true);                // #15: the bet box is locked while the round is open
+      $('game').hidden=true; $('lobby').hidden=false;
+      $('playBtn').disabled=false; $('playBtn').textContent='RESUME ROUND';
+      return;
+    }
+    suspended=false; lockBet(false);
+    barRestore();
+    $('game').hidden=true; $('lobby').hidden=false; document.querySelector('.etoast')?.remove(); document.querySelector('.runbust')?.remove();
+    refreshLobby();
+  }
+  function resumeRound(){ suspended=false; $('lobby').hidden=true; $('game').hidden=false; }
+
+  // ---------- lobby controls ----------
+  // Bets: $1.00 to $100.00 in $0.10 steps. The box is read as a plain decimal (digits and one optional point); anything else
+  // (empty, exponent, sign, letters) is rejected and the bet stays as it was. Off-grid values snap DOWN to $0.10, then clamp to [$1, $100].
+  const BET_MIN_T = 10, BET_MAX_T = 1000;                 // in tenths of a dollar: $1.00 / $100.00
+  function parseBetTenths(s){
+    const m=/^\s*(\d*)(?:\.(\d*))?\s*$/.exec(String(s));
+    if(!m || (m[1]==='' && !m[2])) return null;          // '', '.', 'abc', '1e2', '-5', '1e-7' ...
+    const ip=m[1].replace(/^0+(?=\d)/,'');
+    const t = ip.length>4 ? BET_MAX_T : (+(ip||'0'))*10 + (m[2] ? +m[2][0] : 0);   // whole tenths: the grid snap is a floor
+    return Math.min(BET_MAX_T, Math.max(BET_MIN_T, t));
+  }
+  function syncBet(){
+    if(suspended) return;                           // #15: a paused round keeps its bet; the bet box is locked until it ends
+    const t=parseBetTenths($('betInput').value);
+    let v = t===null ? baseBet : t/10;
+    baseBet=v; bet=v; $('playBtn').textContent = `BUILD ${HERO.build}× · $${money(HERO.build*baseBet)}`;   // the CTA: BUILD 20x and 20x the bet
+  }
+  function lockBet(on){ $('betInput').disabled=on; $('maxBtn').disabled=on; }
+  const HERO = {
+    t:['BLACKJACK 20×',''], build:20,   d:'One bet. Four hands to hit a <span class="nw">multi-pay,</span><br><span class="nw">3-column pay table.</span>'
+  };
+  function renderHero(){
+    const h=HERO; const x=n=>n.toLocaleString('en-US')+'×';
+    $('heroT').innerHTML=`<span class="w">${h.t[0]}</span>${h.t[1]?` <span class="g">${h.t[1]}</span>`:''}`;
+    $('heroD').innerHTML=h.d;   // lobby lines may keep hyphenated words whole (.nw)
+    $('heroB').textContent=x(h.build);
+    $('heroW').textContent=x(Math.min(h.build*1000, maxWinX()));   // WIN UP TO: the build headline x the 1,000x run (v153), never above the max win
+    fitHero();
+  }
+  // one line each: shrink the headline, the game name and the box numbers if a fallback font runs wide
+  function fitHero(){
+    const fit=(el,max)=>{ if(!el) return; el.style.fontSize=''; const w=el.scrollWidth; if(w>max){ const f=parseFloat(getComputedStyle(el).fontSize); el.style.fontSize=(f*max/w).toFixed(2)+'px'; } };
+    const W=$('hero').clientWidth;
+    fit(document.querySelector('.bir'), W); fit($('heroT'), W); const sub=document.querySelector('.bir-sub'); fit(sub, W+28);
+    document.querySelectorAll('.bru .bx b').forEach(b=>fit(b, b.parentElement.clientWidth-8));
+  }
+  window.addEventListener('resize', ()=>{ if(!$('lobby').hidden) fitHero(); });
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(()=>fitHero());
+  function refreshLobby(){
+    if(suspended) return;                          // an unfinished round is waiting: RESUME ROUND first
+    if(!$('game').hidden){ if(!roundFinished()) return; goLobby(); }   // the lobby opens between rounds
+    renderHero();
+    $('playBtn').disabled = false;
+    syncBet();
+  }
+  refreshLobby();
+  $('betInput').addEventListener('input',syncBet);
+  $('betInput').addEventListener('blur',()=>{ syncBet(); $('betInput').value=fmtPay(baseBet); });
+  $('maxBtn').onclick=()=>{ if(suspended) return; const t=Math.min(BET_MAX_T, Math.floor(Math.round(balance*100)/10)); $('betInput').value=fmtPay(Math.max(BET_MIN_T,t)/10); syncBet(); };   // MAX = min(balance floored to $0.10, $100); under $1 it shows $1 and the round cannot start
+  $('playBtn').onclick=()=>{ if(suspended){ resumeRound(); return; } syncBet(); startRound(); };
+  $('hitBtn').onclick=onHit; $('standBtn').onclick=onStand;
+  $('backBtn').onclick=goLobby;
+  new MutationObserver(()=>$('app').classList.toggle('dimscreen',$('game').classList.contains('dimboard'))).observe($('game'),{attributes:true,attributeFilter:['class']});
+  new MutationObserver(()=>{ const a=$('again2'), on=!!a && a.offsetParent!==null; $('app').classList.toggle('enddim', on); if(on) document.querySelectorAll('.tablewrap .etoast, .tablewrap .runbust').forEach(t=>$('app').appendChild(t)); }).observe($('app'),{subtree:true,childList:true,attributes:true,attributeFilter:['hidden','class']});   // end of round: 70% screen dim under PLAY AGAIN; the end toast moves above the dim   // v163: the board-dim state drives the whole-screen scrim
+  document.addEventListener('keydown',e=>{
+    if($('game').hidden||$('hitBtn').disabled) return;
+    if(e.key==='h'||e.key==='H') onHit(); if(e.key==='s'||e.key==='S') onStand();
+  });
+
+  // ---------- rules: the shared CardRunRules sheet (rules-sheet.js) behind the (i) in the top bar ----------
+  // content() runs every time the sheet opens, so the PAYS table shows the pays at the current bet, computed from the game's own
+  // PAY / M21 constants with payCents() (rounded down to the cent exactly as the game pays). Nothing deals on a timer in this
+  // game (cards only follow a tap), so the sheet needs no pause hooks.
+  function rulesHtml(){
+    const b = $('game').hidden ? baseBet : BUY.original;                  // the lobby bet, or the bet that started the round in play
+    const X = x => String(x)+'×', at = x => '$'+money(payCents(x, b)/100);
+    const keys = o => Object.keys(o).map(Number).sort((p,q)=>p-q);
+    const grp = t => `<tr><td colspan="3"><b>${t}</b></td></tr>`;
+    const rows = o => keys(o).map(n=>`<tr><td>${n}</td><td>${X(o[n])}</td><td>${at(o[n])}</td></tr>`).join('');
+    const top = PAY.BJ_C[4] + PAY.WINS[4], mwx = MAX_WIN_X.toLocaleString('en-US')+'×';
+    return `<h3>How to play</h3>
+<p>One bet plays four blackjack hands against one dealer. Every card is drawn from a full deck, so each card is independent of the cards already dealt. The dealer shows one card and draws after you, standing on all 17s.</p>
+<p>Your hands play left to right. You choose HIT or STAND on hard 12 to 16 and on soft 17; lower totals are hit for you and higher totals stand. A two-card 21 is a blackjack. Any tie with the dealer counts as a win, except a blackjack against a dealer blackjack, which is a tie (the BJ column still pays it). A dealer blackjack beats every other hand.</p>
+<h3>Pays</h3>
+<p>Three columns, all added together:</p>
+<table class="crr-t"><tr><th>Count</th><th>× bet</th><th>Pays at $${money(b)}</th></tr>
+${grp('WINS')}${rows(PAY.WINS)}${grp('MADE 21 (21 with three or more cards)')}${rows(M21)}${grp('BJ')}${rows(PAY.BJ_C)}</table>
+<p>The top round is four blackjacks and four wins: ${X(top)}, about 1 in 209,000 rounds.</p>
+<h3>Run bar</h3>
+<div class="crr-key">20× is the build target and the top of the build: four blackjacks and four wins pay exactly 20×. On a 1,000× run you can keep doubling until your total reaches 1,000× your first win, and the double that crosses 1,000× pays in full. No round pays more than the max win of ${mwx} your bet.</div>
+<p>After any win, including a return of your bet or less, the run bar opens:</p>
+<p><b>CASH OUT</b> takes everything you hold.</p>
+<p><b>DOUBLE OR NOTHING</b> is one hand against the dealer: beat the dealer and the amount doubles. You choose HIT or STAND on hard 12 to 16 and soft 17 and 18; the dealer hits 16 or less and stands on all 17s. You win ties on 19 and 20; any other tie deals the hand again.</p>
+<p><b>DOUBLE HALF</b> doubles half of what you hold and puts the other half (plus any odd cent) in your <b>RUN BANK</b>.</p>
+<p>The RUN BANK is paid with everything else when the round ends; if a double loses, the RUN BANK comes back to cash out or double again.</p>
+<p>The minimum double is $${money(MIN_RUN)}. A double that pays nothing ends the round.</p>
+<h3>Return to player</h3>
+<table class="crr-t"><tr><th>Play</th><th>Return</th></tr>
+<tr><td>Board, best play</td><td>94.4%</td></tr>
+<tr><td>Board, basic play (below)</td><td>93.4%</td></tr>
+<tr><td>Board, worst play</td><td>82.0%</td></tr>
+<tr><td>DOUBLE OR NOTHING, best play</td><td>100.1%</td></tr></table>
+<p>Best play uses every card on the table — all four hands and the dealer's card — to choose each hit or stand.</p>
+<p>Basic play: always hit hard 12; hit hard 13 against 2 and 3; stand on hard 13–16 against 4–6 and on 14–16 against 2 and 3; hit 13–16 against 7 or higher; hit soft 17 except against 7.</p>
+<h3>Limits</h3>
+<p>Bets: $${money(BET_MIN_T/10)} to $${money(BET_MAX_T/10)} in $0.10 steps.</p>
+<p>Max win: ${mwx} your bet per round. Your operator may set a lower max win; every payout stops at the max win.</p>
+<p>Pays are rounded down to the cent.</p>
+<p class="crr-note">Results are decided by the game's random number generator. A malfunction voids all pays and plays.</p>
+<p class="crr-note">Return-to-player figures are long-run averages for the play described; any single round can return more or less.</p>`;
+  }
+  CardRunRules.mount({ button: $('rulesInfo'), title: MODES[MODE].name, content: rulesHtml });
+})();
+</script>
+</body>
+</html>

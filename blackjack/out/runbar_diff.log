@@ -1,0 +1,28 @@
+{
+ "gameMinRun": 0.02,
+ "runBarVersion": "170",
+ "runBarSha256": "7b61be1a3c0908761e953d0f43ba434f488104d914cb859f1465d87e47d11dbc",
+ "states": 1594400,
+ "realShowControlsStates": 967464,
+ "edgeStates": 194400,
+ "randomStates": 1000000,
+ "differencesSlice": 0,
+ "differencesRealShowControls": 0,
+ "examples": [],
+ "examplesReal": [],
+ "modes": {
+  "bar": 990342,
+  "max_win": 158138,
+  "run_cap": 445920
+ },
+ "barVisibility": {
+  "cashOutOnly": 51960,
+  "doubleOnly": 8007,
+  "doubleHalfOnly": 55766,
+  "both": 874609
+ },
+ "compared": "mode, held, total, half, keep, show.double, show.doubleHalf, show.cashOutOnly, nMax (slice); buttons shown + CASH OUT / RUN BANK / DOUBLE OR NOTHING / DOUBLE HALF amounts and the amount paid at MAX WIN / run cap (real showControls)",
+ "sliceSha": "5681ad14ba290da8",
+ "build": "/home/claude/fix/labpack/builds-final/card-run-blackjack-classic-launch.html",
+ "buildSha256": "381595b2ec0103398f92886e7429afc9624c3a53d6e68ebcd7e86fde01f2708c"
+}

@@ -1,0 +1,165 @@
+CARD RUN BLACKJACK 20x - PAR SHEET (lab pack)
+Build: card-run-blackjack-classic-launch.html  sha256 381595b2ec0103398f92886e7429afc9624c3a53d6e68ebcd7e86fde01f2708c  131,176 bytes
+Model: infinite deck (every card drawn from 13 ranks, the build's newShoe), four hands v one dealer (one card up, draws after the
+hands, stands on all 17s). Choices on hard 12-16 and soft 17. Ties win; BJ v dealer BJ ties (BJ column pays); dealer BJ beats the rest.
+Pays (x bet, all three columns add): WINS 2/3/4 = 0.3/1.2/2 · MADE 21 1/2/3/4 = 0.4/1/2/4 · BJ 1/2/3/4 = 0.5/2/10/18. Rounded down to the cent.
+Bets $1.00-$100.00 in $0.10 steps · max win 20,000x the bet · minimum $0.02 for DOUBLE OR NOTHING / DOUBLE HALF · run cap 1,000x the first win
+
+1. BASE GAME (one board, exact)
+Play                                     RTP  SD (x bet)  Hit rate
+Best play (all cards on the table)   94.368%      0.9421    69.53%
+Basic play (rules sheet)             93.448%      0.9246    72.48%
+Standard blackjack chart             93.651%      0.9362    71.44%
+Random 50/50 at choices              87.516%      0.9118    69.04%
+Always stand at choices              87.455%      0.9796    61.54%
+Always hit at choices                89.842%      0.8859    74.98%
+Worst play                           81.950%      0.8978    69.14%
+Board pays are whole cents at every bet on the $0.10 grid (no rounding effect). Return by column (best play): WINS 74.179%, MADE 21 9.149%, BJ 11.039%.
+
+2. PAY DISTRIBUTION (best play, one board)
+Pay (x bet)        Probability          1 in
+20.0               4.783572e-6       209,049
+18.0               2.376930e-7     4,207,107
+12.4               2.638982e-5        37,893
+12.0               1.740311e-4         5,746
+11.2               1.846567e-4         5,415
+10.4               1.501169e-6       666,148
+10.0               1.763312e-5        56,711
+6.0                1.897964e-5        52,688
+5.0                5.918093e-5        16,897
+4.5                5.793764e-5        17,260
+4.4                7.171135e-4         1,394
+4.0                3.463308e-3           289
+3.6                7.874848e-4         1,270
+3.5                9.921355e-4         1,008
+3.2                4.149416e-3           241
+3.0                4.785027e-3           209
+2.9                7.599878e-3           132
+2.7                1.090777e-3           917
+2.5                3.017378e-2            33
+2.4                3.106563e-2            32
+2.3                3.339452e-3           299
+2.2                6.214395e-3           161
+2.1                9.838970e-3           102
+2.0                1.445421e-1             7
+1.7                3.268098e-2            31
+1.6                3.949601e-2            25
+1.5                1.318092e-4         7,587
+1.3                4.799431e-3           208
+1.2                1.129953e-1             9
+1.0                1.114324e-3           897
+0.9                1.542079e-3           648
+0.8                3.146611e-2            32
+0.7                3.565791e-2            28
+0.5                3.966236e-2            25
+0.4                4.027935e-2            25
+0.3                1.061586e-1             9
+0.0                3.047110e-1             3
+Top pay: four blackjacks and four wins = 20x, 1 in 209,049 rounds (four blackjacks v a dealer blackjack = 18x, 1 in 4,207,107).
+
+3. DOUBLE OR NOTHING (one hand, the dealer STANDS ON ALL 17s, ties on 19/20 win, other ties dealt again; win pays exactly 2x)
+Win chance per resolved hand p = 0.50045487064506489 (best play) · RTP best play 100.0910% (= 2p) · basic strategy 100.0721% · worst play 92.0888% · always stand 94.7814% · always hit 97.3050% · 1.0422 deals per resolved hand.
+Play                              RTP  Win chance  Push / deal  Deals / hand  RTP, dealer hits S17
+Best play                   100.0910%    50.0455%       4.052%       1.04223              99.9077%
+Basic strategy (conv. chart)  100.0721%    50.0360%       4.000%       1.04166              99.8981%
+Worst play                   92.0888%    46.0444%       3.683%       1.03824              91.9174%
+Always stand                 94.7814%    47.3907%       3.145%       1.03247              94.8811%
+Always hit                   97.3050%    48.6525%       4.541%       1.04757              96.8500%
+Basic strategy = the CR's "ordinary blackjack basic strategy" = the conventional no-doubling chart (strategy.js convMask: hard 12 stand against 4-6 else hit; hard 13-16 stand against 2-6 else hit; soft 17 hit; soft 18 stand against 2-8, hit against 9, 10, A); it reproduces the CR's 99.8981% (dealer hits soft 17) and 100.0721% (stands). The rules sheet's own basic play (a board strategy; soft 18 = stand) applied to this hand returns 99.9579%.
+Base game and DOUBLE OR NOTHING: no rounding (exact cents at every legal bet). Minimum $0.02 for DOUBLE OR NOTHING / DOUBLE HALF; DOUBLE HALF doubles half (floor of the cents) and banks the rest.
+
+4. RUN-BAR POLICIES (one bet per round, runs funded by the round's winnings; best play on the board and in DOUBLE OR NOTHING)
+P0 cash out · P2 DOUBLE OR NOTHING once · P3 DOUBLE OR NOTHING while offered (to the 1,000x cap / max win) · P4 uniform random pick among the buttons shown (CASH OUT / DOUBLE OR NOTHING / DOUBLE HALF) at every bar · P5 DOUBLE HALF once
+(P1, RUN IT AGAIN once, is retired. Since the dealer stands on all 17s a double returns MORE than 100%, so cashing out (P0) no longer bounds the policies: P2 P3 P4 P5 all beat P0. The best any policy can do is section 7.) P4 simulation rows are the first-pass seeds.
+Policy    Exact $1  Exact $10 Exact $100   SD $10  Hit $10   Simulation $10 (95% CI)              Simulation $100 (95% CI)
+P0        94.3679%   94.3679%   94.3679%    0.942   69.53%   94.302% [93.890%, 94.714%]           94.265% [93.683%, 94.847%]
+P2        94.4538%   94.4538%   94.4538%    1.633   34.80%   95.019% [94.302%, 95.735%]           95.142% [94.133%, 96.152%]
+P3        95.2299%   95.2299%   95.2299%   42.842    0.07%   86.170% [68.700%, 103.639%]          95.027% [67.776%, 122.278%]
+P4        94.4825%   94.4825%   94.4825%   2.692*  49.68%*   94.069% [93.291%, 94.848%]           93.775% [92.423%, 95.127%]
+P5        94.4108%   94.4108%   94.4108%    1.154   69.53%   94.213% [93.708%, 94.718%]           94.395% [93.683%, 95.107%]
+* P4: the exact SD and hit rate use the cut paths valued by the tail model (SD a lower bound, hit rate an upper bound, both by the cut mass below).
+P5 closed form (DOUBLE HALF once): E[pay] = a + (2w - 1) x half for a first win of a cents (half = floor(a/2) >= 2 cents), w = 0.500455, 2w - 1 = 0.000910; RTP(P5) - RTP(P0) = $1 0.04293 pts, $10 0.04293 pts, $100 0.04293 pts; the bar model equals the closed form to 1e-12 at every bet; hit rate = the board hit rate.
+P4 at $1 (small amounts, minimum $0.02): exact 94.4825% (cut mass 0.0184%); simulation 200,000 rounds 95.163% [93.777%, 96.550%] (crypto 1401, 1402; picks 4411, 4412): exact inside; hit rate 49.53% [49.31%, 49.75%] v exact 49.68%: inside.
+P5 at $1 (small amounts, minimum $0.02): exact 94.4108%; simulation 200,000 rounds 94.222% [93.712%, 94.733%] (crypto 1501, 1502): exact inside; hit rate 69.38% [69.18%, 69.58%] v exact 69.53%: inside.
+P4 exact: full recursion of every rule, cut at path probability 1e-12; cut mass 0.0184% at $1, 0.0188% at $10, 0.0188% at $100; cut paths valued by a linear tail model (alpha 1.000607 x RUN BANK + beta 1.001214 x held; an estimate). Bracket at $10 (cut paths at 0 / at Lambda x their total, Lambda = the bound on V*/(S+B) over all states from the bar optimum, 1.073): [94.1888%, 94.5034%]; at $1 [94.1887%, 94.5001%]; at $100 [94.1888%, 94.5068%]. The old upper bound (a cut path is worth at most its total) is invalid now that a double returns more than 100%; the upper end is only as good as the power-law extension of the solved ammo. Convergence of the cut: out/exact_runs_convergence.log.
+
+5. SIMULATION OF THE SHIPPED CODE
+Base: 2,000,000 rounds at $10, best play, crypto seeds 1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008: RTP 94.344% (95% CI 94.213% to 94.475%), SD 0.9437x, hit rate 69.51%, max 20x. Exact 94.368%: inside the CI.
+Every exact value inside its 95% CI: NO (37 checks: RTP and hit rate, base and P0 P2 P3 P4 P5 at $10 and $100 [P4 and P2: first-pass seeds], P4 and P5 at $1, P4 hit rate model v game at $1 / $10 / $100; DOUBLE OR NOTHING in the shipped code, RTP and pushes per deal at best play and at basic strategy; the optimal bar policy at ammo 40c); outside: P2 hit rate $100 (see below).
+Follow-up seeds, checked apart as independent replications and never pooled into the checks above (8 checks: P4 at $1 / $10 / $100, P2 at $100): all inside.
+  MISS (first pass): P2 hit rate $100: exact 34.796% outside the sample's 95% CI [34.825%, 35.417%] (2.15 SE, two-sided p = 0.031); follow-up (independent seeds, chosen once after seeing the miss, run once): P2 hit rate $100, follow-up seeds alone -> exact 34.796% inside [34.513%, 34.807%]. 37 checks at 5% would show about 1.9 misses by chance.
+P4 (heavy-tailed) - first pass on the pack's seeds (the CI check): $10 600,000 rounds 94.069% [93.291%, 94.848%], exact 94.482% inside;
+  $100 100,000 rounds 93.775% [92.423%, 95.127%], exact 94.482% inside.
+  All rounds pooled (first pass + follow-up; informational only, not a check): $10 1,000,000 94.093% [93.539%, 94.648%] exact inside; $100 600,000 94.096% [93.331%, 94.861%] exact inside; $1 600,000 94.437% [93.780%, 95.094%] exact inside.
+  Checked: the shipped code follows the exact bar model on every transition (25,296 at $1, 25,043 at $10, 25,093 at $100; 0 mismatches).
+  Follow-up seeds alone, $1: 400,000 rounds (crypto 1403, 1404, 1405, 1406), 94.074% [93.374%, 94.775%], exact 94.482% inside (1.14 SE).
+  Follow-up seeds alone, $10: 400,000 rounds (crypto 2407, 2408, 2409, 2410), 94.129% [93.383%, 94.876%], exact 94.482% inside (0.93 SE).
+  Follow-up seeds alone, $100: 500,000 rounds (crypto 3402, 3403, 3404, 3405, 3406), 94.160% [93.283%, 95.038%], exact 94.482% inside (0.72 SE).
+  Replay (trace_replay.sh): all 22 P4 simulation jobs played again through trace_check.js, the same rounds (RTP and hit rate equal to the job's): 2,200,000 rounds, 2,184,075 transitions, 0 mismatches.
+  Model Monte Carlo (the bar model, not the game): $1 25M rounds 94.423% [94.311%, 94.536%] exact inside; $10 50M rounds 94.477% [94.396%, 94.557%] exact inside; $100 25M rounds 94.447% [94.338%, 94.557%] exact inside.
+  Hit rate, model v game: $1: model 49.670% v game 49.532% (200,000 rounds), 1.2 SE apart; $10: model 49.685% v game 49.581% (600,000 rounds), 1.6 SE apart; $100: model 49.667% v game 49.664% (100,000 rounds), 0.0 SE apart. P0 (94.368%) is NOT a bound any more (a double returns 100.091%): P4 itself returns 94.482%.
+  Below the tail, $1, first pass (200,000 rounds): game v model mean of min(pay, T x bet): T 20x 91.754% v 91.721% (z 0.1), T 100x 94.252% v 93.956% (z 0.6), T 500x 95.063% v 94.339% (z 1.1), T 1000x 95.163% v 94.391% (z 1.1).
+    Pays of at least 50x / 100x / 500x / 1,000x: game 49 v 43.3 expected (P = 0.212) / 16 v 10.0 expected (P = 0.049) / 2 v 0.5 expected (P = 0.077) / 0 v 0.1 expected (P = 1.000); the part of each pay over 1,000x adds 0.00 pts to the game's sample.
+  Below the tail, $10, first pass (600,000 rounds): game v model mean of min(pay, T x bet): T 20x 91.443% v 91.761% (z -1.4), T 100x 93.529% v 94.019% (z -1.7), T 500x 93.911% v 94.394% (z -1.5), T 1000x 93.996% v 94.436% (z -1.2).
+    Pays of at least 50x / 100x / 500x / 1,000x: game 111 v 129.5 expected (P = 0.955) / 25 v 30.3 expected (P = 0.856) / 2 v 1.0 expected (P = 0.280) / 1 v 0.3 expected (P = 0.259); the part of each pay over 1,000x adds 0.07 pts to the game's sample.
+  Below the tail, $100, first pass (100,000 rounds): game v model mean of min(pay, T x bet): T 20x 91.659% v 91.741% (z -0.1), T 100x 93.728% v 93.981% (z -0.4), T 500x 93.775% v 94.379% (z -0.9), T 1000x 93.775% v 94.424% (z -0.9).
+    Pays of at least 50x / 100x / 500x / 1,000x: game 19 v 21.3 expected (P = 0.721) / 2 v 5.1 expected (P = 0.963) / 0 v 0.2 expected (P = 1.000) / 0 v 0.0 expected (P = 1.000); the part of each pay over 1,000x adds 0.00 pts to the game's sample.
+  Below the tail, $1, follow-up seeds (400,000 rounds): game v model mean of min(pay, T x bet): T 20x 91.770% v 91.721% (z 0.2), T 100x 93.936% v 93.956% (z -0.1), T 500x 94.074% v 94.339% (z -0.7), T 1000x 94.074% v 94.391% (z -0.9).
+    Pays of at least 50x / 100x / 500x / 1,000x: game 79 v 86.6 expected (P = 0.807) / 12 v 20.0 expected (P = 0.979) / 0 v 0.9 expected (P = 1.000) / 0 v 0.1 expected (P = 1.000); the part of each pay over 1,000x adds 0.00 pts to the game's sample.
+  Below the tail, $10, follow-up seeds (400,000 rounds): game v model mean of min(pay, T x bet): T 20x 91.676% v 91.761% (z -0.3), T 100x 93.841% v 94.019% (z -0.5), T 500x 94.129% v 94.394% (z -0.7), T 1000x 94.129% v 94.436% (z -0.8).
+    Pays of at least 50x / 100x / 500x / 1,000x: game 83 v 86.3 expected (P = 0.654) / 20 v 20.2 expected (P = 0.548) / 0 v 0.7 expected (P = 1.000) / 0 v 0.2 expected (P = 1.000); the part of each pay over 1,000x adds 0.00 pts to the game's sample.
+  Below the tail, $100, follow-up seeds (500,000 rounds): game v model mean of min(pay, T x bet): T 20x 91.118% v 91.741% (z -2.5), T 100x 93.514% v 93.981% (z -1.5), T 500x 93.950% v 94.379% (z -1.2), T 1000x 94.130% v 94.424% (z -0.7).
+    Pays of at least 50x / 100x / 500x / 1,000x: game 116 v 106.5 expected (P = 0.191) / 27 v 25.5 expected (P = 0.412) / 2 v 1.0 expected (P = 0.257) / 1 v 0.2 expected (P = 0.165); the part of each pay over 1,000x adds 0.03 pts to the game's sample.
+  Pays of 50x or more carry 2.1% of P4's simulated return at $10 (1.5% at $100): the sample SD and normal CI understate the spread.
+
+6. DOUBLE OR NOTHING THROUGH THE SHIPPED CODE (runGame of the final build, one resolved hand per call)
+best play                            10,000,000 hands (10 jobs, crypto 5101-5110): win chance 50.0673%, RTP 100.135% [100.073%, 100.197%], exact 100.0910% inside (z 1.38); pushes 422,055 in 10,422,055 deals = 4.050% [4.038%, 4.062%], exact 4.052% inside.
+basic strategy (conventional chart)  10,000,000 hands (10 jobs, crypto 5201-5210): win chance 50.0494%, RTP 100.099% [100.037%, 100.161%], exact 100.0721% inside (z 0.85); pushes 416,448 in 10,416,448 deals = 3.998% [3.986%, 4.010%], exact 4.000% inside.
+One resolved hand pays 0 or 2x the stake, so its sample SD is 1.00: 10 million hands put the RTP only to +-0.06 points (the edge is 0.09): the shipped-code test shows consistency with the exact value, not the sign of the edge by itself. The exact value is the evaluator (rungame.js) and the rig tests (browser_smoke.js).
+
+7. EXACT OPTIMUM OVER ALL BAR POLICIES (bar_optimum.cpp: value iteration over (held, RUN BANK) in whole cents; cap 1,000 x A; minimum 2c; offers and halves as showControls; checked against run-bar v170 compute() on 1,351,200 states, 0 differences)
+Win chance p = 0.50045487064506489 (best play in the double). A = the first win in cents; lambda(A) = V*(A) / A. The optimal policy never cashes out before the cap (CASH OUT is chosen in no state); it mixes DOUBLE and DOUBLE HALF, starting with DOUBLE HALF.
+A (cents)       states  iters          V*/A           start  always DOUBLE  always HALF   max V*/T   sec
+5              241,575    336    1.03106592     DOUBLE HALF     1.00913475     1.012794    1.03262     1
+10             567,875    341    1.03215116     DOUBLE HALF     1.00913475     1.021982    1.03590     4
+20           1,319,328    348    1.03263874     DOUBLE HALF     1.00913475     1.026800    1.03918    13
+30           2,149,167    344    1.03282100     DOUBLE HALF     1.00913475     1.028665    1.04111    24
+40           3,033,454    356    1.03285867     DOUBLE HALF     1.00913475     1.029350    1.04248    37
+50           3,957,541    350    1.03295027     DOUBLE HALF     1.00913475     1.030016    1.04354    52
+60           4,914,833    353    1.03294190     DOUBLE HALF     1.00913475     1.030304    1.04442    66
+70           5,900,442    355    1.03297959     DOUBLE HALF     1.00913475     1.030543    1.04516    84
+80           6,911,729    365    1.03295581     DOUBLE HALF     1.00913475     1.030705    1.04579   119
+90           7,943,561    351    1.03299204     DOUBLE HALF     1.00913475     1.030861    1.04635   148
+100          8,993,268    361    1.03299564     DOUBLE HALF     1.00913475     1.031040    1.04685   197
+120         11,145,561    363    1.03299336     DOUBLE HALF     1.00913475     1.031201    1.04773   178
+130         12,241,991    350    1.03303245     DOUBLE HALF     1.00913475     1.031301    1.04812   191
+150         14,485,841    364    1.03301399     DOUBLE HALF     1.00913475     1.031394    1.04880   247
+160         15,624,481    374    1.03299668     DOUBLE HALF     1.00913475     1.031425    1.04911   283
+170         16,774,051    367    1.03300748     DOUBLE HALF     1.00913475     1.031468    1.04939   297
+200         20,282,073    371    1.03301497     DOUBLE HALF     1.00913475     1.031597    1.05018   388
+300         32,536,195    373    1.03302383     DOUBLE HALF     1.00913475     1.031792    1.05212  1389
+Basic strategy p = 0.50036044049423456:
+  A 5    c  V*/A 1.02454107  start DOUBLE HALF  always DOUBLE 1.00723224
+  A 10   c  V*/A 1.02539521  start DOUBLE HALF  always DOUBLE 1.00723224
+  A 20   c  V*/A 1.02577865  start DOUBLE HALF  always DOUBLE 1.00723224
+  A 40   c  V*/A 1.02595144  start DOUBLE HALF  always DOUBLE 1.00723224
+  A 100  c  V*/A 1.02605899  start DOUBLE HALF  always DOUBLE 1.00723224
+  A 200  c  V*/A 1.02607409  start DOUBLE HALF  always DOUBLE 1.00723224
+First states of the search at A = 10c (held / RUN BANK in cents: value / (held + bank), optimal button): (10/0: 1.03215 DOUBLE HALF) (20/0: 1.02937 DOUBLE HALF) (10/5: 1.03080 DOUBLE HALF) (5/0: 1.03434 DOUBLE HALF) (40/0: 1.02633 DOUBLE HALF) (20/10: 1.02782 DOUBLE HALF) (20/5: 1.02862 DOUBLE HALF) (10/10: 1.02965 DOUBLE HALF) (4/3: 1.03370 DOUBLE HALF) (3/0: 1.03457 DOUBLE OR NOTHING)
+First states of the search at A = 100c (held / RUN BANK in cents: value / (held + bank), optimal button): (100/0: 1.03300 DOUBLE HALF) (200/0: 1.02975 DOUBLE HALF) (100/50: 1.03129 DOUBLE HALF) (50/0: 1.03623 DOUBLE HALF) (400/0: 1.02649 DOUBLE HALF) (200/100: 1.02804 DOUBLE HALF) (200/50: 1.02885 DOUBLE HALF) (100/100: 1.02998 DOUBLE HALF) (50/25: 1.03454 DOUBLE HALF) (25/0: 1.03943 DOUBLE HALF)
+First states of the search at A = 300c (held / RUN BANK in cents: value / (held + bank), optimal button): (300/0: 1.03302 DOUBLE HALF) (600/0: 1.02976 DOUBLE HALF) (300/150: 1.03131 DOUBLE HALF) (150/0: 1.03629 DOUBLE HALF) (1200/0: 1.02650 DOUBLE HALF) (600/300: 1.02805 DOUBLE HALF) (600/150: 1.02886 DOUBLE HALF) (300/300: 1.02999 DOUBLE HALF) (150/75: 1.03458 DOUBLE HALF) (75/0: 1.03954 DOUBLE HALF)
+Extrapolation A -> infinity (1/A law): Richardson pairs (5,10) 1.033236, (10,20) 1.033126, (20,40) 1.033079, (30,60) 1.033063, (40,80) 1.033053, (50,100) 1.033041, (60,120) 1.033045, (80,160) 1.033038, (100,200) 1.033034, (150,300) 1.033034; least squares A>=20 order 1: 1.033070 (rms 2.1e-5); A>=20 order 2: 1.033041 (rms 1.6e-5); A>=40 order 1: 1.033055 (rms 1.8e-5); A>=40 order 2: 1.033022 (rms 1.6e-5); A>=60 order 1: 1.033047 (rms 1.4e-5); A>=60 order 2: 1.033026 (rms 1.4e-5). lambda(infinity) = 1.03304 +- 0.00004 (max(spread of the A >= 40 fits and Richardson pairs, 2 x the largest fit RMS residual, 3e-5)).
+lambda(A) nondecreasing in A: NO, not strictly: A 50 (1.0329503) > A 60 (1.0329419); A 70 (1.0329796) > A 80 (1.0329558); A 100 (1.0329956) > A 120 (1.0329934); A 130 (1.0330325) > A 150 (1.0330140); A 130 (1.0330325) > A 160 (1.0329967); A 130 (1.0330325) > A 170 (1.0330075); A 130 (1.0330325) > A 200 (1.0330150); A 130 (1.0330325) > A 300 (1.0330238); A 150 (1.0330140) > A 160 (1.0329967); A 150 (1.0330140) > A 170 (1.0330075) (largest excess 3.6e-5); lattice effects of whole-cent halves. lambdaHat = 1.03308 (lambdaHat = max(largest V*(A)/A solved, extrapolated limit + error)).
+MAX WIN clip (MAX WIN = the run cap, an ammo of 20 x the bet): A 20: 1.031059 v 1.032639 (-1.6e-3); A 40: 1.031279 v 1.032859 (-1.6e-3); A 60: 1.031362 v 1.032942 (-1.6e-3); A 100: 1.031416 v 1.032996 (-1.6e-3) - offers that would pass MAX WIN disappear, which can only lower the value.
+Optimal policy at ammo 40c, bar model Monte Carlo (mc_model.js OPT): 100,000,000 rounds, mean final/A 1.03718 [1.02971, 1.04466], exact V*/A 1.032859 inside; always DOUBLE would give 1.009135 (outside the CI).
+Optimal policy at ammo 40c, bar model Monte Carlo (mc_model.js OPT): 100,000,000 rounds, mean final/A 1.03355 [1.02609, 1.04102], exact V*/A 1.032859 inside; always DOUBLE would give 1.009135 (outside the CI).
+Optimal policy at ammo 40c, shipped code (showControls + runGame, best play in the double): 500,000 rounds, mean final/A 0.97115 [0.86870, 1.07361], exact V*/A 1.032859 inside; always DOUBLE would give 1.009135 (inside the CI: not told apart).
+Optimal policy at ammo 40c, shipped code (showControls + runGame, best play in the double): 500,000 rounds, mean final/A 1.04814 [0.94188, 1.15440], exact V*/A 1.032859 inside; always DOUBLE would give 1.009135 (inside the CI: not told apart).
+
+8. ROUND-LEVEL WORST CASE (best base play, then the best bar policy; every figure = expected pay / bet)
+Bet     cash out P0  always DOUBLE P3          exact sum (solved A)   estimate  upper bound  solved mass
+$1         94.3679%          95.2299%    70.723% in 59.5% of rounds    97.482%      97.489%  86% of wins
+$10        94.3679%          95.2299%     3.290% in 10.6% of rounds    97.487%      97.489%  15% of wins
+$100       94.3679%          95.2299%                 (none solved)    97.487%      97.489%   0% of wins
+exact sum = sum of P(A) x V*(A) / bet over the ammo values A whose V* is solved (the other ammo is not in it); estimate = exact where solved and lambda_fit(A) = 1.033055 - 0.0067 / A elsewhere; upper bound = (base best-play return 94.368%) x lambdaHat 1.03308 (assumes lambda(A) <= lambdaHat for every A, see the monotonicity note).
+Joint optimisation of base and bar play: E[V*(ammo)] <= lambdaHat x E[ammo] for any base policy and E[ammo] is largest (94.368%) at best play, so the true worst case of the whole round lies between the estimate and the upper bound (gap 0.0024 points at $10); it is about 97.49%, not the 94.4% of the change request (that figure is the full-double case only, 95.23% here at the shipped board's 94.368%).

@@ -1,0 +1,1005 @@
+{
+ "build": {
+  "sha": "381595b2ec0103398f92886e7429afc9624c3a53d6e68ebcd7e86fde01f2708c"
+ },
+ "p": 0.5004548706450649,
+ "pDigits17": "0.50045487064506489",
+ "ammoSolved": [
+  5,
+  10,
+  20,
+  30,
+  40,
+  50,
+  60,
+  70,
+  80,
+  90,
+  100,
+  120,
+  130,
+  150,
+  160,
+  170,
+  200,
+  300
+ ],
+ "table": [
+  {
+   "A": 5,
+   "states": 241575,
+   "iterations": 336,
+   "lambda": 1.031065917949,
+   "startAction": "DOUBLE HALF",
+   "alwaysDoubleP3": 1.009134746711,
+   "alwaysDoubleHalf": 1.012794330139,
+   "maxVoverTotalAnyState": 1.032620241571,
+   "maxAt": [
+    2,
+    0
+   ],
+   "cashOutNeverOptimalBeforeCap": true,
+   "seconds": 1.114
+  },
+  {
+   "A": 10,
+   "states": 567875,
+   "iterations": 341,
+   "lambda": 1.032151160613,
+   "startAction": "DOUBLE HALF",
+   "alwaysDoubleP3": 1.009134746711,
+   "alwaysDoubleHalf": 1.02198228336,
+   "maxVoverTotalAnyState": 1.035896523589,
+   "maxAt": [
+    2,
+    0
+   ],
+   "cashOutNeverOptimalBeforeCap": true,
+   "seconds": 3.662
+  },
+  {
+   "A": 20,
+   "states": 1319328,
+   "iterations": 348,
+   "lambda": 1.032638743366,
+   "startAction": "DOUBLE HALF",
+   "alwaysDoubleP3": 1.009134746711,
+   "alwaysDoubleHalf": 1.026799734183,
+   "maxVoverTotalAnyState": 1.039183647869,
+   "maxAt": [
+    2,
+    0
+   ],
+   "cashOutNeverOptimalBeforeCap": true,
+   "seconds": 13.392
+  },
+  {
+   "A": 30,
+   "states": 2149167,
+   "iterations": 344,
+   "lambda": 1.032820995622,
+   "startAction": "DOUBLE HALF",
+   "alwaysDoubleP3": 1.009134746711,
+   "alwaysDoubleHalf": 1.028665177064,
+   "maxVoverTotalAnyState": 1.041111330986,
+   "maxAt": [
+    2,
+    0
+   ],
+   "cashOutNeverOptimalBeforeCap": true,
+   "seconds": 23.765
+  },
+  {
+   "A": 40,
+   "states": 3033454,
+   "iterations": 356,
+   "lambda": 1.03285866657,
+   "startAction": "DOUBLE HALF",
+   "alwaysDoubleP3": 1.009134746711,
+   "alwaysDoubleHalf": 1.029350183047,
+   "maxVoverTotalAnyState": 1.042481961099,
+   "maxAt": [
+    2,
+    0
+   ],
+   "cashOutNeverOptimalBeforeCap": true,
+   "seconds": 36.868
+  },
+  {
+   "A": 50,
+   "states": 3957541,
+   "iterations": 350,
+   "lambda": 1.032950274085,
+   "startAction": "DOUBLE HALF",
+   "alwaysDoubleP3": 1.009134746711,
+   "alwaysDoubleHalf": 1.030016433352,
+   "maxVoverTotalAnyState": 1.043544530938,
+   "maxAt": [
+    2,
+    0
+   ],
+   "cashOutNeverOptimalBeforeCap": true,
+   "seconds": 51.703
+  },
+  {
+   "A": 60,
+   "states": 4914833,
+   "iterations": 353,
+   "lambda": 1.032941898484,
+   "startAction": "DOUBLE HALF",
+   "alwaysDoubleP3": 1.009134746711,
+   "alwaysDoubleHalf": 1.030304131675,
+   "maxVoverTotalAnyState": 1.044415228549,
+   "maxAt": [
+    2,
+    0
+   ],
+   "cashOutNeverOptimalBeforeCap": true,
+   "seconds": 65.798
+  },
+  {
+   "A": 70,
+   "states": 5900442,
+   "iterations": 355,
+   "lambda": 1.032979587745,
+   "startAction": "DOUBLE HALF",
+   "alwaysDoubleP3": 1.009134746711,
+   "alwaysDoubleHalf": 1.030542576997,
+   "maxVoverTotalAnyState": 1.045155634926,
+   "maxAt": [
+    2,
+    0
+   ],
+   "cashOutNeverOptimalBeforeCap": true,
+   "seconds": 84.269
+  },
+  {
+   "A": 80,
+   "states": 6911729,
+   "iterations": 365,
+   "lambda": 1.032955814044,
+   "startAction": "DOUBLE HALF",
+   "alwaysDoubleP3": 1.009134746711,
+   "alwaysDoubleHalf": 1.030705367444,
+   "maxVoverTotalAnyState": 1.045789815518,
+   "maxAt": [
+    2,
+    0
+   ],
+   "cashOutNeverOptimalBeforeCap": true,
+   "seconds": 118.54
+  },
+  {
+   "A": 90,
+   "states": 7943561,
+   "iterations": 351,
+   "lambda": 1.03299203896,
+   "startAction": "DOUBLE HALF",
+   "alwaysDoubleP3": 1.009134746711,
+   "alwaysDoubleHalf": 1.030861144455,
+   "maxVoverTotalAnyState": 1.046351749005,
+   "maxAt": [
+    2,
+    0
+   ],
+   "cashOutNeverOptimalBeforeCap": true,
+   "seconds": 147.698
+  },
+  {
+   "A": 100,
+   "states": 8993268,
+   "iterations": 361,
+   "lambda": 1.032995643463,
+   "startAction": "DOUBLE HALF",
+   "alwaysDoubleP3": 1.009134746711,
+   "alwaysDoubleHalf": 1.031039645365,
+   "maxVoverTotalAnyState": 1.046854860429,
+   "maxAt": [
+    2,
+    0
+   ],
+   "cashOutNeverOptimalBeforeCap": true,
+   "seconds": 197.434
+  },
+  {
+   "A": 120,
+   "states": 11145561,
+   "iterations": 363,
+   "lambda": 1.032993359705,
+   "startAction": "DOUBLE HALF",
+   "alwaysDoubleP3": 1.009134746711,
+   "alwaysDoubleHalf": 1.031201255331,
+   "maxVoverTotalAnyState": 1.047728829873,
+   "maxAt": [
+    2,
+    0
+   ],
+   "cashOutNeverOptimalBeforeCap": true,
+   "seconds": 178.092
+  },
+  {
+   "A": 130,
+   "states": 12241991,
+   "iterations": 350,
+   "lambda": 1.033032451525,
+   "startAction": "DOUBLE HALF",
+   "alwaysDoubleP3": 1.009134746711,
+   "alwaysDoubleHalf": 1.031301234939,
+   "maxVoverTotalAnyState": 1.04811766769,
+   "maxAt": [
+    2,
+    0
+   ],
+   "cashOutNeverOptimalBeforeCap": true,
+   "seconds": 191.464
+  },
+  {
+   "A": 150,
+   "states": 14485841,
+   "iterations": 364,
+   "lambda": 1.033013989752,
+   "startAction": "DOUBLE HALF",
+   "alwaysDoubleP3": 1.009134746711,
+   "alwaysDoubleHalf": 1.031393797004,
+   "maxVoverTotalAnyState": 1.048795947553,
+   "maxAt": [
+    2,
+    0
+   ],
+   "cashOutNeverOptimalBeforeCap": true,
+   "seconds": 247.415
+  },
+  {
+   "A": 160,
+   "states": 15624481,
+   "iterations": 374,
+   "lambda": 1.032996677428,
+   "startAction": "DOUBLE HALF",
+   "alwaysDoubleP3": 1.009134746711,
+   "alwaysDoubleHalf": 1.031425109885,
+   "maxVoverTotalAnyState": 1.049106983745,
+   "maxAt": [
+    2,
+    0
+   ],
+   "cashOutNeverOptimalBeforeCap": true,
+   "seconds": 282.582
+  },
+  {
+   "A": 170,
+   "states": 16774051,
+   "iterations": 367,
+   "lambda": 1.033007476578,
+   "startAction": "DOUBLE HALF",
+   "alwaysDoubleP3": 1.009134746711,
+   "alwaysDoubleHalf": 1.031468303439,
+   "maxVoverTotalAnyState": 1.049392261693,
+   "maxAt": [
+    2,
+    0
+   ],
+   "cashOutNeverOptimalBeforeCap": true,
+   "seconds": 297.202
+  },
+  {
+   "A": 200,
+   "states": 20282073,
+   "iterations": 371,
+   "lambda": 1.033014970777,
+   "startAction": "DOUBLE HALF",
+   "alwaysDoubleP3": 1.009134746711,
+   "alwaysDoubleHalf": 1.031596763301,
+   "maxVoverTotalAnyState": 1.050175437776,
+   "maxAt": [
+    2,
+    0
+   ],
+   "cashOutNeverOptimalBeforeCap": true,
+   "seconds": 388.358
+  },
+  {
+   "A": 300,
+   "states": 32536195,
+   "iterations": 373,
+   "lambda": 1.033023834063,
+   "startAction": "DOUBLE HALF",
+   "alwaysDoubleP3": 1.009134746711,
+   "alwaysDoubleHalf": 1.031791973441,
+   "maxVoverTotalAnyState": 1.052122546425,
+   "maxAt": [
+    2,
+    0
+   ],
+   "cashOutNeverOptimalBeforeCap": true,
+   "seconds": 1389.269
+  }
+ ],
+ "firstStates": {
+  "10": [
+   {
+    "held": 10,
+    "bank": 0,
+    "valueOverTotal": 1.032151161,
+    "action": "DOUBLE HALF"
+   },
+   {
+    "held": 20,
+    "bank": 0,
+    "valueOverTotal": 1.02937099,
+    "action": "DOUBLE HALF"
+   },
+   {
+    "held": 10,
+    "bank": 5,
+    "valueOverTotal": 1.030798532,
+    "action": "DOUBLE HALF"
+   },
+   {
+    "held": 5,
+    "bank": 0,
+    "valueOverTotal": 1.034336744,
+    "action": "DOUBLE HALF"
+   },
+   {
+    "held": 40,
+    "bank": 0,
+    "valueOverTotal": 1.026328533,
+    "action": "DOUBLE HALF"
+   },
+   {
+    "held": 20,
+    "bank": 10,
+    "valueOverTotal": 1.02782221,
+    "action": "DOUBLE HALF"
+   },
+   {
+    "held": 20,
+    "bank": 5,
+    "valueOverTotal": 1.028622616,
+    "action": "DOUBLE HALF"
+   },
+   {
+    "held": 10,
+    "bank": 10,
+    "valueOverTotal": 1.029654994,
+    "action": "DOUBLE HALF"
+   },
+   {
+    "held": 4,
+    "bank": 3,
+    "valueOverTotal": 1.033700215,
+    "action": "DOUBLE HALF"
+   },
+   {
+    "held": 3,
+    "bank": 0,
+    "valueOverTotal": 1.034568903,
+    "action": "DOUBLE OR NOTHING"
+   }
+  ],
+  "100": [
+   {
+    "held": 100,
+    "bank": 0,
+    "valueOverTotal": 1.032995643,
+    "action": "DOUBLE HALF"
+   },
+   {
+    "held": 200,
+    "bank": 0,
+    "valueOverTotal": 1.029747085,
+    "action": "DOUBLE HALF"
+   },
+   {
+    "held": 100,
+    "bank": 50,
+    "valueOverTotal": 1.031294362,
+    "action": "DOUBLE HALF"
+   },
+   {
+    "held": 50,
+    "bank": 0,
+    "valueOverTotal": 1.036227555,
+    "action": "DOUBLE HALF"
+   },
+   {
+    "held": 400,
+    "bank": 0,
+    "valueOverTotal": 1.026494484,
+    "action": "DOUBLE HALF"
+   },
+   {
+    "held": 200,
+    "bank": 100,
+    "valueOverTotal": 1.028042233,
+    "action": "DOUBLE HALF"
+   },
+   {
+    "held": 200,
+    "bank": 50,
+    "valueOverTotal": 1.02884832,
+    "action": "DOUBLE HALF"
+   },
+   {
+    "held": 100,
+    "bank": 100,
+    "valueOverTotal": 1.029976588,
+    "action": "DOUBLE HALF"
+   },
+   {
+    "held": 50,
+    "bank": 25,
+    "valueOverTotal": 1.034535565,
+    "action": "DOUBLE HALF"
+   },
+   {
+    "held": 25,
+    "bank": 0,
+    "valueOverTotal": 1.039425655,
+    "action": "DOUBLE HALF"
+   }
+  ],
+  "300": [
+   {
+    "held": 300,
+    "bank": 0,
+    "valueOverTotal": 1.033023834,
+    "action": "DOUBLE HALF"
+   },
+   {
+    "held": 600,
+    "bank": 0,
+    "valueOverTotal": 1.029757951,
+    "action": "DOUBLE HALF"
+   },
+   {
+    "held": 300,
+    "bank": 150,
+    "valueOverTotal": 1.031310879,
+    "action": "DOUBLE HALF"
+   },
+   {
+    "held": 150,
+    "bank": 0,
+    "valueOverTotal": 1.036290777,
+    "action": "DOUBLE HALF"
+   },
+   {
+    "held": 1200,
+    "bank": 0,
+    "valueOverTotal": 1.026498023,
+    "action": "DOUBLE HALF"
+   },
+   {
+    "held": 600,
+    "bank": 300,
+    "valueOverTotal": 1.028047328,
+    "action": "DOUBLE HALF"
+   },
+   {
+    "held": 600,
+    "bank": 150,
+    "valueOverTotal": 1.028855666,
+    "action": "DOUBLE HALF"
+   },
+   {
+    "held": 300,
+    "bank": 300,
+    "valueOverTotal": 1.029987272,
+    "action": "DOUBLE HALF"
+   },
+   {
+    "held": 150,
+    "bank": 75,
+    "valueOverTotal": 1.034581327,
+    "action": "DOUBLE HALF"
+   },
+   {
+    "held": 75,
+    "bank": 0,
+    "valueOverTotal": 1.039541236,
+    "action": "DOUBLE HALF"
+   }
+  ]
+ },
+ "monotone": {
+  "nondecreasingEverywhere": false,
+  "exceptions": [
+   {
+    "smallerA": 50,
+    "largerA": 60,
+    "lambdaSmaller": 1.032950274085,
+    "lambdaLarger": 1.032941898484,
+    "excess": 0.00000837560100008794
+   },
+   {
+    "smallerA": 70,
+    "largerA": 80,
+    "lambdaSmaller": 1.032979587745,
+    "lambdaLarger": 1.032955814044,
+    "excess": 0.000023773701000040504
+   },
+   {
+    "smallerA": 100,
+    "largerA": 120,
+    "lambdaSmaller": 1.032995643463,
+    "lambdaLarger": 1.032993359705,
+    "excess": 0.0000022837580000434343
+   },
+   {
+    "smallerA": 130,
+    "largerA": 150,
+    "lambdaSmaller": 1.033032451525,
+    "lambdaLarger": 1.033013989752,
+    "excess": 0.000018461772999911474
+   },
+   {
+    "smallerA": 130,
+    "largerA": 160,
+    "lambdaSmaller": 1.033032451525,
+    "lambdaLarger": 1.032996677428,
+    "excess": 0.000035774097000063065
+   },
+   {
+    "smallerA": 130,
+    "largerA": 170,
+    "lambdaSmaller": 1.033032451525,
+    "lambdaLarger": 1.033007476578,
+    "excess": 0.000024974947000044878
+   },
+   {
+    "smallerA": 130,
+    "largerA": 200,
+    "lambdaSmaller": 1.033032451525,
+    "lambdaLarger": 1.033014970777,
+    "excess": 0.000017480748000009427
+   },
+   {
+    "smallerA": 130,
+    "largerA": 300,
+    "lambdaSmaller": 1.033032451525,
+    "lambdaLarger": 1.033023834063,
+    "excess": 0.000008617461999982368
+   },
+   {
+    "smallerA": 150,
+    "largerA": 160,
+    "lambdaSmaller": 1.033013989752,
+    "lambdaLarger": 1.032996677428,
+    "excess": 0.00001731232400015159
+   },
+   {
+    "smallerA": 150,
+    "largerA": 170,
+    "lambdaSmaller": 1.033013989752,
+    "lambdaLarger": 1.033007476578,
+    "excess": 0.000006513174000133404
+   }
+  ],
+  "largestExcess": 0.000035774097000063065,
+  "note": "lambda(A) rises with A on the whole (1/A law) but is not strictly monotone: lattice effects of the whole-cent halves and the 2-cent minimum move it by a few 1e-5"
+ },
+ "extrapolation": {
+  "richardson1overA": [
+   {
+    "A": 5,
+    "twoA": 10,
+    "lambdaInf": 1.033236403277
+   },
+   {
+    "A": 10,
+    "twoA": 20,
+    "lambdaInf": 1.033126326119
+   },
+   {
+    "A": 20,
+    "twoA": 40,
+    "lambdaInf": 1.0330785897739998
+   },
+   {
+    "A": 30,
+    "twoA": 60,
+    "lambdaInf": 1.033062801346
+   },
+   {
+    "A": 40,
+    "twoA": 80,
+    "lambdaInf": 1.0330529615180002
+   },
+   {
+    "A": 50,
+    "twoA": 100,
+    "lambdaInf": 1.0330410128410001
+   },
+   {
+    "A": 60,
+    "twoA": 120,
+    "lambdaInf": 1.0330448209260001
+   },
+   {
+    "A": 80,
+    "twoA": 160,
+    "lambdaInf": 1.0330375408119998
+   },
+   {
+    "A": 100,
+    "twoA": 200,
+    "lambdaInf": 1.033034298091
+   },
+   {
+    "A": 150,
+    "twoA": 300,
+    "lambdaInf": 1.033033678374
+   }
+  ],
+  "richardsonSecondOrder": [
+   {
+    "A": 5,
+    "lambdaInf": 1.033089633733
+   },
+   {
+    "A": 10,
+    "lambdaInf": 1.0330626776589997
+   },
+   {
+    "A": 20,
+    "lambdaInf": 1.0330444187660002
+   },
+   {
+    "A": 30,
+    "lambdaInf": 1.033038827452667
+   },
+   {
+    "A": 40,
+    "lambdaInf": 1.0330324005766665
+   },
+   {
+    "A": 50,
+    "lambdaInf": 1.0330320598409999
+   }
+  ],
+  "leastSquares": [
+   {
+    "Amin": 20,
+    "order": 1,
+    "points": 16,
+    "lambdaInf": 1.0330696515912206,
+    "c1": -0.008040519137224322,
+    "rmsResidual": 0.000020775088693747805
+   },
+   {
+    "Amin": 20,
+    "order": 2,
+    "points": 16,
+    "lambdaInf": 1.0330411838312124,
+    "c1": -0.00423627281720998,
+    "c2": -0.07655488026654057,
+    "rmsResidual": 0.000016120134773179905
+   },
+   {
+    "Amin": 40,
+    "order": 1,
+    "points": 14,
+    "lambdaInf": 1.0330552741084702,
+    "c1": -0.00666019147679309,
+    "rmsResidual": 0.000017953142381423057
+   },
+   {
+    "Amin": 40,
+    "order": 2,
+    "points": 14,
+    "lambdaInf": 1.0330224619065267,
+    "c1": -0.0004024381603517785,
+    "c2": -0.2287830807073237,
+    "rmsResidual": 0.00001600399108359213
+   },
+   {
+    "Amin": 60,
+    "order": 1,
+    "points": 12,
+    "lambdaInf": 1.0330467572838784,
+    "c1": -0.00569380264925114,
+    "rmsResidual": 0.000014142734200412062
+   },
+   {
+    "Amin": 60,
+    "order": 2,
+    "points": 12,
+    "lambdaInf": 1.0330255391185426,
+    "c1": -0.0006335026749582425,
+    "c2": -0.25383121835458894,
+    "rmsResidual": 0.000014272300325614751
+   }
+  ],
+  "lambdaInfinity": 1.0330394344979417,
+  "error": 0.000035906284762846114,
+  "errorRule": "max(spread of the A >= 40 fits and Richardson pairs, 2 x the largest fit RMS residual, 3e-5)",
+  "range": [
+   1.0330035282131789,
+   1.0330753407827045
+  ],
+  "assumption": "the error of lambda(A) is a smooth 1/A law plus lattice noise of about the size of the fit residual; the continuum limit has no analytic check here"
+ },
+ "lambdaHat": {
+  "maxSolved": 1.033032451525,
+  "atA": 130,
+  "extrapolatedTop": 1.0330753407827045,
+  "used": 1.0330753407827045,
+  "note": "lambdaHat = max(largest V*(A)/A solved, extrapolated limit + error)"
+ },
+ "stateMax": {
+  "points": [
+   {
+    "A": 5,
+    "max": 1.032620241571,
+    "room": 2500
+   },
+   {
+    "A": 10,
+    "max": 1.035896523589,
+    "room": 5000
+   },
+   {
+    "A": 20,
+    "max": 1.039183647869,
+    "room": 10000
+   },
+   {
+    "A": 30,
+    "max": 1.041111330986,
+    "room": 15000
+   },
+   {
+    "A": 40,
+    "max": 1.042481961099,
+    "room": 20000
+   },
+   {
+    "A": 50,
+    "max": 1.043544530938,
+    "room": 25000
+   },
+   {
+    "A": 60,
+    "max": 1.044415228549,
+    "room": 30000
+   },
+   {
+    "A": 70,
+    "max": 1.045155634926,
+    "room": 35000
+   },
+   {
+    "A": 80,
+    "max": 1.045789815518,
+    "room": 40000
+   },
+   {
+    "A": 90,
+    "max": 1.046351749005,
+    "room": 45000
+   },
+   {
+    "A": 100,
+    "max": 1.046854860429,
+    "room": 50000
+   },
+   {
+    "A": 120,
+    "max": 1.047728829873,
+    "room": 60000
+   },
+   {
+    "A": 130,
+    "max": 1.04811766769,
+    "room": 65000
+   },
+   {
+    "A": 150,
+    "max": 1.048795947553,
+    "room": 75000
+   },
+   {
+    "A": 160,
+    "max": 1.049106983745,
+    "room": 80000
+   },
+   {
+    "A": 170,
+    "max": 1.049392261693,
+    "room": 85000
+   },
+   {
+    "A": 200,
+    "max": 1.050175437776,
+    "room": 100000
+   },
+   {
+    "A": 300,
+    "max": 1.052122546425,
+    "room": 150000
+   }
+  ],
+  "powerLaw": {
+   "slope": 0.004569235396783747,
+   "intercept": -0.003646993292482366,
+   "rule": "max over all states of V*/(S+B) = exp(intercept) x room^slope, room = cap / (S + B) at the maximising state (S + B = 2 cents)"
+  }
+ },
+ "rounds": {
+  "1": {
+   "bet": 1,
+   "ammoValues": 36,
+   "ammoMass": 0.6952890182535305,
+   "expectedAmmoOverBet": 0.943679143241529,
+   "massWithExactV": 0.5953113476162999,
+   "shareOfExpectedAmmoWithExactV": 0.7255092575193077,
+   "exactSumKnownPartOverBet": 0.7072349154735845,
+   "restMass": 0.09997767063723062,
+   "restExpectedAmmoOverBet": 0.2590311886919109,
+   "upperBound": 0.9748916524937732,
+   "mixedUpperBound": 0.9748336490048293,
+   "estimate": 0.9748217924060508,
+   "estimateWithLambdaInfOnly": 0.9748577684817312,
+   "cashOut_P0": 0.943679143241529,
+   "alwaysDouble_P3": 0.9522993254403811,
+   "solvedAmmo": [
+    30,
+    40,
+    50,
+    70,
+    80,
+    90,
+    100,
+    120,
+    130,
+    150,
+    160,
+    170,
+    200,
+    300
+   ],
+   "unsolvedAmmoCount": 22,
+   "smallestAmmoCents": 30,
+   "largestAmmoCents": 2000
+  },
+  "10": {
+   "bet": 10,
+   "ammoValues": 36,
+   "ammoMass": 0.6952890182535305,
+   "expectedAmmoOverBet": 0.943679143241529,
+   "massWithExactV": 0.10615856740796804,
+   "shareOfExpectedAmmoWithExactV": 0.03374830359500615,
+   "exactSumKnownPartOverBet": 0.03289929909673881,
+   "restMass": 0.5891304508455625,
+   "restExpectedAmmoOverBet": 0.9118315730191385,
+   "upperBound": 0.9748916524937732,
+   "mixedUpperBound": 0.974890012129915,
+   "estimate": 0.9748677909811752,
+   "estimateWithLambdaInfOnly": 0.9748577684817312,
+   "cashOut_P0": 0.9436791432415289,
+   "alwaysDouble_P3": 0.9522993254403812,
+   "solvedAmmo": [
+    300
+   ],
+   "unsolvedAmmoCount": 35,
+   "smallestAmmoCents": 300,
+   "largestAmmoCents": 20000
+  },
+  "100": {
+   "bet": 100,
+   "ammoValues": 36,
+   "ammoMass": 0.6952890182535305,
+   "expectedAmmoOverBet": 0.943679143241529,
+   "massWithExactV": 0,
+   "shareOfExpectedAmmoWithExactV": 0,
+   "exactSumKnownPartOverBet": 0,
+   "restMass": 0.6952890182535305,
+   "restExpectedAmmoOverBet": 0.943679143241529,
+   "upperBound": 0.9748916524937732,
+   "mixedUpperBound": 0.9748916524937735,
+   "estimate": 0.9748722529160244,
+   "estimateWithLambdaInfOnly": 0.9748577684817312,
+   "cashOut_P0": 0.9436791432415291,
+   "alwaysDouble_P3": 0.9522993254403809,
+   "solvedAmmo": [],
+   "unsolvedAmmoCount": 36,
+   "smallestAmmoCents": 3000,
+   "largestAmmoCents": 200000
+  }
+ },
+ "bestPlayEAmmo": 0.9436791432415289,
+ "jointOptimisation": {
+  "statement": "E[V*(ammo)] <= lambdaHat x E[ammo] for ANY base policy, and E[ammo] = the base RTP, maximal (94.368%) at best play; so the optimum over base play AND bar play lies between the best-play exact sum and lambdaHat x 94.368%",
+  "baseOptimalSumToUpperGap": {
+   "1": 0.00006986008772236207,
+   "10": 0.000023861512598033485,
+   "100": 0.00001939957774876877
+  }
+ },
+ "basicP": {
+  "p": 0.5003604404942346,
+  "pDigits17": "0.50036044049423456",
+  "ammoSolved": [
+   5,
+   10,
+   20,
+   40,
+   100,
+   200
+  ],
+  "table": [
+   {
+    "A": 5,
+    "lambda": 1.024541069348,
+    "startAction": "DOUBLE HALF",
+    "alwaysDoubleP3": 1.007232240019,
+    "states": 241575
+   },
+   {
+    "A": 10,
+    "lambda": 1.025395209468,
+    "startAction": "DOUBLE HALF",
+    "alwaysDoubleP3": 1.007232240019,
+    "states": 567875
+   },
+   {
+    "A": 20,
+    "lambda": 1.025778646427,
+    "startAction": "DOUBLE HALF",
+    "alwaysDoubleP3": 1.007232240019,
+    "states": 1319328
+   },
+   {
+    "A": 40,
+    "lambda": 1.025951442037,
+    "startAction": "DOUBLE HALF",
+    "alwaysDoubleP3": 1.007232240019,
+    "states": 3033454
+   },
+   {
+    "A": 100,
+    "lambda": 1.026058993161,
+    "startAction": "DOUBLE HALF",
+    "alwaysDoubleP3": 1.007232240019,
+    "states": 8993268
+   },
+   {
+    "A": 200,
+    "lambda": 1.026074092164,
+    "startAction": "DOUBLE HALF",
+    "alwaysDoubleP3": 1.007232240019,
+    "states": 20282073
+   }
+  ]
+ },
+ "maxWinClip": {
+  "note": "MAX WIN = the run cap (an ammo of 20 x the bet: MAX WIN 20,000 x bet = 1,000 x ammo): the offers that would pass MAX WIN disappear",
+  "rows": [
+   {
+    "A": 20,
+    "lambdaWithMaxWin": 1.03105908995,
+    "lambdaWithout": 1.032638743366,
+    "change": -0.0015796534159999709
+   },
+   {
+    "A": 40,
+    "lambdaWithMaxWin": 1.031278741483,
+    "lambdaWithout": 1.03285866657,
+    "change": -0.0015799250869998893
+   },
+   {
+    "A": 60,
+    "lambdaWithMaxWin": 1.031362388056,
+    "lambdaWithout": 1.032941898484,
+    "change": -0.001579510428000086
+   },
+   {
+    "A": 100,
+    "lambdaWithMaxWin": 1.031415528182,
+    "lambdaWithout": 1.032995643463,
+    "change": -0.001580115280999994
+   }
+  ]
+ }
+}
