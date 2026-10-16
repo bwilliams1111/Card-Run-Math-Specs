@@ -1,0 +1,1327 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Card Run Kicks 20×</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700;800&family=Saira:wght@400;500;600;700&family=Exo+2:wght@600;700;800&family=Anton&family=Chakra+Petch:wght@700&family=Montserrat:wght@800;900&display=swap">
+<style>
+/* Layout: one stacked column — wallet bar, twin pay table, pitch with card posts, kick controls, shot log. Single night-stadium look. */
+:root{
+  --bg:#0a1226;
+  --bg-2:#0f1a36;
+  --panel:#18244a;
+  --panel-row:#1c2a55;
+  --line:#2b3b6e;
+  --fg:#eef2fb;
+  --muted:#8491b8;
+  --gold:#f5c84c;
+  --win:#43d68a;
+  --bust:#ff6273;
+  --post:#ffa94d;
+  --grass-1:#1b6a3e;
+  --grass-2:#186139;
+  --card:#fbfaf6;
+  --card-ink:#18203a;
+  --card-red:#c9283d;
+  --display:"Saira Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"Saira",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --rowh:30px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--bg);color:var(--fg)}
+body{font-family:var(--body);margin:0;padding-inline:16px;padding-block:16px 32px;
+  background:radial-gradient(120% 60% at 50% 0%,#1a2a5a 0%,var(--bg) 60%) var(--bg);min-height:100%}
+.wrap{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+button{font:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+/* Top bar */
+.bar{display:flex;align-items:center;gap:14px;flex-wrap:nowrap;min-height:48px}
+.ico{display:grid;place-items:center;width:30px;height:30px;color:var(--muted);flex:none}
+.ico svg{width:24px;height:24px}
+.brand{display:flex;align-items:center;gap:8px;font-family:var(--body);font-weight:800;font-size:24px;letter-spacing:.03em;color:var(--fg);line-height:1}
+.brand svg{width:14px;height:14px;color:var(--muted)}
+.bar .sp{flex:1}
+.chip{border:1.5px solid var(--line);border-radius:999px;padding:7px 20px;flex:none;background:rgba(12,20,48,.5)}
+.chip .v{font-family:var(--body);font-weight:700;font-size:22px;letter-spacing:.02em;font-variant-numeric:tabular-nums;line-height:1.1;color:var(--gold);white-space:nowrap}
+.chip .v .cur{margin-right:.45em}
+
+/* Lobby: BUILD IT. RUN IT. + the selected mode */
+.lobby{display:flex;flex-direction:column;align-items:center;text-align:center;gap:0;padding-block:18px 8px;min-width:0;
+  background-image:radial-gradient(rgba(140,160,220,.16) 1.5px,transparent 1.6px);background-size:44px 44px;background-position:center top}
+.lb-h{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(38px,9vw,60px);line-height:.95;letter-spacing:.02em;color:var(--fg);text-wrap:balance}
+.lb-h span{color:var(--gold)}
+.lb-logo{display:block;width:min(63%,357px);height:auto;margin:0 auto}   /* +5% (was min(60%,340px)) */
+.lb-sub{margin:8px 0 0;font-size:clamp(10px,2.7vw,12.5px);color:#b9c3e3;white-space:nowrap;line-height:1.3}
+.lb-sub .nw{white-space:nowrap}
+.lb-dot{display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--muted);vertical-align:middle;margin:0 .6em;position:relative;top:-.08em}
+.lb-ico{width:clamp(58px,14vw,76px);height:auto;margin-top:26px;color:var(--gold)}
+.lb-name{margin:14px 0 0;font-family:var(--display);font-weight:800;font-size:clamp(40px,10vw,62px);line-height:1;letter-spacing:.05em;color:var(--fg)}
+.lb-name span{color:var(--gold)}
+.lb-desc{margin:20px 0 0;font-size:clamp(14px,3.7vw,18px);line-height:1.5;color:#c3cbe6;max-width:40ch;text-wrap:pretty}
+.lb-math{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1.15fr);align-items:center;gap:clamp(6px,2vw,14px);width:100%;max-width:720px;margin-top:26px}
+.lb-op{font-family:var(--display);font-weight:800;font-size:clamp(18px,4vw,26px);color:var(--muted)}
+.lb-tile{min-width:0;border:1.5px solid var(--line);border-radius:14px;padding:clamp(8px,2vw,14px) 6px;background:rgba(12,20,48,.55)}
+.lb-tile small{display:block;font-size:clamp(9px,2.4vw,13px);font-weight:700;letter-spacing:.12em;color:#9aa5cc;white-space:nowrap}
+.lb-tile b{display:block;margin-top:4px;font-family:var(--display);font-weight:800;font-size:clamp(16px,4.6vw,36px);line-height:1;color:var(--fg);font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.01em}
+.lb-tile.win{border-color:var(--gold);background:#2a2208}
+.lb-tile.win small{color:#d9c48a}.lb-tile.win b{color:var(--gold)}
+.lb-bet{display:flex;align-items:center;gap:10px;width:100%;max-width:720px;margin-top:22px;padding:8px 8px 8px 22px;border-radius:999px;border:1.5px solid var(--line);background:#0c1430}
+.lb-bet:focus-within{border-color:#4b64bb}
+.lb-bet .cur{font-family:var(--body);font-weight:800;font-size:clamp(20px,5vw,28px);color:var(--gold)}
+.lb-bet input{flex:1;min-width:0;border:0;background:none;color:var(--fg);font-family:var(--body);font-weight:800;font-size:clamp(20px,5vw,28px);font-variant-numeric:tabular-nums;outline:none;padding:4px 0}
+.lb-bet button{flex:none;border:1.5px solid var(--line);background:#141d3d;color:#c3cbe6;border-radius:999px;padding:9px 18px;font-family:var(--body);font-weight:800;font-size:15px;letter-spacing:.06em}
+.lb-bet button:hover{color:var(--fg);border-color:#4b64bb}
+.lb-play{margin-top:24px;width:min(100%,600px);border:1.5px solid #ffe7a0;border-radius:999px;padding:clamp(14px,3.6vw,20px) 14px;background:linear-gradient(180deg,#ffe07a,var(--gold));color:#1b1606;
+  font-family:var(--body);font-weight:800;font-size:clamp(16px,4.2vw,22px);letter-spacing:.08em;box-shadow:0 8px 28px rgba(245,200,76,.32);transition:transform .08s,filter .15s}
+.lb-play .n{font-variant-numeric:tabular-nums}
+.lb-play.reset{background:#16224a;color:var(--fg);border-color:#5d72bd;box-shadow:none}
+.lb-play:hover{filter:brightness(1.06)}
+.lb-play:active{transform:translateY(2px)}
+button.ico{border:0;background:none;padding:0;cursor:pointer;border-radius:8px}
+button.ico:hover{color:var(--fg)}
+button.ico:disabled{opacity:.35;cursor:not-allowed}
+@media (max-width:520px){.lobby{padding-block:10px 4px}.lb-ico{margin-top:18px}.lb-desc{margin-top:14px}.lb-math{margin-top:18px}.lb-play{margin-top:18px}}
+
+/* Pay tables */
+.tables{display:grid;grid-template-columns:1fr 1fr;gap:10px;background:linear-gradient(180deg,#2a3a70,#1a2750);
+  border:1px solid #3a4c88;border-radius:18px;padding:10px}
+.pt{background:var(--bg-2);border-radius:12px;overflow:hidden;min-width:0}
+.pt h2{margin:0;font-family:var(--display);font-weight:800;font-size:17px;letter-spacing:.08em;color:var(--gold);
+  text-align:center;padding:8px 6px;background:#212c4f;border-bottom:1px solid var(--line);text-wrap:balance;line-height:1.1}
+.pt h2 .ht{display:inline;font-size:inherit;letter-spacing:inherit;color:inherit}
+.pt{container-type:inline-size}
+.pt h2 span{display:block;font-size:11px;letter-spacing:.14em;color:var(--muted);font-weight:700}
+.row{display:grid;grid-template-columns:28px 1fr;align-items:center;height:var(--rowh);padding-right:12px;
+  border-top:1px solid #16213f;position:relative;transition:background .2s}
+.row:first-of-type{border-top:0}
+.row .n{font-family:var(--display);font-weight:700;color:var(--muted);font-size:14px;text-align:center}
+.row .p{font-family:var(--display);font-weight:800;font-size:20px;text-align:right;font-variant-numeric:tabular-nums}
+.row .p.dim{color:#5d6a91;font-size:15px;letter-spacing:.06em}
+.row.cur{background:rgba(245,200,76,var(--a,.3));z-index:1;
+  box-shadow:inset 0 0 0 2px rgba(255,214,102,.95),inset 0 0 var(--glow,6px) rgba(255,240,190,.75),0 0 var(--glow,6px) rgba(245,200,76,.6)}
+.row.cur .p,.row.cur .n{color:var(--fg)}
+.row.cur.hot .p,.row.cur.hot .n{color:#0a1226}
+.row.cur .p.dim{color:#ffe7a6}.row.cur.hot .p.dim{color:#5a3d00}
+.row.cur::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,rgba(255,255,255,.0),rgba(255,255,255,var(--sheen,0)),rgba(255,255,255,0))}
+.row.bump{animation:bump .55s ease-out}
+@keyframes bump{0%{filter:brightness(1.9)}100%{filter:brightness(1)}}
+@media (prefers-reduced-motion:reduce){.row.bump{animation:none}}
+.row.cur::before{content:"";position:absolute;left:0;top:3px;bottom:3px;width:4px;border-radius:2px;background:var(--gold)}
+.row .lock{position:absolute;left:32px;font-size:10px;letter-spacing:.12em;font-weight:700;color:var(--bg);
+  background:var(--win);border-radius:4px;padding:1px 5px;display:none}
+.row.locked .lock{display:inline-block}
+.row.locked{box-shadow:inset 0 0 0 1px var(--win)}
+
+/* Pitch */
+.pitch{position:relative;height:300px;border-radius:18px;overflow:hidden;border:1px solid #2d6d49;
+  background:repeating-linear-gradient(90deg,var(--grass-1) 0 12.5%,var(--grass-2) 12.5% 25%)}
+.pitch::after{content:"";position:absolute;left:0;right:0;top:0;height:40%;
+  background:linear-gradient(180deg,rgba(10,18,38,.55),rgba(10,18,38,0))}
+.line{position:absolute;left:0;right:0;top:calc(8% + 84px);height:2px;background:rgba(255,255,255,.55)}
+.box{position:absolute;left:20%;right:20%;top:calc(8% + 84px);height:26%;border:2px solid rgba(255,255,255,.35);border-top:0}
+.net{position:absolute;left:30%;right:30%;top:8%;height:84px;z-index:1;
+  background:
+   repeating-linear-gradient(45deg,rgba(255,255,255,.18) 0 1px,transparent 1px 10px),
+   repeating-linear-gradient(-45deg,rgba(255,255,255,.18) 0 1px,transparent 1px 10px),
+   rgba(8,16,34,.35);
+  border-top:4px solid #e9edf5;}
+.zone{position:absolute;top:calc(8% + 90px);font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.2em;color:rgba(255,255,255,.45);z-index:1}
+.zone.l{left:4%}.zone.r{right:4%}.zone.g{left:50%;transform:translateX(-50%);top:calc(8% + 30px);z-index:2}
+.card{position:absolute;width:56px;height:80px;border-radius:7px;background:var(--card);color:var(--card-ink);
+  box-shadow:0 4px 12px rgba(0,0,0,.4);font-family:var(--display);font-weight:800;z-index:3;user-select:none}
+.card .rk{position:absolute;inset:0;display:grid;place-items:center;font-size:36px;line-height:1;letter-spacing:-.02em}
+.card .rk.two{font-size:30px;letter-spacing:-.06em}
+.card .s{position:absolute;font-size:15px;line-height:1}
+.card .s.tl{left:5px;top:4px}
+.card .s.br{right:5px;bottom:4px;transform:rotate(180deg)}
+.card.red{color:var(--card-red)}
+.post{top:8%;z-index:4}
+.post.left{left:30%;transform:translateX(-50%)}
+.post.right{left:70%;transform:translateX(-50%)}
+.post.hit{animation:shake .45s}
+@keyframes shake{0%,100%{transform:translateX(-50%)}25%{transform:translateX(calc(-50% - 5px)) rotate(-4deg)}75%{transform:translateX(calc(-50% + 5px)) rotate(4deg)}}
+.deck{left:50%;bottom:14px;transform:translateX(-50%);background:
+  repeating-linear-gradient(45deg,#233a7a 0 6px,#1b2f66 6px 12px);border:3px solid #fff;z-index:2}
+.deck::before{content:"";position:absolute;inset:-6px -6px 6px 6px;border-radius:7px;background:#1b2f66;border:3px solid #dfe5f3;z-index:-1}
+.deck .cnt{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;color:#fff;font-size:18px}
+.deck .cnt small{display:block;white-space:nowrap;font-size:8px;letter-spacing:.04em;font-family:var(--body);font-weight:600;opacity:.8}
+.fly{left:0;top:0;z-index:6;transition:opacity .35s}
+.fly.good{box-shadow:0 0 0 3px var(--win),0 6px 18px rgba(0,0,0,.5)}
+.fly.bad{box-shadow:0 0 0 3px var(--bust),0 6px 18px rgba(0,0,0,.5)}
+.fly.pst{box-shadow:0 0 0 3px var(--post),0 6px 18px rgba(0,0,0,.5)}
+.fly.old{opacity:0}
+.callout{position:absolute;left:50%;top:calc(8% + 128px);transform:translateX(-50%);z-index:7;
+  font-family:var(--display);font-weight:800;font-size:26px;letter-spacing:.06em;white-space:nowrap;
+  text-shadow:0 2px 10px rgba(0,0,0,.6);pointer-events:none;opacity:0}
+.callout.show{animation:pop 1.1s ease-out forwards}
+@keyframes pop{0%{opacity:0;transform:translate(-50%,8px) scale(.9)}15%{opacity:1;transform:translate(-50%,0) scale(1.05)}70%{opacity:1}100%{opacity:0;transform:translate(-50%,-6px)}}
+
+/* Status + controls */
+.status{display:flex;flex-direction:row-reverse;align-items:center;justify-content:space-between;gap:10px;flex-wrap:nowrap;min-height:24px}
+.shot{display:flex;flex-direction:column;align-items:center;gap:3px;flex:none}
+.mk{height:14px;line-height:14px;font-size:14px;font-weight:800;font-family:var(--body)}
+.mk.ok{color:var(--win)}.mk.no{color:var(--bust)}.mk.po{color:var(--muted)}.mk.bk{color:#ffd76a}
+.tracker{align-items:flex-end}
+.status .tag{white-space:nowrap;flex:none}   /* money tags never truncate */
+.status{flex-wrap:wrap;row-gap:6px}
+.shots{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:.06em;white-space:nowrap}
+.shots b{color:var(--gold)}
+.tag{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;border-radius:999px;padding:4px 10px;
+  background:rgba(255,169,77,.15);color:var(--post);border:1px solid rgba(255,169,77,.4)}
+.tag.free{background:rgba(67,214,138,.14);color:var(--win);border-color:rgba(67,214,138,.45)}
+.result{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:9;min-width:62%;max-width:92%;
+  text-align:center;border-radius:14px;padding:12px 18px;background:rgba(10,18,38,.9);border:2px solid var(--line);
+  font-family:var(--display);font-weight:800;font-size:34px;letter-spacing:.05em;line-height:1.05;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.result small{display:block;font-family:var(--body);font-weight:500;font-size:13px;letter-spacing:0;color:var(--muted);margin-top:6px;line-height:1.4}
+.result.win{color:var(--win);border-color:var(--win)}
+.result.bust{color:var(--bust);border-color:var(--bust)}
+.result.show{animation:land .35s ease-out}
+.result.slam{animation:slam .55s cubic-bezier(.2,1.5,.4,1)}
+@keyframes slam{0%{opacity:0;transform:translate(-50%,-50%) scale(1.9) rotate(-4deg)}55%{opacity:1;transform:translate(-50%,-50%) scale(.93) rotate(1deg)}100%{transform:translate(-50%,-50%) scale(1)}}
+.pitch.bustfx{animation:bustfx .75s ease-out}
+.pitch.bustfx::before{content:"";position:absolute;inset:0;z-index:8;pointer-events:none;background:rgba(255,98,115,.4);animation:bustfade .75s ease-out forwards}
+@keyframes bustfx{15%{transform:translateX(-7px)}30%{transform:translateX(7px)}45%{transform:translateX(-4px)}60%{transform:translateX(3px)}100%{transform:none}}
+@keyframes bustfade{0%{opacity:0}20%{opacity:1}100%{opacity:0}}
+.dot.x{border-style:dashed;color:var(--bust);border-color:var(--bust)}
+/* dead run (can't mathematically win): the kicks left cross out one by one, the out-of-reach pays strike through, then BUSTED slams in */
+.dot.x.xin{animation:xin .38s cubic-bezier(.2,1.6,.4,1) both;animation-delay:var(--d,0s)}
+@keyframes xin{0%{opacity:0;transform:scale(1.9) rotate(-25deg)}60%{opacity:1;transform:scale(.9)}100%{opacity:.55;transform:none}}
+#tCorrect .row.gone .p{color:var(--bust);text-decoration:line-through;text-decoration-thickness:2px;opacity:.6}
+#tCorrect .row.gone.xin .p{animation:strike .45s ease-out both;animation-delay:var(--d,0s)}
+@keyframes strike{0%{opacity:1;color:#fff;text-decoration-color:transparent;transform:scale(1.15)}40%{color:var(--bust);text-decoration-color:var(--bust)}100%{opacity:.6;transform:none}}
+.crk-bust.slam span{animation:stampIn .55s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes stampIn{0%{opacity:0;transform:scale(2.6) rotate(-22deg)}55%{opacity:1;transform:scale(.9) rotate(-6deg)}100%{transform:rotate(-8deg)}}
+.crk-bust.dead{top:20%;gap:10px}.crk-bust .crk-chip.dead{background:rgba(120,20,32,.75);border-color:rgba(255,120,135,.6);font-size:12px;letter-spacing:.12em;white-space:nowrap}
+.crk-bust.slam .crk-chip.dead{animation:land2 .35s ease-out .45s both}
+@keyframes land2{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.result.slam,.pitch.bustfx,.pitch.bustfx::before,.dot.x.xin,#tCorrect .row.gone.xin .p,.crk-bust.slam span,.crk-bust.slam .crk-chip.dead{animation:none}}
+@keyframes land{0%{opacity:0;transform:translate(-50%,-50%) scale(.85)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+.dock{display:flex;flex-direction:column;gap:8px;position:sticky;bottom:0;z-index:20;
+  padding-block:8px calc(10px + env(safe-area-inset-bottom,0px));margin-block:-8px;
+  background:linear-gradient(180deg,rgba(10,18,38,0),var(--bg) 14%)}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{border:0;border-radius:14px;padding:11px 10px;font-family:var(--display);font-weight:800;font-size:26px;letter-spacing:.1em;color:#0a1226;
+  transition:transform .08s, filter .15s}
+.btn:active{transform:translateY(2px)}
+.btn:disabled{filter:grayscale(.8) brightness(.6);cursor:not-allowed}
+.btn small{display:block;font-family:var(--body);font-size:11px;letter-spacing:.08em;font-weight:600;opacity:.75}
+.btn.wide{background:linear-gradient(180deg,#8fb4ff,#5f86e6)}
+.btn.goal{background:linear-gradient(180deg,#ffe07a,var(--gold))}
+.btn.play{grid-column:1/-1;background:linear-gradient(180deg,#6ff0ab,var(--win))}
+
+/* Shot tracker */
+.tracker{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.dot{width:32px;height:32px;border-radius:50%;border:2px solid var(--muted);display:grid;place-items:center;
+  font-family:var(--display);font-weight:800;font-size:17px;line-height:1;color:var(--muted);flex:none;transition:background .2s,border-color .2s}
+.dot.next{border-color:var(--gold);box-shadow:0 0 0 3px rgba(245,200,76,.2)}
+.dot.ex{border-style:dashed}
+.dot.skip{opacity:.3}
+.dot.g{background:#27a862;border-color:#27a862;color:#fff}
+.dot.w{background:#d8384b;border-color:#d8384b;color:#fff}
+.dot.p{background:none;border-color:var(--muted);color:var(--muted);font-size:22px}
+.dot.g.miss,.dot.w.miss{opacity:1}
+.tracker .sep{font-size:10px;letter-spacing:.14em;color:var(--win);font-weight:700}
+@media (max-width:520px){.dot{width:28px;height:28px;font-size:15px}.tracker{gap:6px}}
+
+.shoe{font-variant-numeric:tabular-nums;color:var(--fg)}
+
+@media (max-width:899px){
+  body{padding-block:10px 16px}
+  .wrap{gap:10px}
+  .brand{font-size:20px}
+  .chip{padding:5px 14px}.chip .v{font-size:18px}.bar{gap:8px}.ico{width:24px}.ico svg{width:20px;height:20px}
+  .tables{padding:8px;gap:8px;border-radius:14px}
+  .pt h2{padding:5px 6px}
+  .pitch{height:196px}
+  .card{width:40px;height:58px}
+  .card .rk{font-size:27px}.card .rk.two{font-size:22px}.card .s{font-size:11px}.card .s.tl{left:4px;top:3px}.card .s.br{right:4px;bottom:3px}
+  .post{top:7%}.net{top:7%;height:58px}.line,.box{top:calc(7% + 58px)}.zone{top:calc(7% + 62px)}.zone.g{top:calc(7% + 20px)}
+  .deck{bottom:10px}.deck .cnt{font-size:14px}.deck .cnt small{font-size:6.5px;letter-spacing:0}
+  .callout{top:calc(7% + 84px);font-size:21px}
+  .result{font-size:28px;padding:10px 14px}
+  :root{--rowh:23px}.row .p{font-size:16px}.pt h2{font-size:14px}.pt h2 span{font-size:10px}
+  .shots{font-size:17px}
+  .row .lock{left:26px;font-size:0;padding:1px 4px}.row .lock::after{content:"LOCK";font-size:9px;letter-spacing:.08em}
+  .btn{font-size:22px}
+  .dot{width:26px;height:26px;font-size:14px}.dot.p{font-size:18px}.tracker{gap:6px}
+}
+@media (max-width:899px) and (max-height:700px){
+  .pitch{height:168px}:root{--rowh:21px}.row .p{font-size:15px}
+  .callout{top:calc(7% + 76px);font-size:19px}
+  .result{font-size:24px;padding:8px 12px}.result small{margin-top:3px}
+  .btn{padding:8px 10px;font-size:20px}
+  .tag{font-size:10px;padding:3px 8px}
+}
+@media (min-width:900px){
+  .wrap{max-width:1100px;display:grid;grid-template-columns:minmax(320px,380px) minmax(0,1fr);column-gap:22px;row-gap:12px;align-items:start;
+    grid-template-areas:"bar bar" "tabs tabs" "tables pitch" "tables dock" "foot log" "tools log" "rules rules"}
+  .wrap.off{grid-template-areas:"bar bar" "tabs tabs" "soon soon" "foot tools"}
+  .bar{grid-area:bar}.lobby{grid-area:soon}.tables{grid-area:tables}.pitch{grid-area:pitch}.dock{grid-area:dock}
+  .pitch{height:280px}
+}
+@media (prefers-reduced-motion:reduce){
+  .callout.show{animation-duration:.01s;opacity:1}
+  .post.hit{animation:none}
+}
+
+/* Run Game controls */
+.wrap.run .tables{border-color:#e9c05c;box-shadow:inset 0 0 0 1px #e9c05c,0 0 20px rgba(233,192,92,.25)}
+.wrap.run .pt h2 span{color:#ffe7a6}
+.tag.rbank{background:#0d1631;color:var(--fg);border-color:var(--line)}
+.tag.run{background:rgba(233,192,92,.14);color:#ffe7a6;border-color:rgba(233,192,92,.45)}
+.result.ko{color:#ffe7a6;border-color:#e9c05c;background:rgba(20,14,0,.92)}
+.dot.k{border-color:#e9c05c;color:#e9c05c}
+.controls.endset{grid-template-columns:1fr 2fr}
+.btn.lobbyb{background:#16224a;color:var(--fg);box-shadow:inset 0 0 0 2px #5d72bd;letter-spacing:.08em}
+.btn.endb{background:linear-gradient(180deg,#ffe07a,var(--gold));color:#1b1606;letter-spacing:.08em}
+.btn.endb{display:flex;flex-direction:column;align-items:center;line-height:1.05}
+.btn.endb small{font-family:var(--display);font-size:16px;font-weight:800;letter-spacing:.04em;opacity:.85;font-variant-numeric:tabular-nums;margin-top:2px}
+/* v167 run deck: the module's whole-screen scrim (RunBar.setScreenDim on <body>) dims everything; only the bar's buttons sit above it.
+   The dock is sticky (a stacking context that would trap the buttons under the scrim), so while the bar is up it sits in the flow instead. */
+body{position:relative;min-height:100vh;box-sizing:border-box}
+.tables{position:relative}
+.wrap.barup .dock{position:relative;z-index:auto}
+/* A return at or below the stake is never celebrated */
+.result.flat{color:var(--fg);border-color:var(--line)}
+.result .pre{display:block;margin:0 0 4px;font-family:var(--display);font-size:13px;font-weight:800;letter-spacing:.16em;color:var(--muted)}
+/* Kick Bonus */
+.pt{transition:opacity .35s}
+.pt.o70{opacity:.7}.pt.o80{opacity:.8}.pt.o0{opacity:0;visibility:hidden}
+.pt.o50>h2,.pt.o50>#tBonus{opacity:.3}.pt>h2,#tBonus{transition:opacity .35s}
+.pt.bonus h2{color:var(--gold)}   /* same header as CORRECT */
+.row.rung .p{color:#ffd76a}
+.row.rung.cur .p{color:var(--fg)}.row.rung.cur.hot .p{color:#0a1226}
+.row.rung.paid{background:rgba(67,214,138,.28);box-shadow:inset 0 0 0 2px var(--win)}
+.row.rung.paid .p,.row.rung.paid .n{color:var(--fg)}
+.meter{height:calc(var(--rowh) * 3);border-top:1px solid #16213f;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  font-family:var(--display);font-weight:800;letter-spacing:.14em;font-size:12px;color:var(--muted)}
+.pips{display:flex;gap:8px}
+.meter{flex-direction:column-reverse}
+.pip{position:relative;width:28px;height:28px;border-radius:50%;border:2px solid var(--muted);display:grid;place-items:center;font-size:12px;color:transparent;transition:all .25s}
+.pip::before{content:'';position:absolute;left:50%;top:50%;width:3px;height:11px;border-radius:2px;background:var(--muted);transform:translate(-50%,-50%)}
+.pip.on::before,.meter.go .pip::before{display:none}
+.pip.on{background:var(--post);border-color:var(--post);color:#0a1226}
+.meter.go{color:#ffd76a;animation:flash .8s steps(2) infinite}
+.meter.go .pip{background:#ffd76a;border-color:#ffd76a;color:#0a1226}
+.meter.done{color:var(--muted)}
+@keyframes flash{50%{color:#fff}}
+.wrap.bonus .pitch{border-color:#ffd76a;box-shadow:0 0 0 2px #ffd76a,0 0 28px rgba(255,215,106,.55);animation:pulse 1.4s ease-in-out infinite}
+.wrap.bonus .pitch::after{background:linear-gradient(180deg,rgba(60,40,0,.55),rgba(10,18,38,0))}
+.wrap.bonus .tables{box-shadow:0 0 0 1px #ffd76a inset}
+.wrap.bonus .btn{box-shadow:0 0 0 2px #ffd76a,0 0 18px rgba(255,215,106,.6)}
+@keyframes pulse{50%{box-shadow:0 0 0 2px #ffd76a,0 0 44px rgba(255,215,106,.85)}}
+.result.intro{color:#ffd76a;border-color:#ffd76a;font-size:44px;background:rgba(20,14,0,.92)}
+.result.gold{color:#ffd76a;border-color:#ffd76a}
+.dot.b{border-color:#ffd76a;color:#ffd76a}
+.dot.b.on{background:#ffd76a;color:#0a1226}
+.dot.b.next{box-shadow:0 0 0 3px rgba(255,215,106,.35)}
+.tracker .bl{font-size:10px;letter-spacing:.14em;color:#ffd76a;font-weight:700;margin-right:2px}
+@media (max-width:899px){.result.intro{font-size:34px}.pip{width:24px;height:24px}.pip::before{height:9px}.meter{gap:4px;font-size:10px}}
+@media (prefers-reduced-motion:reduce){.pt,#tBonus{transition:none}.wrap.bonus .pitch{animation:none}.meter.go{animation:none}}
+/* EBG shell: the Parlay window bar carries the game name and close, so the game's own lobby door and title are removed (hidden, not clickable) */
+#bLobby,.bar .brand{display:none!important}
+/* first paint: nothing shows until the game has started, so the lobby is the first screen (never a flash of the game board) */
+html:not(.kready) body>*{visibility:hidden}
+/* EBG shell: no LOBBY buttons (the end bar is PLAY AGAIN only, full width) */
+#bToLobby{display:none!important}
+.endset{grid-template-columns:1fr!important}
+#rbank{display:none!important}
+/* EBG shell: while PLAY AGAIN (or CHANGE BET) is up, the whole game screen dims to 70%; the end bar and the end toast / BUSTED stamp sit above it */
+.crk-toast,.crk-bust{z-index:902}   /* RUN BANK shows on the run bar only */
+/* Rules ⓘ (CardRunRules): above the whole-screen scrim (z 900), like the run bar and PLAY AGAIN; the sheet itself opens at z 2000 */
+#bRules{position:relative;z-index:903}
+/* EBG shell: the lobby's BUILD x RUN = WIN strip, bet and PLAY are pinned to the bottom of the screen (as in Blackjack, Crash and Mines) */
+body{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+.wrap{flex:1 0 auto;width:100%}
+.lobby:not([hidden]){flex:1 0 auto}
+.lobby .lb-desc{margin-bottom:18px;text-wrap:balance;margin-inline:auto}   /* balanced: the description's lines come out the same width */
+.lobby .lb-math{margin-top:auto!important}
+
+.wrap.enddim .dock{position:relative;z-index:auto}
+/* ===== PLAY AGAIN (and CHANGE BET): the shared end-of-round button ===== */
+html body #controls #bAgain{all:unset;position:relative;z-index:901;box-sizing:border-box;cursor:pointer;width:100%;min-height:78px;border-radius:999px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 18px;text-align:center;
+  background:linear-gradient(180deg,#f9da80 0%,#efc356 50%,#e2aa3c 100%);border:1.5px solid #f7de90;color:#141a29;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -2px 0 rgba(150,95,10,.25),0 6px 16px rgba(0,0,0,.35);font-family:Montserrat,Rubik,system-ui,sans-serif;transition:transform .08s,filter .15s}
+html body #controls #bAgain:hover{filter:brightness(1.05)}html body #controls #bAgain:active{transform:scale(.98)}html body #controls #bAgain:focus-visible{outline:2px solid #fff;outline-offset:3px}
+html body #controls #bAgain #aLab{font-family:Montserrat,Rubik,system-ui,sans-serif;font-size:15px;font-weight:800;letter-spacing:.16em;line-height:1.1;color:#1d2230;opacity:1;text-transform:uppercase;white-space:nowrap}
+html body #controls #bAgain small{font-family:Montserrat,Rubik,system-ui,sans-serif;font-size:28px;font-weight:800;letter-spacing:.01em;line-height:1.05;color:#141a29;opacity:1;margin:0;font-variant-numeric:tabular-nums;white-space:nowrap}
+</style>
+
+<script>
+/* EBG shell: RUN BANK shows on the run bar only. Removes it from the end toast, the BUSTED stamp and LOCK IN as they are drawn. */
+(function () {
+  function strip(root) {
+    if (!root || !root.querySelectorAll) return;
+    root.querySelectorAll('.crk-chip, .eb').forEach(function (e) { if (/RUN BANK/.test(e.textContent)) e.remove(); });
+    root.querySelectorAll('.crk-lc .crk-rb').forEach(function (e) { e.remove(); });
+  }
+  function start() {
+    strip(document.body);
+    new MutationObserver(function (ms) { ms.forEach(function (m) { m.addedNodes.forEach(function (n) { if (n.nodeType === 1) { strip(n.parentNode || n); } }); }); })
+      .observe(document.body, { childList: true, subtree: true });
+  }
+  if (document.body) start(); else document.addEventListener('DOMContentLoaded', start);
+})();
+</script>
+<div class="wrap" id="wrap">
+  <header class="bar">
+    <button class="ico" id="bLobby" type="button" aria-label="Back to lobby" title="Lobby"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4H5v16h3"/><path d="M20 12H10"/><path d="M14 8l-4 4 4 4"/></svg></button>
+    <button id="bRules" type="button"></button>
+    <div class="brand">KICKS<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></div>
+    <span class="sp"></span>
+    <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 9.5h4L13 5v14l-5-4.5H4z"/><path d="M16.5 9.5a3.5 3.5 0 010 5" stroke-linecap="round"/></svg></span>
+    <div class="chip bal" aria-label="Balance"><div class="v"><span class="cur">$</span><span id="bal">1,000.00</span></div></div>
+  </header>
+
+  <section class="lobby" id="lobby" aria-label="Lobby" hidden>
+    <h1 class="lb-h"><img class="lb-logo" src="data:image/webp;base64,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" width="1100" height="167" alt="BUILD IT. RUN IT."></h1>
+    <p class="lb-sub"><span class="nw">Build a 20× win</span><span class="lb-dot" aria-hidden="true"></span><span class="nw">then take it on a 1,000× run</span></p>
+    <svg class="lb-ico" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M32 9C38 17 50 24 50 34C50 42 41.5 45 36 39L38.5 50H25.5L28 39C22.5 45 14 42 14 34C14 24 26 17 32 9Z"/><path d="M16 46C17 30 30 17 52 17"/><path d="M52 17L44 13M52 17L46.5 24"/></svg>
+    <h2 class="lb-name" id="lbName"></h2>
+    <p class="lb-desc" id="lbDesc"></p>
+    <div class="lb-math">
+      <div class="lb-tile"><small>BUILD</small><b id="lbBuild"></b></div><span class="lb-op">×</span>
+      <div class="lb-tile"><small>RUN</small><b>1,000×</b></div><span class="lb-op">=</span>
+      <div class="lb-tile win"><small>WIN UP TO</small><b id="lbWin"></b></div>
+    </div>
+    <div class="lb-bet" id="lbBetFree"><span class="cur">$</span><input id="betInput" type="text" inputmode="decimal" autocomplete="off" aria-label="Bet amount"><button type="button" id="betMax">MAX</button></div>
+    <button class="lb-play" id="bPlay" type="button">PLAY</button>
+  </section>
+
+  <section class="tables" aria-label="Pay tables">
+    <div class="pt"><h2><span class="ht" id="hCt">CORRECT</span><span id="hC">POSTS LOSE</span></h2><div id="tCorrect"></div></div>
+    <div class="pt bonus"><h2>POSTS BONUS<span id="hB"></span></h2><div id="tBonus"></div>
+      <div class="meter" id="meter"><span id="mLabel">POSTS</span><div class="pips"><span class="pip"></span></div></div>
+    </div>
+  </section>
+
+  <section class="pitch" id="pitch" aria-label="Pitch">
+    <div class="net"></div>
+    <div class="line"></div>
+    <div class="box"></div>
+    <div class="card post left" id="postL"><span class="s tl">♠</span><span class="rk">5</span><span class="s br">♠</span></div>
+    <div class="card post right red" id="postR"><span class="s tl">♥</span><span class="rk">Q</span><span class="s br">♥</span></div>
+    <div class="card deck" id="deck"></div>
+    <div class="callout" id="callout"></div>
+    <div class="result" id="result" hidden></div>
+  </section>
+
+  <div class="dock">
+    <div class="status">
+      <div class="shots" id="shots"></div>
+      <span class="tag" id="tag" hidden></span>
+      <span class="tag rbank" id="rbank" hidden></span>
+    </div>
+    <div class="tracker" id="tracker" aria-label="Shot tracker"></div>
+        <div class="controls" id="controls">
+      <button class="btn wide" id="bWide" type="button">WIDE<small id="wSub">2–4 · K · A · 14</small></button>
+      <button class="btn goal" id="bGoal" type="button">GOAL<small id="gSub">6 – J</small></button>
+      <button class="btn lobbyb" id="bToLobby" type="button" hidden>LOBBY</button><button class="btn endb" id="bAgain" type="button" data-primary hidden><span id="aLab">PLAY AGAIN</span><small id="aAmt"></small></button>
+    </div>
+    <div class="crk-ribbon" id="rbHost" hidden></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/*!
+ * Card Run · RUN BAR reference module · v170 (v170: RUN IT AGAIN and RUN HALF removed for certification — the bar is CASH OUT, DOUBLE OR NOTHING and DOUBLE HALF (+ the RUN BANK); minimum $0.02 as v169; run deck style: calm amounts, half-bet links, whole-screen dim; CASHED OUT toast; GRP 1.2 with the LOCK IN, PLAY AGAIN, RUN BANK and run-bar-copy amendments)
+ * One file, no dependencies. The same mechanic, numbers, copy and design as Card Run Blackjack prototype v152.
+ *
+ *   RunBar.compute(state)                → the numbers and which controls show (pure; unit-tested in run-bar.test.js)
+ *   RunBar.render(el, state, on)         → draws the run bar into el (the action ribbon)
+ *   RunBar.renderEnd(el, {bet,balance}, on)        → PLAY AGAIN $bet  /  CHANGE BET · BALANCE $n
+ *   RunBar.renderHandoff(el, {label,amount,badge}, on)  → one gold label-over-amount button
+ *   RunBar.renderLockIn(el, {amount,maxWin,banked,half}, on) → LOCK IN $N (+ LOCK IN HALF $keep); returns {set(amount)} for a live board (crash)
+ *   RunBar.toast(host, {variant,title,paid,runBank,plain})  → end toast: CASHED OUT / MAX WIN / 1,000× RUN · PAID $total · INCLUDES RUN BANK $B
+ *       v165: CASH OUT shows it too (title 'CASHED OUT'); plain:true when the total is at or below the stake (shown, not celebrated)
+ *   RunBar.bustStamp(host, {runBank})               → BUSTED stamp (+ RUN BANK $B chip)
+ *   RunBar.setScreenDim(rootEl, barEl, on, opacity) → v167 whole-screen dim, default 65%, fades in with the bar
+ *   RunBar.setDim([boardEl, ribbonEl], on, opacity) → the old per-element dim (pre-v167 hosts only)
+ *
+ * state = { held, banked, ammo, maxWin, variant }   all money in dollars (handled internally as integer cents)
+ *   held    S: what the round holds and can run now
+ *   banked  B: the RUN BANK (round escrow; never in the wallet until the round ends)
+ *   ammo    A: what the build produced (the base round's win, the LOCK IN amount, or the P2 prize). Run cap = 1,000 × A
+ *   maxWin  MW: the operator MAX WIN in dollars (multiple × bet)
+ *   variant the variant name, e.g. 'CLASSIC' (accepted, not used since v170)
+ * on = { cashOut(total), double(stake), doubleHalf(stake, bank), paidOut(kind,total) }
+ *   The module never moves money. The host credits RUN BANK + held in ONE payment when the round ends.
+ */
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) module.exports = factory();
+  else root.RunBar = factory();
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+  var MIN_RUN = 2, CAP_X = 1000;                       // $0.02, in cents: the smallest amount DOUBLE OR NOTHING / DOUBLE HALF will take
+  var c = function (x) { return Math.round(Number(x) * 100); };        // dollars -> cents
+  var d = function (n) { return n / 100; };                             // cents -> dollars
+  var money = function (n) {                                            // cents -> "1,234.56"
+    var s = (Math.abs(n) / 100).toFixed(2).split('.');
+    return (n < 0 ? '-' : '') + s[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '.' + s[1];
+  };
+
+  /* ------------------------------------------------------------------ the numbers ------------------------------------------------------------------ */
+  function compute(st) {
+    var S = c(st.held), B = c(st.banked || 0), A = c(st.ammo), MW = c(st.maxWin), cap = CAP_X * A;
+    if (B + S > MW) S = MW - B;                                     // MAX WIN clips every payout
+    var total = B + S;
+    if (total >= MW) return { mode: 'max_win', held: S, banked: B, total: total };
+    if (total >= cap) return { mode: 'run_cap', held: S, banked: B, total: total };
+    var half = Math.floor(S / 2), keep = S - half;                  // integer cents: an odd cent is kept (banked)
+    var show = {
+      double: S >= MIN_RUN && B + 2 * S <= MW,
+      doubleHalf: half >= MIN_RUN && B + keep + 2 * half <= MW
+    };
+    show.halfPill = show.doubleHalf;
+    show.cashOutOnly = !show.double && !show.doubleHalf;
+    var nCap = Math.max(1, Math.ceil(Math.log2(Math.max(1, (cap - B) / S)) - 1e-9));
+    var nMW = Math.max(1, Math.floor(Math.log2((MW - B) / S) + 1e-9));
+    return {
+      mode: 'bar', held: S, banked: B, total: total, half: half, keep: keep, show: show,
+      nMax: Math.min(nCap, nMW), cap: cap, maxWin: MW,
+      copy: {
+        cashOut: '$' + money(total),
+        runBank: B > 0 ? '$' + money(B) : null,
+        double: '$' + money(2 * S),
+        doubleLine: Math.min(nCap, nMW) + (Math.min(nCap, nMW) === 1 ? ' DOUBLE MAX' : ' DOUBLES MAX'),
+        half: '$' + money(keep),
+        halfStake: '$' + money(half)      // the half link shows the stake (what doubles); the odd cent is banked
+      }
+    };
+  }
+
+  /* ------------------------------------------------------------------ styles ------------------------------------------------------------------ */
+  var CSS = [
+    '.crk-bar{position:relative;display:grid;grid-template-columns:minmax(0,1fr);gap:8px 10px;font-family:"Chakra Petch",Montserrat,system-ui,sans-serif;animation:crkIn .35s cubic-bezier(.2,1.5,.4,1) both}',
+    '@keyframes crkIn{from{transform:translateY(14px) scale(.96);opacity:.3}}',
+    '.crk-btn{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:999px;font-family:"Chakra Petch",Montserrat,system-ui,sans-serif;font-weight:700;-webkit-tap-highlight-color:transparent;transition:transform .08s,filter .15s}',
+    '.crk-btn:active{transform:scale(.97)}.crk-btn:hover{filter:brightness(1.07)}.crk-btn:focus-visible{outline:2px solid #e9bc57;outline-offset:3px}',
+    '.crk-c{justify-self:center;position:relative;display:flex;align-items:center;transform-origin:center;white-space:nowrap}',
+    '.crk-cash{flex:none;height:44px;padding:0 22px;gap:12px;background:rgba(9,16,38,.94);border:1.5px solid #4f5d8c;color:#c9d1ea;box-shadow:0 4px 14px rgba(0,0,0,.35)}',
+    '.crk-cash .t{font-size:14px;letter-spacing:.16em}.crk-cash .a{font-size:21px;color:#fff}',
+    '.crk-rb{position:absolute;left:50%;bottom:calc(100% - 9px);transform:translateX(-50%);z-index:2;display:flex;align-items:baseline;gap:7px;line-height:1;padding:4px 12px;border-radius:999px;background:#163a2a;border:1px solid #2f6b4b;box-shadow:0 2px 8px rgba(0,0,0,.35);font-family:Montserrat,system-ui,sans-serif;white-space:nowrap;pointer-events:none}',
+    '.crk-rb i{font-style:normal;font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#7fd8a4}.crk-rb b{font-family:"Chakra Petch",Montserrat,sans-serif;font-weight:700;font-size:14px;color:#9ff0bf}',
+    '.crk-dbl{height:66px;padding:4px 10px;flex-direction:column;line-height:1.05;text-align:center;min-width:0;overflow:hidden}',
+    '.crk-dbl .t{line-height:16px}.crk-dbl .a{line-height:26px}.crk-dbl .s{line-height:13px}',   /* fixed line boxes: shrinking a big amount never changes the bar height (v152.2) */
+    '.crk-dbl{background:#e9bc57;color:#1c1a12;box-shadow:0 0 0 3px rgba(233,188,87,.18),0 0 18px rgba(233,188,87,.35)}',
+    '.crk-dbl .t{font-size:clamp(12px,3.6vw,15px);letter-spacing:.05em;white-space:nowrap}',
+    '.crk-dbl .a{font-size:clamp(19px,6vw,26px);letter-spacing:.01em;white-space:nowrap}',
+    '.crk-dbl .s{font-family:Montserrat,system-ui,sans-serif;font-weight:800;white-space:nowrap;margin:2px 0 1px;font-size:11px;letter-spacing:.12em;opacity:.95}',
+    /* v167 run deck: the half bet is a text link under DOUBLE OR NOTHING: the stake (half-tone) over DOUBLE HALF + /BANK HALF, underlined; one 44px tap target */
+    '.crk-hl{all:unset;box-sizing:border-box;cursor:pointer;justify-self:center;align-self:start;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:44px;padding:2px 8px;font-family:"Chakra Petch",Montserrat,sans-serif;font-weight:700;white-space:nowrap;-webkit-tap-highlight-color:transparent;transition:transform .08s;animation:crkIn .35s cubic-bezier(.2,1.5,.4,1) both}',
+    '.crk-hl:active{transform:scale(.96)}.crk-hl:focus-visible{outline:2px solid #e9bc57;outline-offset:2px;border-radius:8px}',
+    '.crk-hl .ha{font-size:15px;line-height:1;color:#fff;opacity:.5;letter-spacing:.02em}',
+    '.crk-hl .hlt{font-size:12px;line-height:1;letter-spacing:.08em;color:#8a94b8;padding-bottom:4px;border-bottom:1.5px solid rgba(138,148,184,.75)}',
+    '.crk-hl .hlt b{font-weight:700;color:#e9bc57}',
+    /* v167 run deck: calm amounts. CASH OUT and RUN BANK amounts half-tone; the big buttons' amounts smaller at full strength; DOUBLE OR NOTHING in pure black */
+    '.crk-cash .a,.crk-rb b{opacity:.5}',
+    '.crk-dbl .a{font-size:clamp(16px,4.8vw,20px);line-height:24px;margin-top:2px}',
+    '.crk-dbl,.crk-dbl .t,.crk-dbl .a{color:#000}',
+    /* v167 run deck: ONE whole-screen dim (a scrim over the screen root), fading in with the bar; only the bar sits above it */
+    '.crk-scrim{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none;z-index:900;transition:opacity .2s ease}',
+    '.crk-scrim.on{opacity:var(--crk-dim,.65);transition:opacity .35s cubic-bezier(.2,.8,.3,1)}',
+    '.crk-lift>*{position:relative;z-index:901}',   /* only the bar\'s buttons sit above the scrim; its ribbon dims with the screen */
+    /* gold full-width buttons: the end bar (PLAY AGAIN), the phase hand-off and LOCK IN. Anton, label over amount */
+    '.crk-one{display:grid;grid-template-columns:1fr}',
+    '.crk-gold{all:unset;box-sizing:border-box;cursor:pointer;min-height:76px;border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:8px 4px;background:#e9bc57;color:#1c1a12;box-shadow:0 0 0 3px rgba(233,188,87,.18);font-family:Anton,Impact,"Arial Narrow",sans-serif;line-height:1.05;text-align:center;transition:transform .08s,filter .15s;animation:crkIn .35s cubic-bezier(.2,1.5,.4,1) both}',
+    '.crk-gold:active{transform:scale(.97)}.crk-gold:hover{filter:brightness(1.07)}.crk-gold:focus-visible{outline:2px solid #fff;outline-offset:3px}',
+    '.crk-gold .t{font-size:clamp(15px,4.9vw,21px);letter-spacing:.03em;white-space:nowrap}.crk-gold .a{font-size:clamp(18px,6vw,26px);letter-spacing:.03em;white-space:nowrap}',
+    '.crk-lock{gap:10px}.crk-lc{grid-area:auto;justify-self:stretch}.crk-lc .crk-gold{width:100%}.crk-lc .crk-rb{bottom:calc(100% - 9px)}',
+    '.crk-lh{justify-self:center;min-height:44px;padding:0 22px;gap:10px;background:#0f1a34;border:1.5px solid #8a7440;color:#e9e3d0}.crk-lh .t{font-size:11px;letter-spacing:.08em}.crk-lh .a{font-size:17px;color:#fff}.crk-lh[hidden]{display:none}',
+    '.crk-badge{margin-left:16px;font-family:Montserrat,system-ui,sans-serif;font-size:.5em;font-weight:900;letter-spacing:.08em;vertical-align:.22em;padding:3px 8px;border-radius:6px}',
+    '.crk-badge.on{background:#1f6b3f;color:#fff}.crk-badge.off{background:rgba(28,26,18,.18);color:rgba(28,26,18,.6)}',
+    /* toast and bust stamp (place host on the board, position:relative) */
+    '.crk-toast{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);z-index:46;min-width:62%;max-width:88%;padding:12px 22px 15px;border-radius:14px;text-align:center;pointer-events:none;background:rgba(6,12,32,.86);border:1px solid rgba(255,255,255,.12);font-family:Montserrat,system-ui,sans-serif}',
+    '.crk-toast .eh{font-size:10.5px;font-weight:800;letter-spacing:.24em;color:#c3c9de;opacity:.85}.crk-toast .et{margin-top:6px;font-size:28px;font-weight:900;letter-spacing:.04em;color:#f5c84b;line-height:1.05}',
+    '.crk-toast{width:max-content}.crk-toast .et,.crk-toast .es,.crk-toast .crk-chip{white-space:nowrap}.crk-toast .et.plain{color:#e6ebfa;font-size:24px}',   /* v165: one line each; plain = at or below the stake, never celebrated */
+    '.crk-toast .es{margin-top:6px;font-size:11px;font-weight:800;letter-spacing:.1em;color:#d5dcf2}',
+    '.crk-chip{margin-top:9px;display:inline-block;padding:4px 12px;border-radius:9px;background:rgba(53,107,65,.55);border:1px solid rgba(157,245,207,.5);font-size:14px;font-weight:900;letter-spacing:.08em;color:#fff;font-style:normal}',
+    '.crk-bust{position:absolute;left:0;right:0;top:38%;z-index:45;display:flex;flex-direction:column;align-items:center;gap:16px;pointer-events:none;font-family:Montserrat,system-ui,sans-serif}',
+    '.crk-bust span{font-family:Anton,Impact,sans-serif;font-size:clamp(54px,17vw,76px);letter-spacing:.04em;color:#ff4d5e;padding:0 18px;border:4px solid #ff4d5e;border-radius:10px;transform:rotate(-8deg);background:rgba(20,4,8,.55)}',
+    /* the board dim, "double cover": board and ribbon take the same black overlay at the same opacity and timing */
+    '.crk-dimmable{position:relative}.crk-dimmable::after{content:"";position:absolute;inset:0;border-radius:inherit;background:#000;opacity:0;pointer-events:none;z-index:40;transition:opacity .2s ease}',
+    '.crk-dimmable.crk-dim::after{opacity:var(--crk-dim,.36);transition:opacity .45s ease 1.2s}',
+    '.crk-ribbon.crk-dimmable::after{z-index:0}.crk-ribbon.crk-dimmable>*{position:relative;z-index:1}',   /* the bar sits above its ribbon's overlay; the buttons are never dimmed */
+    '@media (prefers-reduced-motion: reduce){.crk-bar,.crk-gold,.crk-hl{animation:none}.crk-dimmable::after,.crk-scrim{transition:none!important}}'
+  ].join('\n');
+  var injected = false;
+  function injectCSS() {
+    if (injected || typeof document === 'undefined') return; injected = true;
+    var s = document.createElement('style'); s.id = 'crk-run-bar-css'; s.textContent = CSS; document.head.appendChild(s);
+  }
+
+  /* ------------------------------------------------------------------ helpers ------------------------------------------------------------------ */
+  var lockUntil = 0;
+  if (typeof document !== 'undefined') {
+    ['keydown', 'keyup'].forEach(function (t) {
+      document.addEventListener(t, function (e) {
+        if ((e.key === 'Enter' || e.key === ' ') && performance.now() < lockUntil && e.target.closest && e.target.closest('.crk-bar,.crk-one')) { e.preventDefault(); e.stopPropagation(); }
+      }, true);
+    });
+  }
+  function mount(el, html, cls) {                       // swaps the ribbon's content; 350 ms input lock so a double tap can't land on the new buttons
+    injectCSS(); el.innerHTML = ''; var box = document.createElement('div'); box.className = cls; box.innerHTML = html; el.appendChild(box);
+    box.style.pointerEvents = 'none'; setTimeout(function () { box.style.pointerEvents = ''; }, 350); lockUntil = performance.now() + 350;
+    return box;
+  }
+  function fit(box) {
+    var cw = box.querySelector('.crk-c');               // CASH OUT (+ RUN BANK pill) never wraps: the row scales if it must
+    if (cw) { var avail = box.clientWidth - 8, w = cw.scrollWidth; if (w > avail) cw.style.transform = 'scale(' + (avail / w).toFixed(3) + ')'; }
+    box.querySelectorAll('.crk-dbl').forEach(function (b) {   // big amounts shrink a line rather than wrap or clip
+      var avail = b.clientWidth - 22;
+      b.querySelectorAll('.t,.a,.s').forEach(function (e) { e.style.fontSize = ''; var w = e.scrollWidth; if (w > avail) { var f = parseFloat(getComputedStyle(e).fontSize); e.style.fontSize = (f * avail / w).toFixed(2) + 'px'; } });
+    });
+    box.querySelectorAll('.crk-hl').forEach(function (h) { var cell = box.clientWidth - 12; h.querySelectorAll('.hlt,.ha').forEach(function (e) { e.style.fontSize = ''; var w = e.scrollWidth; if (w > cell) { var f = parseFloat(getComputedStyle(e).fontSize); e.style.fontSize = (f * cell / w).toFixed(2) + 'px'; } }); });   // a half link shrinks rather than wrap or clip
+  }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (ch) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]; }); }
+
+  /* ------------------------------------------------------------------ the run bar ------------------------------------------------------------------ */
+  function render(el, st, on) {
+    on = on || {}; var r = compute(st);
+    if (r.mode !== 'bar') { if (on.paidOut) on.paidOut(r.mode, d(r.total)); return r; }   // MAX WIN or the 1,000× run cap: pay at once, no bar
+    var s = r.show, k = r.copy, nD = r.nMax;
+    var html =
+      '<div class="crk-c">' + (k.runBank ? '<div class="crk-rb" aria-hidden="true"><i>RUN BANK</i><b>' + k.runBank + '</b></div>' : '') +
+        '<button class="crk-btn crk-cash" data-act="cashOut" aria-label="Cash out ' + k.cashOut + (k.runBank ? ', including run bank ' + k.runBank : '') + '"><span class="t">CASH OUT</span><span class="a">' + k.cashOut + '</span></button></div>' +
+      (s.double ? '<button class="crk-btn crk-dbl" data-act="double" aria-label="Double or nothing, ' + k.double + '"><span class="t">DOUBLE OR NOTHING</span><span class="a">' + k.double + '</span></button>' : '') +
+      (s.doubleHalf ? '<button class="crk-hl dh" data-act="doubleHalf" aria-label="Double half: ' + k.halfStake + ' doubles, ' + k.half + ' to the run bank"><span class="ha">' + k.halfStake + '</span><span class="hlt"><b>DOUBLE HALF</b>/BANK HALF</span></button>' : '');
+    var box = mount(el, html, 'crk-bar');
+    fit(box);
+    var S = d(r.held), half = d(r.half), keep = d(r.keep);
+    box.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-act]'); if (!b) return; var a = b.getAttribute('data-act');
+      if (a === 'cashOut' && on.cashOut) on.cashOut(d(r.total));
+      if (a === 'double' && on.double) on.double(S);
+      if (a === 'doubleHalf' && on.doubleHalf) on.doubleHalf(half, keep);
+    });
+    var f = box.querySelector('[data-act="cashOut"]'); if (f) f.focus({ preventScroll: true });   // focus on the safe default
+    return r;
+  }
+
+  function renderEnd(el, st, on) {
+    on = on || {}; var bet = c(st.bet), bal = c(st.balance), can = bal >= bet;
+    var html = can ? '<button class="crk-gold" data-act="again" aria-label="Play again, bet $' + money(bet) + '"><span class="t">PLAY AGAIN</span><span class="a">$' + money(bet) + '</span></button>'
+                   : '<button class="crk-gold" data-act="change" aria-label="Change bet"><span class="t">CHANGE BET</span><span class="a">BALANCE $' + money(bal) + '</span></button>';
+    var box = mount(el, html, 'crk-one'); var b = box.querySelector('button');
+    b.addEventListener('click', function () { if (can) { if (on.playAgain) on.playAgain(d(bet)); } else if (on.changeBet) on.changeBet(); });
+    b.focus({ preventScroll: true }); return can;
+  }
+
+  function renderHandoff(el, st, on) {
+    on = on || {}; var badge = st.badge ? ' <span class="crk-badge ' + (st.badge.on ? 'on' : 'off') + '">' + esc(st.badge.label) + ' ' + (st.badge.on ? 'ON' : 'OFF') + '</span>' : '';
+    var html = '<button class="crk-gold" data-act="go"><span class="t">' + esc(st.label) + '</span><span class="a">' + (st.amount != null ? '$' + money(c(st.amount)) : esc(st.sub || '')) + badge + '</span></button>';
+    var box = mount(el, html, 'crk-one'); var b = box.querySelector('button');
+    b.addEventListener('click', function () { if (on.go) on.go(); }); b.focus({ preventScroll: true });
+  }
+
+  function renderLockIn(el, st, on) {                 // LOCK IN $N: the stop that leads to the run bar (a build that can be stopped early, or a crash board's own stop)
+    // st = { amount, maxWin, banked, half }   on = { lockIn(amount), lockInHalf(keep, flying), paidOut('max_win', total) }
+    // Returns { set(amount), amount() }: a live board (crash) calls set() every tick; the button updates in place (no remount, no new input lock).
+    on = on || {}; var B = c(st.banked || 0), MW = st.maxWin != null ? c(st.maxWin) : Infinity, amt = 0, done = false;
+    var html = '<div class="crk-c crk-lc">' + (B > 0 ? '<div class="crk-rb" aria-hidden="true"><i>RUN BANK</i><b>$' + money(B) + '</b></div>' : '') +
+      '<button class="crk-gold" data-act="lock"><span class="t">LOCK IN</span><span class="a"></span></button></div>' +
+      (st.half ? '<button class="crk-btn crk-lh" data-act="lockHalf"><span class="t">LOCK IN HALF</span><span class="a"></span></button>' : '');
+    var box = mount(el, html, 'crk-one crk-lock'), b = box.querySelector('[data-act="lock"]'), h = box.querySelector('[data-act="lockHalf"]');
+    function set(x) {
+      if (done) return; amt = c(x); if (B + amt > MW) amt = MW - B;             // clipped to MAX WIN
+      b.querySelector('.a').textContent = '$' + money(amt); b.setAttribute('aria-label', 'Lock in $' + money(amt));
+      if (h) { var keep = amt - Math.floor(amt / 2); h.hidden = Math.floor(amt / 2) < MIN_RUN; h.querySelector('.a').textContent = '$' + money(keep); h.setAttribute('aria-label', 'Lock in half: $' + money(keep) + ' to the run bank'); }
+      if (B + amt >= MW) { done = true; if (on.paidOut) on.paidOut('max_win', d(B + amt)); }   // reaching MAX WIN pays at once
+    }
+    b.addEventListener('click', function () { if (done) return; done = true; if (on.lockIn) on.lockIn(d(amt)); });
+    if (h) h.addEventListener('click', function () { if (done) return; var fly = Math.floor(amt / 2), keep = amt - fly; if (fly < MIN_RUN) return; done = true; if (on.lockInHalf) on.lockInHalf(d(keep), d(fly)); });
+    set(st.amount || 0);
+    return { set: set, amount: function () { return d(amt); } };
+  }
+
+  function toast(host, st) {
+    injectCSS(); var t = document.createElement('div'); t.className = 'crk-toast'; t.setAttribute('role', 'status'); t.setAttribute('aria-live', 'polite');
+    t.innerHTML = '<div class="eh">' + esc(st.variant || '') + '</div><div class="et' + (st.plain ? ' plain' : '') + '">' + esc(st.title) + '</div>' + (st.paid != null ? '<div class="es">PAID $' + money(c(st.paid)) + '</div>' : '') +
+      (st.runBank > 0 ? '<i class="crk-chip">INCLUDES RUN BANK $' + money(c(st.runBank)) + '</i>' : '');
+    host.appendChild(t); return t;
+  }
+  function bustStamp(host, st) {
+    injectCSS(); var t = document.createElement('div'); t.className = 'crk-bust'; t.setAttribute('role', 'status');
+    t.innerHTML = '<span>BUSTED</span>' + (st && st.runBank > 0 ? '<i class="crk-chip">RUN BANK $' + money(c(st.runBank)) + '</i>' : '');
+    host.appendChild(t); return t;
+  }
+  // v167: the run deck dims the WHOLE screen: one scrim inside the screen root (must be position:relative/absolute), fading in with the bar (0.35 s).
+  // The bar (barEl: the element holding the run bar, e.g. the ribbon) is lifted above the scrim. Default 65%.
+  // barEl must not sit inside an ancestor that makes its own stacking context below the scrim (z-index/transform/filter/opacity on an ancestor).
+  function setScreenDim(root, barEl, on, opacity) {
+    injectCSS(); if (!root) return; var sc = root.querySelector(':scope > .crk-scrim');
+    if (!sc) { sc = document.createElement('div'); sc.className = 'crk-scrim'; sc.setAttribute('aria-hidden', 'true'); root.appendChild(sc); }
+    if (opacity != null) sc.style.setProperty('--crk-dim', opacity);
+    if (barEl) barEl.classList.toggle('crk-lift', !!on);
+    sc.classList.toggle('on', !!on);
+  }
+  function setDim(els, on, opacity) {   // v129-v165 per-element dim (kept for old hosts; v167 uses setScreenDim)
+    injectCSS(); (Array.isArray(els) ? els : [els]).forEach(function (e) { if (!e) return; e.classList.add('crk-dimmable'); if (opacity != null) e.style.setProperty('--crk-dim', opacity); e.classList.toggle('crk-dim', !!on); });
+  }
+
+  return { compute: compute, render: render, renderEnd: renderEnd, renderHandoff: renderHandoff, renderLockIn: renderLockIn, toast: toast, bustStamp: bustStamp, setDim: setDim, setScreenDim: setScreenDim, CSS: CSS, money: function (x) { return money(c(x)); }, version: '170' };
+});
+
+</script>
+<script>
+/*!
+ * Card Run · RULES SHEET (shared by all four 20× games) · v1 · 14 Oct 2026
+ * One ⓘ button that opens a full-height rules & pays sheet over the game. No dependencies, no globals except CardRunRules.
+ *
+ *   CardRunRules.mount({ button: el, title: 'BLACKJACK 20×', content: () => html, onOpen(), onClose() })
+ *     button   an element to turn into the ⓘ (the game places it; 44×44 tap target, aria-label "Rules and pays")
+ *     content  a FUNCTION returning the sheet's HTML each time it opens (so tables show pays at the current bet)
+ *     onOpen / onClose  optional: a game that deals on its own (Crash auto-deal) pauses while the sheet is open
+ *   CardRunRules.open() / close() / isOpen()
+ * Building blocks for content (classes styled here): <h3>, <p>, <table class="crr-t"> (first column left, others right),
+ *   <p class="crr-note"> small print, <div class="crr-key"> a highlighted line (e.g. the 20× / 1,000× rule).
+ */
+(function (root) {
+  'use strict';
+  var CSS = [
+    '.crr-btn{all:unset;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;flex:none;border-radius:50%;cursor:pointer;color:#c9d1ea;-webkit-tap-highlight-color:transparent}',
+    '.crr-btn svg{width:24px;height:24px}.crr-btn:hover{color:#fff}.crr-btn:focus-visible{outline:2px solid #e9bc57;outline-offset:2px}',
+    '.crr-wrap{position:fixed;inset:0;z-index:2000;display:flex;align-items:stretch;justify-content:center;background:rgba(0,0,0,.6);animation:crrIn .2s ease both}',
+    '@keyframes crrIn{from{opacity:0}}',
+    '.crr-sheet{position:relative;box-sizing:border-box;width:100%;max-width:460px;height:100%;display:flex;flex-direction:column;background:#0b1430;color:#dfe5f6;font:400 14px/1.5 Montserrat,system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 0 40px rgba(0,0,0,.5)}',
+    '.crr-head{flex:none;display:flex;align-items:center;gap:8px;padding:6px 6px 6px 18px;border-bottom:1px solid #24305a}',
+    '.crr-head h2{flex:1;margin:0;font:800 15px/1.2 Montserrat,system-ui,sans-serif;letter-spacing:.12em;color:#fff}',
+    '.crr-x{all:unset;box-sizing:border-box;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;cursor:pointer;color:#c9d1ea}',
+    '.crr-x:focus-visible{outline:2px solid #e9bc57;outline-offset:2px}.crr-x svg{width:22px;height:22px}',
+    '.crr-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:6px 18px 28px}',
+    '.crr-body h3{margin:18px 0 6px;font:800 12px/1.3 Montserrat,system-ui,sans-serif;letter-spacing:.16em;color:#e9bc57;text-transform:uppercase}',
+    '.crr-body p{margin:6px 0}.crr-body b{color:#fff}',
+    '.crr-t{width:100%;border-collapse:collapse;margin:6px 0 4px;font-variant-numeric:tabular-nums;font-size:13px}',
+    '.crr-t th,.crr-t td{padding:5px 6px;border-bottom:1px solid #1e2a50;text-align:right;vertical-align:top}',
+    '.crr-t th:first-child,.crr-t td:first-child{text-align:left}',
+    '.crr-t th{font-weight:700;font-size:11px;letter-spacing:.06em;color:#9aa6c9;text-transform:uppercase}',
+    '.crr-key{margin:10px 0;padding:10px 12px;border-radius:10px;background:#121e44;border:1px solid #2c3a6b;color:#fff}',
+    '.crr-note{font-size:12px;color:#9aa6c9}',
+    '@media (prefers-reduced-motion: reduce){.crr-wrap{animation:none}}'
+  ].join('\n');
+  var ICON_I = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 11v6" stroke-linecap="round"/><circle cx="12" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></svg>';
+  var ICON_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  var cfg = null, wrap = null, lastFocus = null, injected = false;
+  function inject() { if (injected) return; injected = true; var s = document.createElement('style'); s.id = 'crr-css'; s.textContent = CSS; document.head.appendChild(s); }
+  function onKey(e) {
+    if (!wrap) return;
+    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(); return; }
+    if (e.key === 'Tab') {                                     // keep focus inside the sheet
+      var f = wrap.querySelectorAll('button,[href],[tabindex]:not([tabindex="-1"])'); if (!f.length) return;
+      var a = f[0], z = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); }
+      else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+    }
+    e.stopPropagation();                                       // game shortcuts (e.g. H / S) don't fire behind the sheet
+  }
+  function open() {
+    if (!cfg || wrap) return; inject(); lastFocus = document.activeElement;
+    wrap = document.createElement('div'); wrap.className = 'crr-wrap'; wrap.setAttribute('role', 'dialog'); wrap.setAttribute('aria-modal', 'true'); wrap.setAttribute('aria-label', cfg.title + ' rules and pays');
+    wrap.innerHTML = '<div class="crr-sheet"><div class="crr-head"><h2></h2><button type="button" class="crr-x" aria-label="Close rules">' + ICON_X + '</button></div><div class="crr-body" tabindex="0"></div></div>';
+    wrap.querySelector('h2').textContent = cfg.title;
+    wrap.querySelector('.crr-body').innerHTML = cfg.content();
+    wrap.querySelector('.crr-x').addEventListener('click', close);
+    wrap.addEventListener('click', function (e) { if (e.target === wrap) close(); });
+    document.addEventListener('keydown', onKey, true);
+    document.body.appendChild(wrap);
+    if (cfg.onOpen) try { cfg.onOpen(); } catch (e) {}
+    wrap.querySelector('.crr-x').focus({ preventScroll: true });
+  }
+  function close() {
+    if (!wrap) return; document.removeEventListener('keydown', onKey, true); wrap.remove(); wrap = null;
+    if (cfg && cfg.onClose) try { cfg.onClose(); } catch (e) {}
+    if (lastFocus && lastFocus.focus) try { lastFocus.focus({ preventScroll: true }); } catch (e) {}
+  }
+  function mount(c) {
+    inject(); cfg = c; var b = c.button;
+    b.classList.add('crr-btn'); b.setAttribute('type', 'button'); b.setAttribute('aria-label', 'Rules and pays'); b.setAttribute('title', 'Rules and pays'); b.innerHTML = ICON_I;
+    b.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); open(); });
+    return { open: open, close: close };
+  }
+  root.CardRunRules = { mount: mount, open: open, close: close, isOpen: function () { return !!wrap; }, version: '1' };
+})(typeof self !== 'undefined' ? self : this);
+
+</script>
+<script>
+(function(){
+let BET=10;                                        // the bet for the current tab (set in the lobby, fixed for a buy-in)
+const CL_KICKS=6, RUN_SHOTS=3, RUN_TO=2, TRIGGER=1, MINRUN=0.02;   // 6 kicks, the 1st post starts the Posts Bonus · MINRUN $0.02 = run-bar MIN_RUN
+const MAX_WIN_X = 20000;               // platform ceiling (x bet)
+const OPERATOR_MAX_WIN_X = MAX_WIN_X;  // server/operator config point: may be lowered, never raised
+const MW_X=Math.min(MAX_WIN_X,OPERATOR_MAX_WIN_X);   // MAX WIN as a multiple of the round's bet. Clips every phase (holdWin, the run bar, BUILD UP TO).
+const maxWin=(b=BET)=>MW_X*Math.round(b*100)/100;      // dollars, a whole number of cents: MW_X × the bet that started the round (BET is fixed while a round is live)
+const HEAD={classic:20};                               // headline (BUILD 20×)
+const capNow=()=>1000*(S.ammo||BET);                  // GR-CAP: the run caps at 1,000× the ammo (the first win)
+const promise=b=>Math.min(HEAD[S.tab]*b,maxWin(b));      // BUILD UP TO $N.NN
+const DIM=.65;                                        // v167 run deck: whole-screen dim while the run bar is up (RunBar.setScreenDim)
+const MIN_BET=1, MAX_BET=100;                         // free bet: $1.00–$100.00 in $0.10 steps (BET_STEP_C)
+const zoneOf=c=>['2','3','4'].includes(c.r)?'WL':['6','7','8'].includes(c.r)?'LG':['9','10','J'].includes(c.r)?'RG':['K','A','14'].includes(c.r)?'WR':'P';   // where a card lands on the pitch
+const nKicks=()=>CL_KICKS;
+const PAY_CLASSIC=[1,0,0,0,1.5,4,20];                  // CLASSIC 20x (option B, 12 Oct): 6 kicks + the Posts Bonus from the 1st post → 92.967% perfect, 92.507% counter, 90.580% random
+//   exact DP over every shoe state (math/classic6b.py) · 20× 1 in 160 · main pays 25.7% · bonus starts 61.3%, pays 15.6%, 3 in a row 1 in 13
+const PAY=PAY_CLASSIC;
+const LADDER_CLASSIC=[0,0,1,3];
+const LADDER=LADDER_CLASSIC;                // Posts Bonus (max 3 shots): right calls in a row -> × bet (2 → 1×, 3 → 3×, the top)
+const r2=v=>Math.round(v*100)/100;
+// every payout rounds DOWN to the cent in exact integer arithmetic (amt): stake in cents × pay in hundredths
+const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A','14'];
+const SUITS=['♠','♥','♦','♣'];
+const GOAL=new Set(['6','7','8','9','10','J']);
+const POST=new Set(['5','Q']);
+const LOWWIDE=new Set(['2','3','4']);
+const $=id=>document.getElementById(id);
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const wait=ms=>new Promise(r=>setTimeout(r,reduce?0:ms));
+
+let S;
+const DECK=[];for(const s of SUITS)for(const r of RANKS)DECK.push({r,s});
+// every kick is an independent, uniform draw from the full deck (nothing is removed)
+function rnd(n){const u=new Uint32Array(1),lim=4294967296-4294967296%n;do{crypto.getRandomValues(u);}while(u[0]>=lim);return u[0]%n;}
+// Run Game: every shot a fresh, independent draw from the full 56-card deck (nothing is removed)
+function draw(){return DECK[rnd(DECK.length)];}
+// First run (bonus included): a fresh shuffled 112-card shoe per buy-in, dealt without replacement
+function freshShoe(){const a=[...DECK,...DECK];for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
+function deal(){if(!S.shoe||!S.shoe.length)S.shoe=freshShoe();return S.shoe.pop();}
+function shoeLeft(){const n={goal:0,wide:0,post:0,five:0,queen:0,all:0};const sh=S.shoe||[...DECK,...DECK];
+  for(const c of sh){const k=kind(c);n[k]++;n.all++;if(c.r==='5')n.five++;else if(c.r==='Q')n.queen++;}return n;}
+function blank(){return{balance:1000,phase:'idle',mode:'main',correct:0,posts:0,shots:0,log:[],
+  view:'lobby',bets:{classic:10},tab:'classic',bonus:null,bonusWin:0,bonusPlayed:false,games:0,note:'',stake:BET,run:false,offer:0,banked:0,ko:null,cashed:0};}
+// The run bar (§6a): run-bar.js draws it and decides which buttons show. Here: is a win held for it?
+function offerState(){return{offer:S.phase==='done'&&S.offer>0&&!S.bbust};}
+function view(){if(S.phase==='play'||S.phase==='done')return{run:S.run,stake:S.stake};return{run:false,stake:BET};}
+const amt=(mult,v)=>{const sc=Math.round(v.stake*100),m=Math.round(mult*100),n=sc*m;
+  return (n-n%100)/100/100;};                      // ⌊cents × pay ÷ 100⌋ in whole cents: n < 2^53 (stake ≤ MAX WIN $2,000,000 = 2e8 cents · pay ≤ 2040)
+const pay=c=>PAY[Math.min(c,PAY.length-1)];
+const money=v=>'$'+v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+// pay-table figures (comp): no $ sign, no .00 on whole amounts — 200, 12, 5 · 1.20 keeps its cents
+const tnum=v=>{const c=Math.round(v*100);return (c/100).toLocaleString('en-US',{minimumFractionDigits:c%100?2:0,maximumFractionDigits:2});};
+const kind=c=>POST.has(c.r)?'post':GOAL.has(c.r)?'goal':'wide';
+const isRed=s=>s==='♥'||s==='♦';
+
+function buildTables(){
+  const tc=$('tCorrect'),tb=$('tBonus');tc.innerHTML='';tb.innerHTML='';
+  for(let i=8;i>=0;i--){
+    const r=document.createElement('div');r.className='row';r.dataset.i=i;const v=PAY[i];
+    r.innerHTML=`<span class="n">${i}</span><span class="p ${v?'':'dim'}">${v?tnum(v*BET):'BUST'}</span>`;
+    tc.appendChild(r);
+  }
+  for(let i=LADDER.length-1;i>=2;i--){       // the ladder shows 3 … 2 in a row
+    const r=document.createElement('div');r.className='row rung'+(i===LADDER.length-1?' top':'');r.dataset.i=i;
+    r.innerHTML=`<span class="n">${i}</span><span class="p ${LADDER[i]?'':'dim'}">${LADDER[i]?tnum(LADDER[i]*BET):'—'}</span>`;
+    tb.appendChild(r);
+  }
+}
+function cardHTML(c){return `<span class="s tl">${c.s}</span><span class="rk${c.r.length>1?' two':''}">${c.r}</span><span class="s br">${c.s}</span>`;}
+function heat(r,lvl,bump){const a=Math.min(.3+lvl*.085,.98);
+  r.style.setProperty('--a',a.toFixed(3));r.style.setProperty('--glow',(6+lvl*3)+'px');
+  r.style.setProperty('--sheen',(lvl*.04).toFixed(2));r.classList.toggle('hot',a>=.6);
+  if(bump){r.classList.remove('bump');void r.offsetWidth;r.classList.add('bump');}}
+
+const MODES={   // lobby copy
+  classic:{name:'KICKS 20×',build:'20×',desc:'Six kicks, call your shots. 4+ correct wins, hit the post for a bonus and 0 correct pays also'}};
+const PLAY_NAME={classic:'KICKS 20×'};   // the game's name on the end toasts
+const betText=v=>Number.isInteger(v)?String(v):v.toFixed(2);
+function renderLobby(){const m=MODES[S.tab],bet=S.bets[S.tab]||10,open=live();
+  $('lbName').textContent=m.name;   // the game name, in white: KICKS 20×
+  $('lbDesc').textContent=m.desc;$('lbBuild').textContent=m.build;
+  $('lbWin').textContent=(HEAD[S.tab]*1000).toLocaleString('en-US')+'×';   // WIN UP TO = BUILD × 1,000 (not cut to MAX WIN)
+  requestAnimationFrame(()=>{for(const id of ['lbBuild','lbWin']){const e=$(id);e.style.fontSize='';const room=e.parentElement.clientWidth-10;let f=parseFloat(getComputedStyle(e).fontSize),n=0;while(e.scrollWidth>room&&f>10&&n++<40){f-=.5;e.style.fontSize=f+'px';}}});   // big figures shrink, never wrap or clip
+  $('lbBetFree').hidden=open;           // the bet is fixed while a round is unfinished
+  if(document.activeElement!==$('betInput'))$('betInput').value=betText(bet);
+  const broke=!open&&S.balance<bet;
+  $('bPlay').classList.toggle('reset',broke);
+  $('bPlay').innerHTML=open?'RESUME ROUND':broke?'BALANCE TOO LOW':`BUILD ${m.build} · <span class="n">${money(promise(bet))}</span>`;}
+// Bets: $1.00–$100.00 in $0.10 steps. Typed text must be a plain decimal (digits and one point: no sign, no exponent, no other
+// characters) or it is rejected and the bet stays as it was; an off-grid amount snaps DOWN to $0.10, then clamps to [$1, $100].
+const BET_STEP_C=10;                                 // $0.10, in cents
+const snapBet=c=>Math.min(MAX_BET*100,Math.max(MIN_BET*100,Math.floor(c/BET_STEP_C)*BET_STEP_C))/100;   // cents → dollars on the grid, never $0.00
+function parseBet(t){const m=/^(\d*)(?:\.(\d*))?$/.exec(String(t==null?'':t).trim());if(!m||!(m[1]||m[2]))return null;
+  const i=m[1].replace(/^0+(?=\d)/,'');if(i.length>4)return MAX_BET;return snapBet((+i||0)*100+ +((m[2]||'')+'00').slice(0,2));}
+function setBet(v){if(live())return;v=snapBet(Math.round(v*100));S.bets[S.tab]=v;BET=v;render();}   // the bet is fixed while a round is live
+// The door always goes to the lobby. A pending run bar is cashed out first; an unfinished round waits behind RESUME ROUND.
+function toLobby(){if(S.busy||S.view==='lobby')return;if(offerState().offer)cashOut(true);S.view='lobby';render();}
+function toGame(){
+  if(S.balance<(S.bets[S.tab]||10)&&!live())return;   // no wallet top-up: lower the bet
+  if(!live())freshTab();S.view='game';render();}
+// between buy-ins: the tab opens on a fresh, unplayed round
+function freshTab(){
+  if(S.phase==='done'||S.ended){Object.assign(S,{early:false,ended:false,phase:'idle',correct:0,posts:0,shots:0,log:[],bonus:null,bonusWin:0,bonusPlayed:false,ko:null,run:false,stake:BET,cashed:0,offer:0});
+    document.querySelectorAll('.fly').forEach(n=>n.remove());hideResult();}}
+const live=()=>S.phase==='play'||(S.phase==='done'&&S.offer>0)||!!S.bbust;   // a buy-in is in progress: the bet is fixed
+const VNAME=()=>PLAY_NAME[S.tab];
+function buyIn(){if(S.balance<BET-1e-9){S.view='lobby';render();return false;}
+  S.balance=r2(S.balance-BET);S.games++;S.ended=false;return true;}
+// End bar (GRP 1.2 amendment, BJ v141): one gold button, PLAY AGAIN over the base bet it will charge.
+// If the balance can't cover the bet: CHANGE BET over BALANCE $N.NN, and the tap goes to the lobby. Never the build promise.
+function endLabel(){return S.balance>=BET-1e-9?{l1:'PLAY AGAIN',l2:money(BET),aria:`Play again, bet ${money(BET)}`}:{l1:'CHANGE BET',l2:'BALANCE '+money(S.balance),aria:'Change bet'};}
+function buildAgain(){
+  if(S.balance<BET-1e-9){S.view='lobby';render();return;}
+  S.ended=false;freshTab();
+  newGame(BET,'buy');
+}
+// the round is over (cashed out, busted or capped): the end bar shows
+function roundOver(){S.ended=true;}
+// A win is held for the run bar, unless it reaches MAX WIN or the 1,000× ammo cap: then it pays out (returns the toast html).
+function holdWin(total){
+  S.phase='done';S.offer=total;
+  const B=S.banked||0,cap=capNow(),mw=r2(B+total)>=maxWin();
+  if(!mw&&r2(B+total)<cap)return null;
+  if(mw)S.offer=r2(maxWin()-B);
+  const paid=r2(B+S.offer);cashOut(true);
+  track('cap_reached',{total:paid,source:mw?'max_win':'run_cap'});
+  return {cap:{variant:VNAME(),title:mw?'MAX WIN':'1,000× RUN',paid,runBank:B}};   // toast via RunBar.toast
+}
+// ---- RUN BAR (run-bar.js). The module never moves money: the game keeps held, RUN BANK and ammo for the round
+// and pays RUN BANK + held in ONE credit when the round ends (spec §6).
+const track=(ev,o)=>console.info(ev,Object.assign({variant:S.tab},o||{}));
+const RB_ON={
+  cashOut:()=>{track('run_choice',{choice:'cash_out',stake:S.offer,banked_amount:S.banked||0});cashOut();},
+  double:()=>{track('run_choice',{choice:'double_it',stake:S.offer,banked_amount:S.banked||0});newGame(S.offer,'run');},
+  doubleHalf:(half,keep)=>{track('run_choice',{choice:'double_half',stake:half,banked_amount:keep});S.banked=r2((S.banked||0)+keep);newGame(half,'run');},
+  paidOut:()=>{cashOut();}
+};
+function showBar(on){
+  const host=$('rbHost');
+  if(!on){if(host.dataset.key){host.dataset.key='';host.innerHTML='';}host.hidden=true;return;}
+  const st={held:S.offer,banked:S.banked||0,ammo:S.ammo||S.offer,maxWin:maxWin(),variant:VNAME()};
+  const key=[st.held,st.banked,st.ammo,st.maxWin,st.variant].join('|');
+  host.hidden=false;if(host.dataset.key===key)return;host.dataset.key=key;
+  const r=RunBar.render(host,st,RB_ON);
+  if(r.mode==='bar')track('run_offer',{held:st.held,banked:st.banked,ammo:st.ammo,options_shown:Object.keys(r.show).filter(k=>r.show[k]&&k!=='halfPill'&&k!=='cashOutOnly'),n_max:r.nMax});
+}
+function render(){
+  if(!live()&&S.bets)BET=S.bets[S.tab]||10;          // the bet only changes between buy-ins
+  const lobby=S.view==='lobby';
+  const on=!lobby;
+  $('lobby').hidden=!lobby;if(lobby)renderLobby();$('bLobby').style.visibility=lobby?'hidden':'';
+  $('wrap').classList.toggle('off',!on);   // the lobby (desktop grid areas)
+  for(const n of document.querySelectorAll('.tables,.pitch,.dock'))n.hidden=!on;
+  $('bal').textContent=money(S.balance).slice(1);
+  const V=view();
+  const fresh=S.phase==='idle';
+  $('wrap').classList.toggle('run',V.run);
+
+  $('hC').textContent=V.run?`50/50 · RUNNING ${money(V.stake)}`:'POSTS LOSE';
+  $('hB').textContent=V.run?'NOT IN A RUN GAME':'';
+  document.querySelectorAll('#tCorrect .row').forEach(r=>{const i=+r.dataset.i,p=r.querySelector('.p');
+    const t=V.run?(i>=RUN_TO?tnum(r2(V.stake*2)):i===1?'TIE-BREAKER':'LOST'):(PAY[i]?tnum(amt(PAY[i],V)):'BUST');
+    p.textContent=t;p.classList.toggle('dim',!/^[\d]/.test(t));r.hidden=V.run?i>RUN_TO:i>=PAY.length;});   // Classic shows 6 … 0
+  document.querySelectorAll('#tBonus .row').forEach(r=>{const i=+r.dataset.i;if(LADDER[i])r.querySelector('.p').textContent=tnum(amt(LADDER[i],V));});
+  const play=S.phase==='play', inBonus=play&&S.mode==='bonus';
+  $('wrap').classList.toggle('bonus',inBonus);
+  $('bWide').disabled=$('bGoal').disabled=!!S.busy;
+  const done=S.phase==='done';
+  const O=offerState();
+  const endBar=(done&&!O.offer&&!S.bbust)||(S.phase==='idle'&&!!S.ended);
+  $('bWide').hidden=$('bGoal').hidden=done||endBar;
+  $('bAgain').hidden=!endBar;$('bToLobby').hidden=!endBar;$('controls').classList.toggle('endset',endBar);if(endBar){const E=endLabel();$('aLab').textContent=E.l1;$('aAmt').textContent=E.l2;$('bAgain').setAttribute('aria-label',E.aria);}
+  // the run bar: run-bar.js v152 draws it (copy, design, visibility, N); the game keeps held / RUN BANK / ammo and moves the money
+  showBar(O.offer);
+  // v167: one whole-screen 65% dim, fading in with the bar (on when the bar shows; off when a run starts or the round ends)
+  const barUp=!!O.offer,wasUp=$('wrap').classList.contains('barup');$('wrap').classList.toggle('barup',barUp);
+  RunBar.setScreenDim(document.body,$('rbHost'),barUp,DIM);
+  if(!barUp) RunBar.setScreenDim(document.body,$('controls'),endBar&&!lobby,.7);   // never in the lobby
+  $('wrap').classList.toggle('enddim',!barUp&&endBar&&!lobby);   // the sticky dock goes back to normal flow so PLAY AGAIN sits above the dim   // end of round: the game screen dims to 70% under PLAY AGAIN
+  if(barUp&&!wasUp)requestAnimationFrame(()=>$('rbHost').scrollIntoView({block:'nearest'}));
+  // RUN BANK during a run (no bar up): status row. On the bar the module's green pill sits on CASH OUT.
+  const rb=$('rbank');rb.hidden=!(S.banked>0&&S.phase==='play');if(!rb.hidden)rb.textContent='RUN BANK '+money(S.banked);
+  const pre='PLAY '+money(BET);
+  const L=shoeLeft(),shoeOn=play&&!S.run;
+  $('wSub').textContent=!play?pre:shoeOn?`2–4 · K · A · 14 · ${L.wide} LEFT`:'2–4 · K · A · 14';
+  $('gSub').textContent=!play?pre:shoeOn?`6 – J · ${L.goal} LEFT`:'6 – J';
+  $('deck').innerHTML=S.run&&S.phase!=='idle'?'<span class="cnt">56<small>SHUFFLED</small></span>':`<span class="cnt">${shoeOn||S.phase==='done'?L.all:112}<small>IN SHOE</small></span>`;
+  // correct table
+  const bumpC=play&&S.correct>(render.lc??0);render.lc=S.correct;
+  document.querySelectorAll('#tCorrect .row').forEach(r=>{
+    const at=fresh?0:Math.min(S.correct,PAY.length-1);           // 0 is lit before the first kick; the highlight climbs with every right call
+    const on=+r.dataset.i===at;
+    r.classList.toggle('cur',on);if(on)heat(r,at,bumpC);else r.classList.remove('hot','bump');
+    const i=+r.dataset.i,gone=S.early&&!V.run&&!fresh&&i>S.correct&&!!PAY[i];
+    r.classList.toggle('gone',gone);r.classList.toggle('xin',gone&&!!render.xAnim);if(gone)r.style.setProperty('--d',((i-S.correct)*.06)+'s');
+  });
+  // column opacity
+  const colC=$('tCorrect').parentElement,colB=$('tBonus').parentElement;
+  let oc='',ob='';
+  if(inBonus)oc='o70';
+  else if(play&&S.bonusPlayed){if(!S.bonusWin)ob='o80';}
+  else if(S.phase==='done'){if(V.run?!S.offer:!pay(S.correct))oc='o80';if(S.bonusPlayed&&!S.bonusWin)ob='o80';}
+  colC.classList.remove('o70','o80');if(oc)colC.classList.add(oc);
+  if(fresh||!S.bonusPlayed)ob='o50';if(V.run)ob='o0';
+  colB.classList.remove('o0','o50','o70','o80');if(ob)colB.classList.add(ob);
+  // bonus ladder
+  const st=S.bonus?S.bonus.streak:0;
+  const bumpB=inBonus&&st>(render.lb??0);render.lb=st;
+  document.querySelectorAll('#tBonus .row').forEach(r=>{
+    const i=+r.dataset.i;
+    const on=inBonus&&i===st;
+    r.classList.toggle('cur',on);if(on)heat(r,i+2,bumpB);else r.classList.remove('hot','bump');
+    r.classList.toggle('paid',!inBonus&&!fresh&&S.bonusPlayed&&S.bonus&&i===S.bonus.streak&&LADDER[i]>0);
+  });
+  // meter
+  const m=$('meter');const pips=m.querySelectorAll('.pip');
+  pips.forEach((p,i)=>{p.classList.toggle('on',!fresh&&i<S.posts);p.textContent=i<S.posts&&!fresh?'✓':'';});
+  m.classList.toggle('go',inBonus);m.classList.toggle('done',!inBonus&&S.bonusPlayed&&!fresh);
+  $('mLabel').textContent=V.run?'POSTS RE-KICK':inBonus?'BONUS LIVE':(S.bonusPlayed&&!fresh?'BONUS PLAYED':'1ST POST STARTS IT');
+  // status
+  const sh=$('shots'),tag=$('tag');
+  if(S.phase==='idle'){sh.innerHTML=S.cashed?`CASHED OUT <b>${money(S.cashed)}</b>`:S.ended?'ROUND OVER':'';tag.hidden=true;}
+  else if(play&&S.run){const tb=S.shots===RUN_SHOTS-1;
+    sh.innerHTML=tb?`<b>1–1</b> · NEXT SHOT WINS`:`RUN GAME · SHOT <b>${S.shots+1}</b> of ${RUN_SHOTS}`;
+    tag.hidden=false;tag.className='tag run';tag.textContent=`TO WIN ${money(r2(S.stake*2))}`;}
+  else if(inBonus){sh.innerHTML=`POSTS BONUS · <b>${st}</b> in a row`;tag.hidden=false;tag.className='tag free';
+    tag.textContent=LADDER[st]?`+${money(amt(LADDER[st],V))}`:(st?'2 IN A ROW PAYS':'ONE MISS ENDS IT');}
+  else if(play){sh.innerHTML=`KICK <b>${Math.min(S.shots+1,nKicks())}</b> of ${nKicks()}`;
+    const t=S.bonusWin?`POSTS BONUS +${money(S.bonusWin)}`:S.note;
+    tag.hidden=!t;tag.className='tag'+(S.bonusWin?' free':'');tag.textContent=t||'';}
+  else{sh.innerHTML=O.offer?'':S.bbust?'':'ROUND OVER';   // the bar speaks for itself
+    tag.hidden=!S.bankedBack||!S.offer;if(S.bankedBack){tag.className='tag run';tag.textContent=`RUN BANK ${money(S.bankedBack)}`;}}
+  // tracker
+  let th='';
+  if(inBonus){
+    th='<span class="bl">BONUS</span>';
+    for(let i=1;i<LADDER.length;i++){let cls='dot b';if(i<=st)cls+=' on';else if(i===st+1)cls+=' next';
+      th+=`<span class="shot"><span class="mk bk">${i<=st?'✓':''}</span><span class="${cls}">${i<=st?'✓':i}</span></span>`;}
+  }else if(S.run&&S.phase!=='idle'){
+    th='<span class="bl">RUN</span>';
+    const ks=S.log.filter(e=>!e.rk);
+    for(let i=0;i<RUN_SHOTS;i++){const e=ks[i];let cls='dot',t='';
+      if(e){if(e.k==='goal'){cls+=' g';t='G';}else{cls+=' w';t='W';}}
+      else{t=i+1;if(i===RUN_SHOTS-1)cls+=' k ex';if(play&&i===ks.length)cls+=' next';else if(!play)cls+=' skip';}
+      const mk=!e?'<span class="mk"></span>':e.res==='good'?'<span class="mk ok">✓</span>':'<span class="mk no">✗</span>';
+      th+=`<span class="shot">${mk}<span class="${cls}" title="${i===RUN_SHOTS-1?'Tie-breaker':'Shot '+(i+1)}">${t}</span></span>`;}
+  }else{
+    const main=S.log.filter(e=>!e.b&&!e.rk&&!e.ko);
+    let xi=0;
+    for(let i=0;i<nKicks();i++){
+      const e=main[i];let cls='dot',t='';
+      if(e){if(e.k==='goal'){cls+=' g';t='G';}else if(e.k==='wide'){cls+=' w';t='W';}else{cls+=' p';t='–';}}
+      else if(play&&i===main.length&&!S.early)cls+=' next';
+      else if(S.early){cls+=' skip x'+(render.xAnim?' xin':'');t='✕';if(render.xAnim)xi++;}
+      const mk=!e?'':e.res==='good'?'<span class="mk ok">✓</span>':e.res==='pst'?'<span class="mk po">✗</span>':'<span class="mk no">✗</span>';
+      th+=`<span class="shot">${mk||'<span class="mk"></span>'}<span class="${cls}"${cls.includes('xin')?` style="--d:${(xi-1)*.14}s"`:''} title="${e?e.title:'Kick '+(i+1)}">${t}</span></span>`;
+    }
+  }
+  $('tracker').innerHTML=th;
+}
+
+// End toasts and the bust stamp are run-bar.js v152 (RunBar.toast / RunBar.bustStamp); other banners use the board's result box
+function showResult(cls,html,opt){
+  clearMarks();
+  if(html&&html.cap){fitToast(RunBar.toast($('pitch'),html.cap));return;}
+  if(cls==='bust'){RunBar.bustStamp($('pitch'),{runBank:opt&&opt.runBank||0});return;}
+  const b=$('result');b.className='result '+cls;b.innerHTML=html;b.hidden=false;void b.offsetWidth;b.classList.add('show');}
+// run-bar.js v167's toast is width:max-content capped at 88%: on a narrow board a long chip (INCLUDES RUN BANK $12,000.00) can overhang it.
+// Host-side fit (the module is untouched): shrink the lines evenly until they fit.
+function fitToast(t){if(!t)return t;for(let z=.95;z>.6&&t.scrollWidth>t.clientWidth+1;z-=.05)[...t.children].forEach(n=>n.style.zoom=z);return t;}
+function clearMarks(){document.querySelectorAll('#pitch .crk-toast,#pitch .crk-bust').forEach(n=>n.remove());}
+function hideResult(){$('result').hidden=true;clearMarks();}
+
+// kind: 'buy' (a buy-in, debits BET) · 'run' (DOUBLE OR NOTHING / DOUBLE HALF: one Run Game hand on the amount run)
+function newGame(stake=BET,kind='buy'){
+  stake=r2(stake);
+  if(kind==='buy'){if(!buyIn())return false;}
+  if(kind==='buy'){S.banked=0;S.bankCont=0;S.ammo=0;}
+  if(kind==='buy')S.shoe=freshShoe();              // fresh 112-card shoe for every buy-in
+  Object.assign(S,{stake,run:kind==='run',offer:0,pause:false,phase:'play',mode:'main',correct:0,posts:0,shots:0,log:[],busy:false,note:'',bonus:null,bonusWin:0,bonusPlayed:false,ko:null,cashed:0,early:false,ended:false,bankedBack:0,bbust:false});
+  render.lc=0;render.lb=0;
+  document.querySelectorAll('.fly').forEach(n=>n.remove());
+  hideResult();render();return true;
+}
+
+function flightTarget(c,k){
+  const P=$('pitch').getBoundingClientRect(),net=document.querySelector('.net').getBoundingClientRect();
+  const cw=$('deck').offsetWidth,ch=$('deck').offsetHeight;
+  const y=net.top-P.top+net.height/2-ch/2+(Math.random()*16-8);
+  let x;
+  if(k==='goal'){x=P.width*(zoneOf(c)==='LG'?0.36+Math.random()*0.11:0.53+Math.random()*0.11)-cw/2;}
+  else if(k==='post'){const post=c.r==='5'?$('postL'):$('postR');const r=post.getBoundingClientRect();x=r.left-P.left+(r.width-cw)/2;}
+  else if(LOWWIDE.has(c.r)){x=P.width*(0.07+Math.random()*0.12)-cw/2;}
+  else{x=P.width*(0.81+Math.random()*0.12)-cw/2;}
+  return {x,y};
+}
+function fly(c,k){
+  return new Promise(res=>{
+    const P=$('pitch'),d=$('deck');
+    document.querySelectorAll('.fly').forEach(n=>{n.classList.add('old');setTimeout(()=>n.remove(),400);});
+    const el=document.createElement('div');el.className='card fly'+(isRed(c.s)?' red':'');el.innerHTML=cardHTML(c);
+    P.appendChild(el);
+    const sx=d.offsetLeft-d.offsetWidth/2, sy=d.offsetTop;
+    const t=flightTarget(c,k);
+    const rot=(Math.random()*30-15);
+    const frames=k==='post'
+      ?[{transform:`translate(${sx}px,${sy}px) scale(1) rotate(0)`},
+        {transform:`translate(${t.x}px,${t.y}px) scale(.9) rotate(${rot}deg)`,offset:.62},
+        {transform:`translate(${t.x+(c.r==='5'?-18:18)}px,${t.y+70}px) scale(.95) rotate(${-rot*2}deg)`}]
+      :[{transform:`translate(${sx}px,${sy}px) scale(1) rotate(0)`},
+        {transform:`translate(${(sx+t.x)/2}px,${(sy+t.y)/2-40}px) scale(1.12) rotate(${rot/2}deg)`,offset:.5},
+        {transform:`translate(${t.x}px,${t.y}px) scale(.9) rotate(${rot}deg)`}];
+    const dur=reduce?1:(k==='post'?760:600);
+    const a=el.animate(frames,{duration:dur,easing:'cubic-bezier(.2,.7,.3,1)',fill:'forwards'});
+    if(k==='post')setTimeout(()=>{const p=c.r==='5'?$('postL'):$('postR');p.classList.remove('hit');void p.offsetWidth;p.classList.add('hit');},dur*.6);
+    a.onfinish=()=>res(el);
+  });
+}
+function callout(text,color){const c=$('callout');c.textContent=text;c.style.color=color;c.classList.remove('show');void c.offsetWidth;c.classList.add('show');}
+
+async function kick(guess){
+  if(S.busy||S.pause||S.phase==='done')return;
+  if(S.phase!=='play'&&(S.ended||!newGame()))return;
+  if(S.run)return runKick(guess);                 // DOUBLE OR NOTHING: the Kicks Run Game (3 shots, posts re-kicked)
+  if(S.mode==='bonus')return bonusKick(guess);
+  S.busy=true;render();
+  const c=deal(),k=kind(c),hit=guess===k;
+  const el=await fly(c,k);
+  if(hit)S.correct++;
+  if(k==='post')S.posts++;
+  S.shots++;
+  const res=k==='post'?'pst':hit?'good':'bad';
+  el.classList.add(res);
+  S.log.push({r:c.r,s:c.s,k,res,title:`${k.toUpperCase()} · called ${guess.toUpperCase()}${hit?' · correct':''}`});
+  if(k==='post'){callout(S.posts===TRIGGER&&!S.bonusPlayed?'POST! BONUS':'POST! MISS','var(--post)');}
+  else if(hit){callout(k==='goal'?'GOAL! CORRECT':'WIDE! CORRECT','var(--win)');}
+  else{callout(k==='goal'?'GOAL · MISSED CALL':'WIDE · MISSED CALL','var(--bust)');}
+  render();
+  if(k==='post'&&S.posts===TRIGGER&&!S.bonusPlayed){await startBonus();return;}
+  if(S.shots>=nKicks())finish();
+  else if(deadRun()){await endEarly();return;}
+  S.busy=false;render();
+}
+// No paying count is still reachable (no paying count between the right calls so far and the most still possible)
+// and the Posts Bonus can no longer start. The run ends here; the payout is unchanged.
+function deadRun(){
+  const left=nKicks()-S.shots;
+  const hi=Math.min(S.correct+left,PAY.length-1);
+  let canPay=false;for(let c=S.correct;c<=hi;c++)if(PAY[c])canPay=true;
+  const bonusCanStart=!S.bonusPlayed&&S.posts+left>=TRIGGER;
+  return !canPay&&!bonusCanStart;
+}
+// The next count that pays, above the right calls so far
+const needN=()=>PAY.findIndex((v,c)=>v&&c>S.correct);
+const needTxt=()=>`CAN'T REACH ${needN()}`;
+// Dead run (the player can no longer mathematically win): CAN'T REACH n → the kicks left cross out one by one and the
+// out-of-reach pays strike through → the pitch shakes and BUSTED slams in with CAN'T REACH n · k KICKS LEFT
+async function endEarly(){
+  await wait(700);
+  const left=nKicks()-S.shots;
+  S.early=true;render.xAnim=true;
+  callout(needTxt(),'var(--bust)');render();
+  render.xAnim=false;
+  await wait(140*left+520);
+  const bust=!S.bonusWin;
+  finish(true);
+  if(bust){bustFx();const st=document.querySelector('#pitch .crk-bust');
+    if(st){st.classList.add('dead');if(!reduce)st.classList.add('slam');const c=document.createElement('i');c.className='crk-chip dead';c.textContent=`${needTxt()} · ${left} KICK${left===1?'':'S'} LEFT`;st.appendChild(c);}}
+  S.busy=false;render();
+}
+
+async function startBonus(){
+  await wait(900);
+  S.mode='bonus';S.bonus={streak:0};S.bonusPlayed=true;render.lb=0;
+  document.querySelectorAll('.fly').forEach(n=>n.remove());
+  render();
+  showResult('intro','POSTS BONUS<small>Keep calling it right. 2 in a row starts paying.<br>One wrong call ends it. A post means kick again.</small>');
+  await wait(2200);hideResult();
+  S.busy=false;render();
+}
+
+async function bonusKick(guess){
+  S.busy=true;render();
+  const c=deal(),k=kind(c),hit=guess===k;
+  const el=await fly(c,k);
+  const res=k==='post'?'pst':hit?'good':'bad';el.classList.add(res);
+  S.log.push({r:c.r,s:c.s,k,res,b:true,title:`BONUS · ${k.toUpperCase()} · called ${guess.toUpperCase()}${hit?' · correct':''}`});
+  if(k==='post'){callout('OFF THE POST! KICK AGAIN','#ffd76a');S.busy=false;render();return;}
+  if(hit){
+    S.bonus.streak++;
+    const top=S.bonus.streak>=LADDER.length-1;
+    callout(top?'MAX BONUS!':(LADDER[S.bonus.streak]?`SCORED! ${money(amt(LADDER[S.bonus.streak],view()))}`:'SCORED! 1 IN A ROW'),'#ffd76a');
+    render();
+    if(top){await endBonus();return;}
+    S.busy=false;render();return;
+  }
+  callout('SAVED! BONUS OVER','var(--bust)');render();
+  await endBonus();
+}
+
+async function endBonus(){
+  const st=S.bonus.streak,win=LADDER[st]?amt(LADDER[st],view()):0;
+  S.bonusWin=win;                                  // part of the held amount at the end of the run
+  await wait(900);
+  S.mode='main';render();
+  showResult(win?'gold':'bust',win?`POSTS BONUS ${money(win)}<small>${st} right call${st>1?'s':''} in a row${st>=LADDER.length-1?' · maximum bonus':''}</small>`
+    :`NO BONUS WIN<small>${st?'1 right call · 2 in a row needed':'First call missed'}</small>`);
+  if(S.shots>=nKicks()){await wait(2000);finish(true);S.busy=false;render();return;}
+  if(deadRun()){await wait(1300);hideResult();await endEarly();return;}   // bonus banked, but the kicks can no longer pay
+  await wait(1600);hideResult();                    // no CONTINUE button: the kicks carry on
+  S.busy=false;render();
+}
+
+// End of the base board. A win goes straight to the run bar and is the ammo; $0 is BUSTED.
+function finish(now){
+  const m=pay(S.correct),main=m?amt(m,view()):0,total=r2(main+S.bonusWin);
+  S.phase='done';S.offer=total;                   // held: paid on CASH OUT
+  if(total)S.ammo=total;                 // the build makes the ammo
+  let sub=`${S.correct} correct · ${S.posts} post${S.posts===1?'':'s'}`;
+  if(S.early){const left=nKicks()-S.shots;sub+=`<br>${left} kick${left===1?'':'s'} left · ${needTxt().toLowerCase()}`;}
+  if(S.bonusWin)sub+=`<br>Kicks ${main?money(main):'bust'} + Posts Bonus ${money(S.bonusWin)}`;
+  const capped=total?holdWin(total):null;
+  if(!total)roundOver();
+  const html=capped||(total?`WIN ${money(total)}<small>${sub}</small>`:`BUSTED<small>${sub}</small>`);
+  const cls=capped?'gold':total?(total<=S.stake?'flat':main?'win':'gold'):'bust';   // a return at or below the stake is never celebrated
+  if(now){showResult(cls,html);return;}
+  const g=S.games,st=S.stake;setTimeout(()=>{if(S.games===g&&S.stake===st&&(S.phase==='done'||capped))showResult(cls,html);},reduce?0:650);
+}
+
+// ---- DOUBLE OR NOTHING (Kicks): the Run Game, 2 shots, posts re-kicked (so every call is 1/2); 2 right wins double, 2 wrong loses, 1–1 goes to a one-shot tie-breaker
+async function runKick(guess){
+  S.busy=true;render();
+  const c=draw(),k=kind(c),hit=guess===k,ko=S.shots===RUN_SHOTS-1;   // ko = the tie-breaker shot
+  const el=await fly(c,k);
+  if(k==='post'){
+    el.classList.add('pst');
+    S.log.push({r:c.r,s:c.s,k,res:'pst',rk:true,ko,title:'POST · kick again'});
+    callout('OFF THE POST! KICK AGAIN','var(--post)');S.busy=false;render();return;
+  }
+  const res=hit?'good':'bad';el.classList.add(res);
+  S.log.push({r:c.r,s:c.s,k,res,ko,title:`${ko?'TIE-BREAKER · ':''}${k.toUpperCase()} · called ${guess.toUpperCase()}${hit?' · correct':''}`});
+  callout(hit?(k==='goal'?'GOAL! CORRECT':'WIDE! CORRECT'):(k==='goal'?'GOAL · MISSED CALL':'WIDE · MISSED CALL'),hit?'var(--win)':'var(--bust)');
+  if(hit)S.correct++;
+  S.shots++;render();
+  if(S.correct>=RUN_TO)finishRun(true);               // 2 right: won
+  else if(S.shots-S.correct>=RUN_TO)finishRun(false);  // 2 wrong: lost
+  else if(S.shots===RUN_SHOTS-1){                      // 1–1: one-shot tie-breaker
+    await wait(800);
+    document.querySelectorAll('.fly').forEach(n=>n.remove());render();
+    showResult('ko',`1–1 TIE-BREAKER<small>Next shot wins ${money(r2(S.stake*2))}</small>`);
+    await wait(1800);hideResult();
+  }
+  S.busy=false;render();
+}
+function finishRun(won){
+  const prize=won?r2(S.stake*2):0;
+  S.phase='done';S.offer=prize;
+  if(!won&&S.banked>0){bankedBust();return;}     // banked-bust rule: banked money plays on
+  const capped=won?holdWin(prize):null;
+  if(!won)roundOver();
+  const html=capped||(won?`DOUBLED<small>${money(prize)}</small>`:'');
+  const cls=capped?'gold':won?'win':'bust';
+  render();
+  const g=S.games,st=S.stake;setTimeout(()=>{if(S.games===g&&S.stake===st&&(S.phase==='done'||capped)){showResult(cls,html);if(!won)bustFx();}},reduce?0:350);
+}
+function bustFx(){if(!reduce){const p=$('pitch');p.classList.remove('bustfx');void p.offsetWidth;p.classList.add('bustfx');}$('result').classList.add('slam');}
+// Lost a run with money in the RUN BANK: BUSTED · RUN BANK $N.NN, then the RUN BANK becomes the held amount and the bar returns on it
+async function bankedBust(){
+  const B=S.banked,g=S.games;S.bbust=true;S.busy=true;render();
+  await wait(350);if(S.games!==g)return;
+  showResult('bust','',{runBank:B});bustFx();        // BUSTED + RUN BANK $B chip; it stays up until the next action
+  await new Promise(r=>setTimeout(r,1300));if(S.games!==g)return;   // ~1.3 s beat (not shortened by reduced motion: it carries information)
+  S.banked=0;S.offer=B;S.bankedBack=B;S.bankCont=(S.bankCont||0)+1;   // the RUN BANK becomes the held amount; the wallet does not move
+  console.info('banked_continue',{variant:S.tab,banked_amount:B,continue_count:S.bankCont});
+  S.bbust=false;S.busy=false;render();
+}
+// CASH OUT ends the round: RUN BANK + held are paid to the wallet in ONE credit. Round over → end bar.
+// quiet: no board reset of the toast (cap payouts and the door use it).
+function cashOut(quiet){
+  if(!(S.phase==='done'&&S.offer>0))return;
+  const total=r2(S.banked+S.offer),bank=S.banked||0;
+  S.balance=r2(S.balance+total);
+  console.info('round_settle',{variant:S.tab,credit:total,run_bank:S.banked,held:S.offer});
+  Object.assign(S,{bankedBack:0,early:false,phase:'idle',run:false,stake:BET,offer:0,banked:0,cashed:total,correct:0,posts:0,shots:0,log:[],bonus:null,bonusWin:0,bonusPlayed:false,ko:null,mode:'main'});
+  roundOver();
+  if(quiet===true)return;
+  document.querySelectorAll('.fly').forEach(n=>n.remove());hideResult();render();
+  // CASH OUT toast (CR, run-bar v165): CASHED OUT · PAID total (+ RUN BANK chip); at or below the stake it is plain, never celebrated
+  fitToast(RunBar.toast($('pitch'),{variant:VNAME(),title:'CASHED OUT',paid:total,runBank:bank,plain:total<=BET+1e-9}));
+}
+
+// ---- RULES SHEET (rules-sheet.js, CardRunRules): the ⓘ in the top bar. Built fresh each time it opens, so every pay is shown
+// at the CURRENT bet through the game's own amt() (rounded down to the cent exactly as the game pays). Wording: RULES-CONTENT.txt.
+const xTxt=v=>v.toLocaleString('en-US',{maximumFractionDigits:2})+'×';
+function rulesHTML(){
+  const at=v=>money(amt(v,{stake:BET}));
+  let main='';for(let i=PAY_CLASSIC.length-1;i>=0;i--){const v=PAY_CLASSIC[i];if(!v)continue;
+    main+=`<tr><td>${i}</td><td>${xTxt(v)}${i===0?' (your bet back)':''}</td><td>${at(v)}</td></tr>`;}
+  const zero=PAY_CLASSIC.map((v,i)=>v?null:i).filter(i=>i!=null);
+  main+=`<tr><td>${zero[0]}–${zero[zero.length-1]}</td><td>0</td><td>${money(0)}</td></tr>`;
+  let bonus='';for(let i=LADDER_CLASSIC.length-1;i>=0;i--){const v=LADDER_CLASSIC[i];if(!v)continue;
+    bonus+=`<tr><td>${i} in a row${i===LADDER_CLASSIC.length-1?' (the top)':''}</td><td>${xTxt(v)}</td><td>${at(v)}</td></tr>`;}
+  const mw=MW_X.toLocaleString('en-US');
+  return `<h3>How to play</h3>
+<p>Each game deals six kicks from a 112-card shoe, shuffled for every game and dealt without replacement; the buttons show how many cards of each kind are left. Before each kick, call <b>GOAL</b> or <b>WIDE</b>. GOAL is 6 to J (48 cards), WIDE is 2, 3, 4, K, A and 14 (48 cards). A POST (5 or Q, 16 cards) is never a right call: a 5 or Q hits the post, which counts as a miss. Your 1st post starts the Posts Bonus straight away, once per game.</p>
+<p><b>POSTS BONUS:</b> your first post starts it, once per game, from the same shoe. Each right call in a row adds to the streak; a post kicks again; the first miss ends it. 2 right in a row pays 1×, 3 right (the top) pays 3×. The bonus is paid on top of the main game, then the 6 kicks carry on.</p>
+<p class="crr-note">Keys: W = wide, G = goal; on the run bar D = double or nothing, F = double half, C = cash out.</p>
+<h3>Pays</h3>
+<table class="crr-t"><thead><tr><th>Right calls</th><th>× bet</th><th>Pays at ${money(BET)}</th></tr></thead><tbody>${main}</tbody></table>
+<table class="crr-t"><thead><tr><th>Posts Bonus</th><th>× bet</th><th>Pays at ${money(BET)}</th></tr></thead><tbody>${bonus}</tbody></table>
+<p>The Posts Bonus is added to the main pay. The top round is six right: 20×, about 1 in 160 games.</p>
+<h3>The run bar</h3>
+<div class="crr-key">20× is the build target and the top of the build: six right calls pay exactly 20×. On a 1,000× run you can keep running until your total reaches 1,000× your first win, and the run that crosses 1,000× pays in full. No round pays more than the max win of ${mw}× your bet.</div>
+<p>After any win, including a return of your bet or less, the run bar opens:</p>
+<p><b>CASH OUT</b> takes everything you hold.</p>
+<p><b>DOUBLE OR NOTHING</b> is up to three shots from the full 56-card deck, each a fresh draw; posts are kicked again, so every call is exactly 50/50. Two right doubles the amount; two wrong loses it.</p>
+<p><b>DOUBLE HALF</b> runs half of what you hold, as a DOUBLE OR NOTHING, and puts the other half (plus any odd cent) in your <b>RUN BANK</b>. The RUN BANK is paid with everything else when the round ends; if the run loses, the RUN BANK comes back as the amount you hold, to cash out or double.</p>
+<p>The minimum run is ${money(MINRUN)}. A run that pays nothing ends the round.</p>
+<h3>Return to player</h3>
+<table class="crr-t"><thead><tr><th>Play</th><th>Return</th></tr></thead><tbody>
+<tr><td>Best play</td><td>93.0%</td></tr>
+<tr><td>Calling the side with more cards left</td><td>92.5%</td></tr>
+<tr><td>Random calls</td><td>90.6%</td></tr>
+<tr><td>Worst play</td><td>84.8%</td></tr>
+<tr><td>DOUBLE OR NOTHING</td><td>100.0%</td></tr></tbody></table>
+<p>Best play follows the shoe count, with one exception: after a miss with no right calls yet, calling the side with FEWER cards left gives the best chance of the 0-right pay (your bet back).</p>
+<h3>Limits</h3>
+<p>Bets: ${money(MIN_BET)} to ${money(MAX_BET)} in ${money(BET_STEP_C/100)} steps.</p>
+<p>Max win: ${mw}× your bet per round. Your operator may set a lower max win; every payout stops at the max win.</p>
+<p>Pays are rounded down to the cent.</p>
+<p class="crr-note">Results are decided by the game's random number generator. A malfunction voids all pays and plays.</p>
+<p class="crr-note">Return-to-player figures are long-run averages for the play described; any single round can return more or less.</p>`;
+}
+function start(){
+  S=blank();BET=S.bets[S.tab]||10;
+  buildTables();render();
+  CardRunRules.mount({button:$('bRules'),title:'KICKS 20×',content:rulesHTML});   // no pause: every kick waits for a call
+  $('bPlay').onclick=toGame;$('bLobby').onclick=toLobby;
+  let betBefore=null;                               // the bet when the field took focus: rejected text goes back to it
+  $('betInput').onfocus=()=>{betBefore=S.bets[S.tab]||10;};
+  $('betInput').oninput=e=>{if(live())return;const v=parseBet(e.target.value),b=v!=null?v:(betBefore??S.bets[S.tab]??10);S.bets[S.tab]=b;BET=b;renderLobby();};
+  $('betInput').onchange=e=>{const v=parseBet(e.target.value);setBet(v!=null?v:(betBefore??S.bets[S.tab]??10));e.target.value=betText(S.bets[S.tab]);};
+  $('betInput').onkeydown=e=>{if(e.key==='Enter'){e.target.blur();}};
+  $('betMax').onclick=()=>{setBet(Math.min(MAX_BET,Math.floor(Math.round(S.balance*100)/BET_STEP_C)*BET_STEP_C/100));};   // under $1 → $1 and BALANCE TOO LOW
+  $('bAgain').onclick=buildAgain;$('bToLobby').onclick=toLobby;
+  $('bWide').onclick=()=>kick('wide');
+  $('bGoal').onclick=()=>kick('goal');
+  document.addEventListener('keydown',e=>{
+    if(e.target.tagName==='INPUT')return;
+    if(S.view==='lobby'){if(e.key==='Enter'&&document.activeElement.tagName!=='BUTTON'){e.preventDefault();toGame();}return;}
+    const k=e.key.toLowerCase();
+    const O=offerState();
+    if(O.offer){const act={d:'double',f:'doubleHalf',c:'cashOut'}[k];const b=act&&$('rbHost').querySelector(`[data-act="${act}"]`);if(b)b.click();return;}
+    if(!$('bAgain').hidden){if((k==='enter'||k===' ')&&document.activeElement.tagName!=='BUTTON'){e.preventDefault();buildAgain();}return;}
+    if(S.phase==='done')return;
+    if(k==='w')kick('wide');else if(k==='g')kick('goal');
+  });
+}
+// Input lock: for 350 ms after any button set swaps in, taps, clicks, Enter and Space are ignored. Focus moves to the primary action.
+let lockUntil=0,btnSig='';
+const now=()=>performance.now();
+function buttonSig(){let s='';for(const b of document.querySelectorAll('button')){if(b.offsetParent===null||b.closest('.crr-wrap'))continue;s+=(b.id||b.className)+'|';}return s;}
+new MutationObserver(()=>{const sg=buttonSig();if(sg===btnSig)return;const was=btnSig;btnSig=sg;if(!was)return;
+  lockUntil=now()+350;
+  const p=[...document.querySelectorAll('[data-primary]')].find(b=>b.offsetParent!==null&&!b.hidden);
+  if(p&&document.activeElement!==p&&!(document.activeElement&&document.activeElement.tagName==='INPUT')&&!CardRunRules.isOpen())p.focus({preventScroll:true});
+}).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['hidden','class']});
+for(const ev of ['click','pointerdown','pointerup']) addEventListener(ev,e=>{if(now()<lockUntil&&e.target.closest&&e.target.closest('button')){e.stopImmediatePropagation();e.preventDefault();}},true);
+addEventListener('keydown',e=>{if(now()<lockUntil&&e.target.tagName!=='INPUT'&&(e.key==='Enter'||e.key===' '||/^[a-z]$/i.test(e.key))){e.stopImmediatePropagation();e.preventDefault();}},true);
+// Start at once in the lobby, always on a fresh session
+start();
+document.documentElement.classList.add('kready');
+})();
+</script>

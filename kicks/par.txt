@@ -1,0 +1,118 @@
+KICKS 20× — PAR SHEET (Card Run)
+====================================================================================================
+Build: builds-final/card-run-kicks-classic-launch.html  sha256 f4592849c5f06a8f3b9c63d495caa02fb7fdebe13a645bce0c609cc819654e26  (147,720 bytes)
+Every constant below is parsed from the build by exact_kicks.py and asserted equal to the values the math uses.
+
+1. GAME
+----------------------------------------------------------------------------------------------------
+Shoe: 112 cards (2 decks of 2-10, J, Q, K, A, 14 in 4 suits), shuffled every game, dealt without replacement.
+  GOAL 6-J: 48 cards · WIDE 2,3,4,K,A,14: 48 cards · POST 5,Q: 16 cards
+Main game: 6 kicks; call GOAL or WIDE; a post counts as a miss. The 1st post starts the Posts Bonus (once per game, same shoe).
+Pays (x bet) by right calls:   0: 1  1: 0  2: 0  3: 0  4: 3/2  5: 4  6: 20
+Posts Bonus ladder (x bet) by right calls in a row (post = kick again, first miss ends, 3 = top):   0: 0  1: 0  2: 1  3: 3
+Run bar after any win: CASH OUT · DOUBLE OR NOTHING · DOUBLE HALF (half doubles, the other half + any odd cent goes to the RUN BANK). DOUBLE OR NOTHING: Run Game, first to 2 right in at most 3 shots, each a fresh draw from the 56-card deck, posts kicked again.
+Minimum run $0.02 (game MINRUN = run-bar v170 MIN_RUN 2 cents) · run cap 1,000x the first win (pays in full) · MAX WIN 20,000x the bet (operator may lower) · bets $1.00-$100.00 in $0.10 steps · every pay rounded DOWN to the cent (doubles are exact).
+
+2. BASE GAME RTP BY STRATEGY (exact)
+----------------------------------------------------------------------------------------------------
+strategy                                            RTP  SD (x bet)  hit rate       20x odds  exact fraction
+Best play (exact DP over every shoe state)     92.9666%      1.9606  38.7665%     1 in 159.9  200943920392331/216146392994805
+Call the side with more cards left (tie GOAL)   92.5067%      1.9611  38.3656%     1 in 159.9  6598347887567848/7132830968828565
+Random calls (50/50)                           90.5795%      1.9363  37.8924%     1 in 165.2  17336258081/19139262912
+Worst play                                     84.8069%      1.8247  36.6319%     1 in 195.0  128328992263287440986067471/151319132000977106167351350
+Best play split: main pays 61.6819% + Posts Bonus 31.2846%.  Rounding: none (every base pay is whole cents on the $0.10 grid).
+Simulation (shipped code, best play, $10): 2,000,000 rounds, RTP 92.8282%, 95% CI [92.5576%, 93.0988%], SD 1.9524, hit 38.7784%, max 20x  -> exact 92.9666% inside: True
+
+3. PAY DISTRIBUTION — BEST PLAY (round total = main pay + Posts Bonus, x bet)
+----------------------------------------------------------------------------------------------------
+    pays    probability             odds   RTP share       sim freq      z
+      0x   0.6123350215         1 in 1.6     0.0000%     0.61221600  -0.35
+      1x   0.0906704247        1 in 11.0     9.0670%     0.09079850   0.63
+    1.5x   0.1501255445         1 in 6.7    22.5188%     0.15025900   0.53
+      2x   0.0036667989       1 in 272.7     0.7334%     0.00372250   1.30
+    2.5x   0.0096134515       1 in 104.0     2.4034%     0.00958250  -0.45
+      3x   0.0634376137        1 in 15.8    19.0313%     0.06315450  -1.64
+      4x   0.0509198453        1 in 19.6    20.3679%     0.05107400   0.99
+    4.5x   0.0096505056       1 in 103.6     4.3427%     0.00968800   0.54
+      5x   0.0016612577       1 in 602.0     0.8306%     0.00162200  -1.36
+      7x   0.0016674334       1 in 599.7     1.1672%     0.00172550   2.01
+     20x   0.0062521032       1 in 159.9    12.5042%     0.00615750  -1.70
+Top pay: 20x (6 right calls (no post, so no Posts Bonus)), 1 in 159.9 games.
+Right calls (main game, all 6 kicks played):  0: 3.5393%  1: 15.3890%  2: 29.1333%  3: 29.3167%  4: 16.9390%  5: 5.0575%  6: 0.6252%
+  sim (1-3 pooled: a board stops early once no pay is reachable): 0: 3.5564% (z 1.31)  1-3: 73.7986% (z -1.30)  4: 16.9530% (z 0.53)  5: 5.0762% (z 1.21)  6: 0.6158% (z -1.70)
+  Posts Bonus sim: bonus_start: 61.2062% vs 61.2504% (z -1.28)  bonus_pays: 15.5770% vs 15.5988% (z -0.85)  bonus_top: 7.8228% vs 7.8429% (z -1.06)
+Posts Bonus: starts 61.2504% of games, pays (2+ in a row) 15.5988%, top 3x 1 in 12.8.
+
+4. DOUBLE OR NOTHING
+----------------------------------------------------------------------------------------------------
+DOUBLE OR NOTHING: P(right call) = 1/2, P(double) = 1/2 -> RTP 100.0000% (prize 2x in whole cents, never rounded); 2.500 decided shots, 2.917 kicks per hand.
+
+5. ROUNDING EFFECT (base pays rounded down to the cent)
+----------------------------------------------------------------------------------------------------
+  bet    $1: base RTP 92.9666% (loss 0.00e+00); DOUBLE OR NOTHING and DOUBLE HALF are exact in whole cents (no rounding at any amount)
+  bet   $10: base RTP 92.9666% (loss 0.00e+00); DOUBLE OR NOTHING and DOUBLE HALF are exact in whole cents (no rounding at any amount)
+  bet  $100: base RTP 92.9666% (loss 0.00e+00); DOUBLE OR NOTHING and DOUBLE HALF are exact in whole cents (no rounding at any amount)
+
+6. RUN-BAR POLICIES (round payout per bet; boards at best play)
+----------------------------------------------------------------------------------------------------
+P0 cash out · P2 DOUBLE once · P3 double while offered (to the 1,000x cap / MAX WIN) · P4 random (cash out 1/3, else uniform over the DOUBLE / DOUBLE HALF buttons shown) · P5 DOUBLE HALF once   (P1 = RUN IT AGAIN once: retired)
+       bet   exact RTP   exact SD  exact hit   sim rounds    sim RTP                  95% CI    sim SD   sim hit     max x
+P0      $1    92.9666%     1.9606   38.7665%
+P0     $10    92.9666%     1.9606   38.7665%      200,000   93.3310% [92.4712%, 94.1908%]     1.962  38.8590%      20.0
+P0    $100    92.9666%     1.9606   38.7665%      100,000   92.2880% [91.0772%, 93.4988%]     1.953  38.5260%      20.0
+P2      $1    92.9666%     2.9245   19.3832%
+P2     $10    92.9666%     2.9245   19.3832%      200,000   93.3850% [92.1049%, 94.6651%]     2.921  19.5095%      40.0
+P2    $100    92.9666%     2.9245   19.3832%      100,000   94.7750% [92.9240%, 96.6260%]     2.986  19.5120%      40.0
+P3      $1    92.9666%    59.4984    0.0385%
+P3     $10    92.9666%    59.4984    0.0385%      200,000  104.7040% [78.1526%, 131.2554%]    60.582   0.0445%   10240.0
+P3    $100    92.9666%    59.4984    0.0385%      100,000  114.6880% [68.6408%, 160.7352%]    74.293   0.0410%   10240.0
+P4      $1    92.9666%   >=4.6817   27.6899%
+P4     $10    92.9666%   >=4.6819   27.6904%      200,000   93.5957% [91.6391%, 95.5524%]     4.464  27.6665%     776.0
+P4    $100    92.9666%   >=4.6820   27.6904%      100,000   93.7222% [91.4730%, 95.9714%]     3.629  27.7860%     266.0
+P5      $1    92.9666%     2.2408   38.7665%
+P5     $10    92.9666%     2.2408   38.7665%      200,000   92.6273% [91.6538%, 93.6007%]     2.221  38.6905%      30.0
+P5    $100    92.9666%     2.2408   38.7665%      100,000   92.5725% [91.1890%, 93.9560%]     2.232  38.7590%      30.0
+P0, P2, P3, P5: exact fractions. Every bar action is exactly fair in whole cents (DOUBLE / DOUBLE HALF win 1/2 for 2x the amount run, offered only when MAX WIN cannot clip them; the 1,000x cap pays in full),
+so every policy has the base RTP exactly (P2 = P3 = P5 = P0 = best play 92.96659%); they differ only in SD and hit rate. P5 also has a closed form (asserted equal to the recursion).
+P4: RTP exact (equal to the base RTP; the propagation reproduces it to 2.0e-12). Hit rate and SD from a bounded recursion: every P4 action expanded exactly to a per-state probability of 1e-15;
+    dropped mass ($1: 6.79e-09 of rounds, 3,650,150 peak states, 48 bars deep  $10: 7.44e-09 of rounds, 3,797,738 peak states, 47 bars deep  $100: 6.04e-09 of rounds, 2,983,843 peak states, 46 bars deep).
+    rigorous RTP bounds [expanded part, + dropped tail at W]: $1: [92.9661%, 92.9666%]  $10: [92.9662%, 92.9666%]  $100: [92.9663%, 92.9666%]
+    hit-rate interval [expanded, + dropped mass] and SD bounds (dropped state worth W: W^2 <= E[X^2] <= MW x W): $1: hit [0.276899, 0.276899], SD [4.6817, 4.6911]  $10: hit [0.276904, 0.276904], SD [4.6819, 4.6884]  $100: hit [0.276904, 0.276904], SD [4.6820, 4.6865]
+
+7. CHECKS — every exact value against its simulation 95% CI
+----------------------------------------------------------------------------------------------------
+  ok   base RTP (best play) $10                   exact 0.929666  CI [0.925576, 0.930988]
+  ok   base hit rate $10                          exact 0.387665  CI [0.387109, 0.388459]
+  ok   P0 RTP $10                                 exact 0.929666  CI [0.924712, 0.941908]
+  ok   P0 hit rate $10                            exact 0.387665  CI [0.386454, 0.390726]
+  ok   P0 RTP $100                                exact 0.929666  CI [0.910772, 0.934988]
+  ok   P0 hit rate $100                           exact 0.387665  CI [0.382244, 0.388276]
+  ok   P2 RTP $10                                 exact 0.929666  CI [0.921049, 0.946651]
+  ok   P2 hit rate $10                            exact 0.193832  CI [0.193358, 0.196832]
+  ok   P2 RTP $100                                exact 0.929666  CI [0.929240, 0.966260]
+  ok   P2 hit rate $100                           exact 0.193832  CI [0.192664, 0.197576]
+  ok   P3 RTP $10                                 exact 0.929666  CI [0.781526, 1.312554]
+  ok   P3 hit rate $10                            exact 0.000385  CI [0.000353, 0.000537]
+  ok   P3 RTP $100                                exact 0.929666  CI [0.686408, 1.607352]
+  ok   P3 hit rate $100                           exact 0.000385  CI [0.000285, 0.000535]
+  ok   P4 RTP $10                                 exact 0.929666  CI [0.916391, 0.955524]
+  ok   P4 RTP bounds $10 overlaps CI              exact [0.929662, 0.929666]  CI [0.916391, 0.955524]
+  ok   P4 hit-rate interval $10 overlaps CI       exact [0.276904, 0.276904]  CI [0.274704, 0.278626]
+  ok   P4 RTP $100                                exact 0.929666  CI [0.914730, 0.959714]
+  ok   P4 RTP bounds $100 overlaps CI             exact [0.929663, 0.929666]  CI [0.914730, 0.959714]
+  ok   P4 hit-rate interval $100 overlaps CI      exact [0.276904, 0.276904]  CI [0.275084, 0.280636]
+  ok   P5 RTP $10                                 exact 0.929666  CI [0.916538, 0.936007]
+  ok   P5 hit rate $10                            exact 0.387665  CI [0.384770, 0.389040]
+  ok   P5 RTP $100                                exact 0.929666  CI [0.911890, 0.939560]
+  ok   P5 hit rate $100                           exact 0.387665  CI [0.384570, 0.390610]
+  ok   P4 RTP $1 (small-amount run)               exact 0.929666  CI [0.914612, 0.949646]
+  ok   P4 RTP bounds $1 (small-amount run) overlaps CI exact [0.929661, 0.929666]  CI [0.914612, 0.949646]
+  ok   P4 hit-rate interval $1 (small-amount run) overlaps CI exact [0.276899, 0.276899]  CI [0.273916, 0.277834]
+  small-amount check (out/small/, seeds 30401..30404 x 50,000): P4 at a $1.00 bet, 200,000 rounds through the shipped code: RTP 93.2129% [91.4612%, 94.9646%], SD 3.997, hit 0.275875 [0.273916, 0.277834], max 560x;
+    exact P4 $1: RTP 92.9666% (= the base RTP; bounds [92.9661%, 92.9666%]), SD in [4.6817, 4.6911], hit interval [0.276899, 0.276899]; choices {'cashOut': 55175, 'double': 54898, 'doubleHalf': 54768}
+  27 checks, 27 inside; issues: none
+
+8. SAME-SEED COMPARISON WITH THE v169 RUN (build feab7531…, $0.02 minimum run WITH RUN IT AGAIN / RUN HALF; compare_prev.py -> out/compare_prev.txt)
+----------------------------------------------------------------------------------------------------
+  chunks: 10 changed, 58 identical, 6 only in new, 36 only in previous; changed: pol_P4_100_20401.json pol_P4_100_20402.json pol_P4_10_10401.json pol_P4_10_10402.json pol_P4_10_10403.json pol_P4_10_10404.json small/pol_P4_1_30401.json small/pol_P4_1_30402.json small/pol_P4_1_30403.json small/pol_P4_1_30404.json
+  exact values that changed: P4 $1 RTP 92.8679% -> 92.9666%, hit 26.4581% -> 27.6899%; P4 $10 RTP 92.9155% -> 92.9666%, hit 26.4331% -> 27.6904%; P4 $100 RTP 92.9188% -> 92.9666%, hit 26.4252% -> 27.6904%; P5 $1 RTP 92.8447% -> 92.9666%, hit 38.7665% -> 38.7665%; P5 $10 RTP 92.9329% -> 92.9666%, hit 38.7665% -> 38.7665%; P5 $100 RTP 92.9378% -> 92.9666%, hit 38.7665% -> 38.7665%

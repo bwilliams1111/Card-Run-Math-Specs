@@ -1,0 +1,71 @@
+Same-seed comparison with /home/claude/fix/minrun/v169_kicks_out
+  chunks: 10 changed, 58 identical, 6 only in new, 36 only in previous
+  only in previous: extra/pol_P4_100_20405.json
+  only in previous: extra/pol_P4_100_20406.json
+  only in previous: extra/pol_P4_100_20407.json
+  only in previous: extra/pol_P4_100_20408.json
+  only in previous: followup/pol_P4_10_10405.json
+  only in previous: followup/pol_P4_10_10406.json
+  only in previous: followup/pol_P4_10_10407.json
+  only in previous: followup/pol_P4_10_10408.json
+  only in previous: followup/pol_P4_10_10409.json
+  only in previous: followup/pol_P4_10_10410.json
+  only in previous: followup/pol_P4_10_10411.json
+  only in previous: followup/pol_P4_10_10412.json
+  only in previous: followup/pol_P4_10_10413.json
+  only in previous: followup/pol_P4_10_10414.json
+  only in previous: followup/pol_P4_10_10415.json
+  only in previous: followup/pol_P4_10_10416.json
+  only in previous: followup/pol_P4_10_10417.json
+  only in previous: followup/pol_P4_10_10418.json
+  only in previous: followup/pol_P4_10_10419.json
+  only in previous: followup/pol_P4_10_10420.json
+  only in previous: followup/pol_P4_10_10421.json
+  only in previous: followup/pol_P4_10_10422.json
+  only in previous: followup/pol_P4_10_10423.json
+  only in previous: followup/pol_P4_10_10424.json
+  only in previous: pol_P1_100_20101.json
+  only in previous: pol_P1_100_20102.json
+  only in previous: pol_P1_10_10101.json
+  only in previous: pol_P1_10_10102.json
+  only in previous: pol_P1_10_10103.json
+  only in previous: pol_P1_10_10104.json
+  CHANGED pol_P4_100_20401.json        RTP 0.91668 -> 0.93828  hit 0.27054 -> 0.27946  bars 40130 -> 41415  choices {'cashOut': 13527, 'runIt': 6585, 'double': 6650, 'runHalf': 6631, 'doubleHalf': 6737} -> {'cashOut': 13973, 'double': 13633, 'doubleHalf': 13809}
+  CHANGED pol_P4_100_20402.json        RTP 0.90530 -> 0.93616  hit 0.26732 -> 0.27626  bars 40560 -> 41563  choices {'cashOut': 13366, 'runIt': 6785, 'double': 6740, 'runHalf': 6803, 'doubleHalf': 6866} -> {'cashOut': 13813, 'double': 13879, 'doubleHalf': 13871}
+  CHANGED pol_P4_10_10401.json         RTP 0.87642 -> 0.93939  hit 0.26344 -> 0.27492  bars 39625 -> 41677  choices {'cashOut': 13172, 'runIt': 6678, 'double': 6629, 'runHalf': 6512, 'doubleHalf': 6634} -> {'cashOut': 13746, 'double': 14078, 'doubleHalf': 13853}
+  CHANGED pol_P4_10_10402.json         RTP 0.89947 -> 0.93306  hit 0.26570 -> 0.27952  bars 39915 -> 41643  choices {'cashOut': 13285, 'runIt': 6534, 'double': 6719, 'runHalf': 6706, 'doubleHalf': 6671} -> {'cashOut': 13976, 'double': 13839, 'doubleHalf': 13828}
+  CHANGED pol_P4_10_10403.json         RTP 0.85638 -> 0.95927  hit 0.26204 -> 0.27596  bars 39025 -> 41666  choices {'cashOut': 13102, 'runIt': 6544, 'double': 6534, 'runHalf': 6394, 'doubleHalf': 6451} -> {'cashOut': 13798, 'double': 14059, 'doubleHalf': 13809}
+  CHANGED pol_P4_10_10404.json         RTP 0.89221 -> 0.91210  hit 0.26508 -> 0.27626  bars 39692 -> 41101  choices {'cashOut': 13254, 'runIt': 6715, 'double': 6483, 'runHalf': 6668, 'doubleHalf': 6572} -> {'cashOut': 13813, 'double': 13680, 'doubleHalf': 13608}
+  only in previous: pol_P5_100_20501.json
+  only in previous: pol_P5_100_20502.json
+  only in new: pol_P5_100_20601.json
+  only in new: pol_P5_100_20602.json
+  only in previous: pol_P5_10_10501.json
+  only in previous: pol_P5_10_10502.json
+  only in previous: pol_P5_10_10503.json
+  only in previous: pol_P5_10_10504.json
+  only in new: pol_P5_10_10601.json
+  only in new: pol_P5_10_10602.json
+  only in new: pol_P5_10_10603.json
+  only in new: pol_P5_10_10604.json
+  CHANGED small/pol_P4_1_30401.json    RTP 0.90594 -> 0.93739  hit 0.26462 -> 0.27470  bars 39759 -> 41032  choices {'cashOut': 13231, 'runIt': 6692, 'double': 6750, 'runHalf': 6488, 'doubleHalf': 6598} -> {'cashOut': 13735, 'double': 13868, 'doubleHalf': 13429}
+  CHANGED small/pol_P4_1_30402.json    RTP 1.05253 -> 0.93833  hit 0.26174 -> 0.27748  bars 39158 -> 41421  choices {'cashOut': 13087, 'runIt': 6534, 'double': 6445, 'runHalf': 6599, 'doubleHalf': 6493} -> {'cashOut': 13874, 'double': 13819, 'doubleHalf': 13728}
+  CHANGED small/pol_P4_1_30403.json    RTP 0.94897 -> 0.92910  hit 0.26870 -> 0.27876  bars 39886 -> 41452  choices {'cashOut': 13435, 'runIt': 6501, 'double': 6595, 'runHalf': 6626, 'doubleHalf': 6729} -> {'cashOut': 13938, 'double': 13584, 'doubleHalf': 13930}
+  CHANGED small/pol_P4_1_30404.json    RTP 0.94383 -> 0.92370  hit 0.26330 -> 0.27256  bars 39853 -> 40936  choices {'cashOut': 13165, 'runIt': 6740, 'double': 6584, 'runHalf': 6715, 'doubleHalf': 6649} -> {'cashOut': 13628, 'double': 13627, 'doubleHalf': 13681}
+  identical: base_10_1001.json base_10_1002.json base_10_1003.json base_10_1004.json base_10_1005.json base_10_1006.json base_10_1007.json base_10_1008.json base_10_1009.json base_10_1010.json base_10_1011.json base_10_1012.json base_10_1013.json base_10_1014.json base_10_1015.json base_10_1016.json base_10_1017.json base_10_1018.json base_10_1019.json base_10_1020.json base_10_1021.json base_10_1022.json base_10_1023.json base_10_1024.json base_10_1025.json base_10_1026.json base_10_1027.json base_10_1028.json base_10_1029.json base_10_1030.json base_10_1031.json base_10_1032.json base_10_1033.json base_10_1034.json base_10_1035.json base_10_1036.json base_10_1037.json base_10_1038.json base_10_1039.json base_10_1040.json pol_P0_100_20001.json pol_P0_100_20002.json pol_P0_10_10001.json pol_P0_10_10002.json pol_P0_10_10003.json pol_P0_10_10004.json pol_P2_100_20201.json pol_P2_100_20202.json pol_P2_10_10201.json pol_P2_10_10202.json pol_P2_10_10203.json pol_P2_10_10204.json pol_P3_100_20301.json pol_P3_100_20302.json pol_P3_10_10301.json pol_P3_10_10302.json pol_P3_10_10303.json pol_P3_10_10304.json
+Exact policy values before -> after (RTP, hit rate):
+  P0 $1    same    RTP 0.92966585 -> 0.92966585  hit 0.387665 -> 0.387665
+  P0 $10   same    RTP 0.92966585 -> 0.92966585  hit 0.387665 -> 0.387665
+  P0 $100  same    RTP 0.92966585 -> 0.92966585  hit 0.387665 -> 0.387665
+  P2 $1    same    RTP 0.92966585 -> 0.92966585  hit 0.193832 -> 0.193832
+  P2 $10   same    RTP 0.92966585 -> 0.92966585  hit 0.193832 -> 0.193832
+  P2 $100  same    RTP 0.92966585 -> 0.92966585  hit 0.193832 -> 0.193832
+  P3 $1    same    RTP 0.92966585 -> 0.92966585  hit 0.000385 -> 0.000385
+  P3 $10   same    RTP 0.92966585 -> 0.92966585  hit 0.000385 -> 0.000385
+  P3 $100  same    RTP 0.92966585 -> 0.92966585  hit 0.000385 -> 0.000385
+  P4 $1    CHANGED RTP 0.92867943 -> 0.92966585  hit 0.264581 -> 0.276899  bounds [0.9173598898102818, 0.9287028799924265] -> [0.9296606635639543, 0.9296658510381839]
+  P4 $10   CHANGED RTP 0.92915534 -> 0.92966585  hit 0.264331 -> 0.276904  bounds [0.9176662307048608, 0.9291791783802489] -> [0.929662123576872, 0.9296658510383915]
+  P4 $100  CHANGED RTP 0.92918782 -> 0.92966585  hit 0.264252 -> 0.276904  bounds [0.9179246560635292, 0.929211187378987] -> [0.9296631138967556, 0.9296658510360823]
+  P5 $1    CHANGED RTP 0.92844749 -> 0.92966585  hit 0.387665 -> 0.387665
+  P5 $10   CHANGED RTP 0.92932928 -> 0.92966585  hit 0.387665 -> 0.387665
+  P5 $100  CHANGED RTP 0.92937773 -> 0.92966585  hit 0.387665 -> 0.387665

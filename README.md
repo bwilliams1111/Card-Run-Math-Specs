@@ -6,10 +6,10 @@ Math specifications, exact solvers, simulation evidence and PAR sheets for the *
 |---|---|---|
 | **Blackjack 20×** | **Delivered** (16 Oct 2026, run-bar v170) | [`blackjack/`](blackjack/) |
 | **Mines 20×** | **Delivered** (16 Oct 2026, run-bar v170) | [`mines/`](mines/) |
+| **Kicks 20×** | **Delivered** (16 Oct 2026, run-bar v170) | [`kicks/`](kicks/) |
 | Crash 20× | Pending | — |
-| Kicks 20× | Pending | — |
 
-The remaining two games will be added to this repository as their math packs are completed. The platform rules shared by all four games (bets, rounding, MAX WIN, the run bar, RNG) are already described in [`VERIFICATION.md`](VERIFICATION.md).
+Crash will be added to this repository when its math pack is completed. The platform rules shared by all four games (bets, rounding, MAX WIN, the run bar, RNG) are already described in [`VERIFICATION.md`](VERIFICATION.md).
 
 ---
 
@@ -119,6 +119,57 @@ python3 -I summarize.py > out/summary.txt             # CI checks, chi-square, r
 
 ---
 
+## Kicks 20× — start here
+
+| File | What it is |
+|---|---|
+| [`kicks/KICKS-MATH.pdf`](kicks/KICKS-MATH.pdf) | The math document, formatted (12 pages) |
+| [`kicks/KICKS-MATH.md`](kicks/KICKS-MATH.md) | The same document in Markdown (`.docx` also provided) |
+| [`kicks/par.txt`](kicks/par.txt) | Plain-text PAR sheet (every table) |
+| [`kicks/results.json`](kicks/results.json) | Every headline number and CI check as data |
+| [`kicks/README.txt`](kicks/README.txt) | Every script, command and seed |
+| [`kicks/PACK-README.txt`](kicks/PACK-README.txt) | The math pack's cover note |
+| [`kicks/out/sheet_strategy.txt`](kicks/out/sheet_strategy.txt) | The rules sheet's description of best play, evaluated exactly |
+| [`kicks/out/`](kicks/out/) | Raw solver and simulation outputs |
+
+### Headline figures (exact)
+
+| Item | Value |
+|---|---|
+| Base game RTP, best play | **92.9666%** (200943920392331 / 216146392994805), SD 1.9606×, hit rate 38.7665% |
+| Other ways to call | 92.5067% (side with more cards left) · 90.5795% (random) · **84.8069%** (worst play) |
+| Top pay | 20× (six right calls), 1 in 159.9 games |
+| Rounding | None at any bet: every base pay is whole cents on the $0.10 grid; doubles are exact |
+| DOUBLE OR NOTHING | Win chance 1/2 exactly, **100.0000%** |
+| Whole round, any bar policy | Same as the base game (every bar action is a fair bet; nothing is clipped) |
+| MAX WIN | 20,000× the bet |
+| Bets | $1.00 – $100.00 in $0.10 steps |
+
+Kicks is a skill game: the certified figure is best play, and the rules sheet shows all four ways of calling. The shoe (112 cards, 2 decks) is dealt without replacement and shuffled every game, so card counting is part of best play. The rules sheet's one-sentence description of best play, played literally, returns the exact best-play RTP.
+
+### Build under test
+
+| File | sha256 |
+|---|---|
+| `builds-final/card-run-kicks-classic-launch.html` | `f4592849c5f06a8f3b9c63d495caa02fb7fdebe13a645bce0c609cc819654e26` |
+
+`run-bar.js` v170 is embedded byte for byte in the Kicks build (hashes under Blackjack above).
+
+### Reproducing the results
+
+Requirements: Python 3 (standard library only) and Node ≥ 18, no network. `exact_kicks.py` parses every constant and code shape from the build text and stops if one differs; it needs about 1 GB of RAM.
+
+```sh
+cd kicks
+python3 -I exact_kicks.py                        # exact math -> out/exact.json (~12 min; run under ulimit -v 3500000)
+node sheet_strategy.js > out/sheet_strategy.txt  # the rules-sheet description of best play, evaluated exactly
+./run_sims.sh 1                                  # 70 simulation jobs of 50,000 rounds, ~45 min
+./run_small_p4.sh 1                              # the $1 check for P4 -> out/small/
+python3 -I merge.py                              # CI checks, results.json, par.txt
+```
+
+---
+
 ## Repository layout
 
 ```
@@ -126,11 +177,12 @@ README.md            this file
 VERIFICATION.md      verification guide: scope, platform rules, RNG, run bar, checklist (covers all four games)
 blackjack/           Blackjack 20× math pack: document, PAR sheet, solvers, simulators, raw outputs
 mines/               Mines 20× math pack: document, PAR sheet, solver, simulators, raw outputs
+kicks/               Kicks 20× math pack: document, PAR sheet, solver, simulators, raw outputs
 builds-final/        the client build(s) under test, by hash
 shared/              run-bar.js, run-bar.test.js, rules-sheet.js (embedded in every build)
 ```
 
 ## Out of scope
 
-- The production RNG and server-side outcome determination. The builds draw outcomes in the client with `crypto.getRandomValues` (rejection sampling, no `Math.random` fallback); production replaces `rngU32` (Blackjack and Mines) with the platform RNG, certified separately.
+- The production RNG and server-side outcome determination. The builds draw outcomes in the client with `crypto.getRandomValues` (rejection sampling, no `Math.random` fallback); production replaces `rngU32` (Blackjack and Mines) and `rnd` (Kicks) with the platform RNG, certified separately.
 - See `VERIFICATION.md` §9 for the open items and their owners.

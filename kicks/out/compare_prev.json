@@ -1,0 +1,1439 @@
+{
+ "previous_dir": "/home/claude/fix/minrun/v169_kicks_out",
+ "chunks": [
+  {
+   "chunk": "base_10_1001.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1002.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1003.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1004.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1005.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1006.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1007.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1008.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1009.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1010.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1011.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1012.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1013.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1014.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1015.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1016.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1017.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1018.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1019.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1020.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1021.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1022.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1023.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1024.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1025.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1026.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1027.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1028.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1029.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1030.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1031.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1032.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1033.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1034.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1035.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1036.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1037.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1038.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1039.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "base_10_1040.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "extra/pol_P4_100_20405.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "extra/pol_P4_100_20406.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "extra/pol_P4_100_20407.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "extra/pol_P4_100_20408.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "followup/pol_P4_10_10405.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "followup/pol_P4_10_10406.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "followup/pol_P4_10_10407.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "followup/pol_P4_10_10408.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "followup/pol_P4_10_10409.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "followup/pol_P4_10_10410.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "followup/pol_P4_10_10411.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "followup/pol_P4_10_10412.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "followup/pol_P4_10_10413.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "followup/pol_P4_10_10414.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "followup/pol_P4_10_10415.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "followup/pol_P4_10_10416.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "followup/pol_P4_10_10417.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "followup/pol_P4_10_10418.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "followup/pol_P4_10_10419.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "followup/pol_P4_10_10420.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "followup/pol_P4_10_10421.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "followup/pol_P4_10_10422.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "followup/pol_P4_10_10423.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "followup/pol_P4_10_10424.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "pol_P0_100_20001.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "pol_P0_100_20002.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "pol_P0_10_10001.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "pol_P0_10_10002.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "pol_P0_10_10003.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "pol_P0_10_10004.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "pol_P1_100_20101.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "pol_P1_100_20102.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "pol_P1_10_10101.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "pol_P1_10_10102.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "pol_P1_10_10103.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "pol_P1_10_10104.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "pol_P2_100_20201.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "pol_P2_100_20202.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "pol_P2_10_10201.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "pol_P2_10_10202.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "pol_P2_10_10203.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "pol_P2_10_10204.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "pol_P3_100_20301.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "pol_P3_100_20302.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "pol_P3_10_10301.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "pol_P3_10_10302.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "pol_P3_10_10303.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "pol_P3_10_10304.json",
+   "status": "identical"
+  },
+  {
+   "chunk": "pol_P4_100_20401.json",
+   "status": "changed",
+   "fields_differing": [
+    "bars",
+    "choices",
+    "ci95",
+    "events",
+    "hash",
+    "hit",
+    "hits",
+    "max_x",
+    "rng_calls",
+    "rtp",
+    "sd",
+    "sum",
+    "sumsq"
+   ],
+   "rtp": [
+    0.9166790740000006,
+    0.9382849979999999
+   ],
+   "hit": [
+    0.27054,
+    0.27946
+   ],
+   "bars": [
+    40130,
+    41415
+   ],
+   "choices": [
+    {
+     "cashOut": 13527,
+     "runIt": 6585,
+     "double": 6650,
+     "runHalf": 6631,
+     "doubleHalf": 6737
+    },
+    {
+     "cashOut": 13973,
+     "double": 13633,
+     "doubleHalf": 13809
+    }
+   ]
+  },
+  {
+   "chunk": "pol_P4_100_20402.json",
+   "status": "changed",
+   "fields_differing": [
+    "bars",
+    "choices",
+    "ci95",
+    "events",
+    "hash",
+    "hit",
+    "hits",
+    "max_x",
+    "rng_calls",
+    "rtp",
+    "sd",
+    "sum",
+    "sumsq"
+   ],
+   "rtp": [
+    0.9053044899999984,
+    0.9361585840000004
+   ],
+   "hit": [
+    0.26732,
+    0.27626
+   ],
+   "bars": [
+    40560,
+    41563
+   ],
+   "choices": [
+    {
+     "cashOut": 13366,
+     "runIt": 6785,
+     "double": 6740,
+     "runHalf": 6803,
+     "doubleHalf": 6866
+    },
+    {
+     "cashOut": 13813,
+     "double": 13879,
+     "doubleHalf": 13871
+    }
+   ]
+  },
+  {
+   "chunk": "pol_P4_10_10401.json",
+   "status": "changed",
+   "fields_differing": [
+    "bars",
+    "choices",
+    "ci95",
+    "events",
+    "hash",
+    "hit",
+    "hits",
+    "max_x",
+    "rng_calls",
+    "rtp",
+    "sd",
+    "sum",
+    "sumsq"
+   ],
+   "rtp": [
+    0.8764209599999966,
+    0.9393945000000001
+   ],
+   "hit": [
+    0.26344,
+    0.27492
+   ],
+   "bars": [
+    39625,
+    41677
+   ],
+   "choices": [
+    {
+     "cashOut": 13172,
+     "runIt": 6678,
+     "double": 6629,
+     "runHalf": 6512,
+     "doubleHalf": 6634
+    },
+    {
+     "cashOut": 13746,
+     "double": 14078,
+     "doubleHalf": 13853
+    }
+   ]
+  },
+  {
+   "chunk": "pol_P4_10_10402.json",
+   "status": "changed",
+   "fields_differing": [
+    "bars",
+    "choices",
+    "ci95",
+    "events",
+    "hash",
+    "hit",
+    "hits",
+    "max_x",
+    "rng_calls",
+    "rtp",
+    "sd",
+    "sum",
+    "sumsq"
+   ],
+   "rtp": [
+    0.8994737799999963,
+    0.9330614000000007
+   ],
+   "hit": [
+    0.2657,
+    0.27952
+   ],
+   "bars": [
+    39915,
+    41643
+   ],
+   "choices": [
+    {
+     "cashOut": 13285,
+     "runIt": 6534,
+     "double": 6719,
+     "runHalf": 6706,
+     "doubleHalf": 6671
+    },
+    {
+     "cashOut": 13976,
+     "double": 13839,
+     "doubleHalf": 13828
+    }
+   ]
+  },
+  {
+   "chunk": "pol_P4_10_10403.json",
+   "status": "changed",
+   "fields_differing": [
+    "bars",
+    "choices",
+    "ci95",
+    "events",
+    "hash",
+    "hit",
+    "hits",
+    "max_x",
+    "rng_calls",
+    "rtp",
+    "sd",
+    "sum",
+    "sumsq"
+   ],
+   "rtp": [
+    0.8563847199999979,
+    0.95927454
+   ],
+   "hit": [
+    0.26204,
+    0.27596
+   ],
+   "bars": [
+    39025,
+    41666
+   ],
+   "choices": [
+    {
+     "cashOut": 13102,
+     "runIt": 6544,
+     "double": 6534,
+     "runHalf": 6394,
+     "doubleHalf": 6451
+    },
+    {
+     "cashOut": 13798,
+     "double": 14059,
+     "doubleHalf": 13809
+    }
+   ]
+  },
+  {
+   "chunk": "pol_P4_10_10404.json",
+   "status": "changed",
+   "fields_differing": [
+    "bars",
+    "choices",
+    "ci95",
+    "events",
+    "hash",
+    "hit",
+    "hits",
+    "max_x",
+    "rng_calls",
+    "rtp",
+    "sd",
+    "sum",
+    "sumsq"
+   ],
+   "rtp": [
+    0.8922075599999983,
+    0.9120993199999996
+   ],
+   "hit": [
+    0.26508,
+    0.27626
+   ],
+   "bars": [
+    39692,
+    41101
+   ],
+   "choices": [
+    {
+     "cashOut": 13254,
+     "runIt": 6715,
+     "double": 6483,
+     "runHalf": 6668,
+     "doubleHalf": 6572
+    },
+    {
+     "cashOut": 13813,
+     "double": 13680,
+     "doubleHalf": 13608
+    }
+   ]
+  },
+  {
+   "chunk": "pol_P5_100_20501.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "pol_P5_100_20502.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "pol_P5_100_20601.json",
+   "status": "only in new"
+  },
+  {
+   "chunk": "pol_P5_100_20602.json",
+   "status": "only in new"
+  },
+  {
+   "chunk": "pol_P5_10_10501.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "pol_P5_10_10502.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "pol_P5_10_10503.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "pol_P5_10_10504.json",
+   "status": "only in previous"
+  },
+  {
+   "chunk": "pol_P5_10_10601.json",
+   "status": "only in new"
+  },
+  {
+   "chunk": "pol_P5_10_10602.json",
+   "status": "only in new"
+  },
+  {
+   "chunk": "pol_P5_10_10603.json",
+   "status": "only in new"
+  },
+  {
+   "chunk": "pol_P5_10_10604.json",
+   "status": "only in new"
+  },
+  {
+   "chunk": "small/pol_P4_1_30401.json",
+   "status": "changed",
+   "fields_differing": [
+    "bars",
+    "choices",
+    "ci95",
+    "events",
+    "hash",
+    "hit",
+    "hits",
+    "max_x",
+    "rng_calls",
+    "rtp",
+    "sd",
+    "sum",
+    "sumsq"
+   ],
+   "rtp": [
+    0.905939600000008,
+    0.9373855999999997
+   ],
+   "hit": [
+    0.26462,
+    0.2747
+   ],
+   "bars": [
+    39759,
+    41032
+   ],
+   "choices": [
+    {
+     "cashOut": 13231,
+     "runIt": 6692,
+     "double": 6750,
+     "runHalf": 6488,
+     "doubleHalf": 6598
+    },
+    {
+     "cashOut": 13735,
+     "double": 13868,
+     "doubleHalf": 13429
+    }
+   ]
+  },
+  {
+   "chunk": "small/pol_P4_1_30402.json",
+   "status": "changed",
+   "fields_differing": [
+    "bars",
+    "choices",
+    "ci95",
+    "events",
+    "hash",
+    "hit",
+    "hits",
+    "max_x",
+    "rng_calls",
+    "rtp",
+    "sd",
+    "sum",
+    "sumsq"
+   ],
+   "rtp": [
+    1.0525330000000102,
+    0.9383307999999988
+   ],
+   "hit": [
+    0.26174,
+    0.27748
+   ],
+   "bars": [
+    39158,
+    41421
+   ],
+   "choices": [
+    {
+     "cashOut": 13087,
+     "runIt": 6534,
+     "double": 6445,
+     "runHalf": 6599,
+     "doubleHalf": 6493
+    },
+    {
+     "cashOut": 13874,
+     "double": 13819,
+     "doubleHalf": 13728
+    }
+   ]
+  },
+  {
+   "chunk": "small/pol_P4_1_30403.json",
+   "status": "changed",
+   "fields_differing": [
+    "bars",
+    "choices",
+    "ci95",
+    "events",
+    "hash",
+    "hit",
+    "hits",
+    "max_x",
+    "rng_calls",
+    "rtp",
+    "sd",
+    "sum",
+    "sumsq"
+   ],
+   "rtp": [
+    0.9489734000000078,
+    0.9290991999999991
+   ],
+   "hit": [
+    0.2687,
+    0.27876
+   ],
+   "bars": [
+    39886,
+    41452
+   ],
+   "choices": [
+    {
+     "cashOut": 13435,
+     "runIt": 6501,
+     "double": 6595,
+     "runHalf": 6626,
+     "doubleHalf": 6729
+    },
+    {
+     "cashOut": 13938,
+     "double": 13584,
+     "doubleHalf": 13930
+    }
+   ]
+  },
+  {
+   "chunk": "small/pol_P4_1_30404.json",
+   "status": "changed",
+   "fields_differing": [
+    "bars",
+    "choices",
+    "ci95",
+    "events",
+    "hash",
+    "hit",
+    "hits",
+    "max_x",
+    "rng_calls",
+    "rtp",
+    "sd",
+    "sum",
+    "sumsq"
+   ],
+   "rtp": [
+    0.9438270000000092,
+    0.9236993999999996
+   ],
+   "hit": [
+    0.2633,
+    0.27256
+   ],
+   "bars": [
+    39853,
+    40936
+   ],
+   "choices": [
+    {
+     "cashOut": 13165,
+     "runIt": 6740,
+     "double": 6584,
+     "runHalf": 6715,
+     "doubleHalf": 6649
+    },
+    {
+     "cashOut": 13628,
+     "double": 13627,
+     "doubleHalf": 13681
+    }
+   ]
+  }
+ ],
+ "summary": {
+  "changed": 10,
+  "identical": 58,
+  "only in new": 6,
+  "only in previous": 36
+ },
+ "changed_chunks": [
+  "pol_P4_100_20401.json",
+  "pol_P4_100_20402.json",
+  "pol_P4_10_10401.json",
+  "pol_P4_10_10402.json",
+  "pol_P4_10_10403.json",
+  "pol_P4_10_10404.json",
+  "small/pol_P4_1_30401.json",
+  "small/pol_P4_1_30402.json",
+  "small/pol_P4_1_30403.json",
+  "small/pol_P4_1_30404.json"
+ ],
+ "exact_policies_before_after": {
+  "P0 $1": {
+   "rtp": [
+    0.9296658510381,
+    0.9296658510381
+   ],
+   "rtp_fraction": [
+    "200943920392331/216146392994805",
+    "200943920392331/216146392994805"
+   ],
+   "sd": [
+    1.960632884065633,
+    1.960632884065633
+   ],
+   "hit_rate": [
+    0.3876649784726116,
+    0.3876649784726116
+   ],
+   "rtp_bounds": [
+    null,
+    null
+   ],
+   "hit_interval": [
+    null,
+    null
+   ],
+   "dropped_probability": [
+    null,
+    null
+   ],
+   "bar_states": [
+    10,
+    10
+   ],
+   "same": true
+  },
+  "P0 $10": {
+   "rtp": [
+    0.9296658510381,
+    0.9296658510381
+   ],
+   "rtp_fraction": [
+    "200943920392331/216146392994805",
+    "200943920392331/216146392994805"
+   ],
+   "sd": [
+    1.960632884065633,
+    1.960632884065633
+   ],
+   "hit_rate": [
+    0.3876649784726116,
+    0.3876649784726116
+   ],
+   "rtp_bounds": [
+    null,
+    null
+   ],
+   "hit_interval": [
+    null,
+    null
+   ],
+   "dropped_probability": [
+    null,
+    null
+   ],
+   "bar_states": [
+    10,
+    10
+   ],
+   "same": true
+  },
+  "P0 $100": {
+   "rtp": [
+    0.9296658510381,
+    0.9296658510381
+   ],
+   "rtp_fraction": [
+    "200943920392331/216146392994805",
+    "200943920392331/216146392994805"
+   ],
+   "sd": [
+    1.960632884065633,
+    1.960632884065633
+   ],
+   "hit_rate": [
+    0.3876649784726116,
+    0.3876649784726116
+   ],
+   "rtp_bounds": [
+    null,
+    null
+   ],
+   "hit_interval": [
+    null,
+    null
+   ],
+   "dropped_probability": [
+    null,
+    null
+   ],
+   "bar_states": [
+    10,
+    10
+   ],
+   "same": true
+  },
+  "P2 $1": {
+   "rtp": [
+    0.9296658510381,
+    0.9296658510381
+   ],
+   "rtp_fraction": [
+    "200943920392331/216146392994805",
+    "200943920392331/216146392994805"
+   ],
+   "sd": [
+    2.92445571119575,
+    2.92445571119575
+   ],
+   "hit_rate": [
+    0.1938324892363058,
+    0.1938324892363058
+   ],
+   "rtp_bounds": [
+    null,
+    null
+   ],
+   "hit_interval": [
+    null,
+    null
+   ],
+   "dropped_probability": [
+    null,
+    null
+   ],
+   "bar_states": [
+    20,
+    20
+   ],
+   "same": true
+  },
+  "P2 $10": {
+   "rtp": [
+    0.9296658510381,
+    0.9296658510381
+   ],
+   "rtp_fraction": [
+    "200943920392331/216146392994805",
+    "200943920392331/216146392994805"
+   ],
+   "sd": [
+    2.92445571119575,
+    2.92445571119575
+   ],
+   "hit_rate": [
+    0.1938324892363058,
+    0.1938324892363058
+   ],
+   "rtp_bounds": [
+    null,
+    null
+   ],
+   "hit_interval": [
+    null,
+    null
+   ],
+   "dropped_probability": [
+    null,
+    null
+   ],
+   "bar_states": [
+    20,
+    20
+   ],
+   "same": true
+  },
+  "P2 $100": {
+   "rtp": [
+    0.9296658510381,
+    0.9296658510381
+   ],
+   "rtp_fraction": [
+    "200943920392331/216146392994805",
+    "200943920392331/216146392994805"
+   ],
+   "sd": [
+    2.92445571119575,
+    2.92445571119575
+   ],
+   "hit_rate": [
+    0.1938324892363058,
+    0.1938324892363058
+   ],
+   "rtp_bounds": [
+    null,
+    null
+   ],
+   "hit_interval": [
+    null,
+    null
+   ],
+   "dropped_probability": [
+    null,
+    null
+   ],
+   "bar_states": [
+    20,
+    20
+   ],
+   "same": true
+  },
+  "P3 $1": {
+   "rtp": [
+    0.9296658510381,
+    0.9296658510381
+   ],
+   "rtp_fraction": [
+    "200943920392331/216146392994805",
+    "200943920392331/216146392994805"
+   ],
+   "sd": [
+    59.498449808827495,
+    59.498449808827495
+   ],
+   "hit_rate": [
+    0.0003846846500455122,
+    0.0003846846500455122
+   ],
+   "rtp_bounds": [
+    null,
+    null
+   ],
+   "hit_interval": [
+    null,
+    null
+   ],
+   "dropped_probability": [
+    null,
+    null
+   ],
+   "bar_states": [
+    100,
+    100
+   ],
+   "same": true
+  },
+  "P3 $10": {
+   "rtp": [
+    0.9296658510381,
+    0.9296658510381
+   ],
+   "rtp_fraction": [
+    "200943920392331/216146392994805",
+    "200943920392331/216146392994805"
+   ],
+   "sd": [
+    59.498449808827495,
+    59.498449808827495
+   ],
+   "hit_rate": [
+    0.0003846846500455122,
+    0.0003846846500455122
+   ],
+   "rtp_bounds": [
+    null,
+    null
+   ],
+   "hit_interval": [
+    null,
+    null
+   ],
+   "dropped_probability": [
+    null,
+    null
+   ],
+   "bar_states": [
+    100,
+    100
+   ],
+   "same": true
+  },
+  "P3 $100": {
+   "rtp": [
+    0.9296658510381,
+    0.9296658510381
+   ],
+   "rtp_fraction": [
+    "200943920392331/216146392994805",
+    "200943920392331/216146392994805"
+   ],
+   "sd": [
+    59.498449808827495,
+    59.498449808827495
+   ],
+   "hit_rate": [
+    0.0003846846500455122,
+    0.0003846846500455122
+   ],
+   "rtp_bounds": [
+    null,
+    null
+   ],
+   "hit_interval": [
+    null,
+    null
+   ],
+   "dropped_probability": [
+    null,
+    null
+   ],
+   "bar_states": [
+    100,
+    100
+   ],
+   "same": true
+  },
+  "P4 $1": {
+   "rtp": [
+    0.9286794315134435,
+    0.9296658510381839
+   ],
+   "rtp_fraction": [
+    null,
+    null
+   ],
+   "sd": [
+    null,
+    4.681710792764884
+   ],
+   "hit_rate": [
+    0.2645807851426041,
+    0.27689945392319026
+   ],
+   "rtp_bounds": [
+    [
+     0.9173598898102818,
+     0.9287028799924265
+    ],
+    [
+     0.9296606635639543,
+     0.9296658510381839
+    ]
+   ],
+   "hit_interval": [
+    [
+     0.2645807851426041,
+     0.26580638768054654
+    ],
+    [
+     0.27689945392319026,
+     0.2768994607089907
+    ]
+   ],
+   "dropped_probability": [
+    0.001225602537942482,
+    6.785800411210547e-09
+   ],
+   "bar_states": [
+    4282864,
+    3650150
+   ],
+   "same": false
+  },
+  "P4 $10": {
+   "rtp": [
+    0.9291553364685202,
+    0.9296658510383915
+   ],
+   "rtp_fraction": [
+    null,
+    null
+   ],
+   "sd": [
+    null,
+    4.681903853633498
+   ],
+   "hit_rate": [
+    0.26433136720645944,
+    0.2769035337095966
+   ],
+   "rtp_bounds": [
+    [
+     0.9176662307048608,
+     0.9291791783802489
+    ],
+    [
+     0.929662123576872,
+     0.9296658510383915
+    ]
+   ],
+   "hit_interval": [
+    [
+     0.26433136720645944,
+     0.26588913400043485
+    ],
+    [
+     0.2769035337095966,
+     0.2769035411517643
+    ]
+   ],
+   "dropped_probability": [
+    0.0015577667939754177,
+    7.442167725971522e-09
+   ],
+   "bar_states": [
+    5534618,
+    3797738
+   ],
+   "same": false
+  },
+  "P4 $100": {
+   "rtp": [
+    0.9291878151665544,
+    0.9296658510360823
+   ],
+   "rtp_fraction": [
+    null,
+    null
+   ],
+   "sd": [
+    null,
+    4.681972544955498
+   ],
+   "hit_rate": [
+    0.2642516915630714,
+    0.276903576304926
+   ],
+   "rtp_bounds": [
+    [
+     0.9179246560635292,
+     0.929211187378987
+    ],
+    [
+     0.9296631138967556,
+     0.9296658510360823
+    ]
+   ],
+   "hit_interval": [
+    [
+     0.2642516915630714,
+     0.265926481888548
+    ],
+    [
+     0.276903576304926,
+     0.2769035823490666
+    ]
+   ],
+   "dropped_probability": [
+    0.001674790325476643,
+    6.044140565557582e-09
+   ],
+   "bar_states": [
+    5957633,
+    2983843
+   ],
+   "same": false
+  },
+  "P5 $1": {
+   "rtp": [
+    0.9284474944363994,
+    0.9296658510381
+   ],
+   "rtp_fraction": [
+    "40373402512142749622283693784943/43484852675110978809135350392500",
+    "200943920392331/216146392994805"
+   ],
+   "sd": [
+    3.011043247575451,
+    2.2407970191978572
+   ],
+   "hit_rate": [
+    0.3876649784726116,
+    0.3876649784726116
+   ],
+   "rtp_bounds": [
+    null,
+    null
+   ],
+   "hit_interval": [
+    null,
+    null
+   ],
+   "dropped_probability": [
+    null,
+    null
+   ],
+   "bar_states": [
+    127,
+    30
+   ],
+   "same": false,
+   "note": "P5 redefined: RUN HALF once -> DOUBLE HALF once"
+  },
+  "P5 $10": {
+   "rtp": [
+    0.929329275425163,
+    0.9296658510381
+   ],
+   "rtp_fraction": [
+    "15760581185127029600071511965972399/16959092543293281735562786653075000",
+    "200943920392331/216146392994805"
+   ],
+   "sd": [
+    3.0117297029979615,
+    2.2407970191978572
+   ],
+   "hit_rate": [
+    0.3876649784726116,
+    0.3876649784726116
+   ],
+   "rtp_bounds": [
+    null,
+    null
+   ],
+   "hit_interval": [
+    null,
+    null
+   ],
+   "dropped_probability": [
+    null,
+    null
+   ],
+   "bar_states": [
+    127,
+    30
+   ],
+   "same": false,
+   "note": "P5 redefined: RUN HALF once -> DOUBLE HALF once"
+  },
+  "P5 $100": {
+   "rtp": [
+    0.9293777269974153,
+    0.9296658510381
+   ],
+   "rtp_fraction": [
+    "52538009599415749645848023984025271/56530308477644272451875955510250000",
+    "200943920392331/216146392994805"
+   ],
+   "sd": [
+    3.0117651977805693,
+    2.2407970191978572
+   ],
+   "hit_rate": [
+    0.3876649784726116,
+    0.3876649784726116
+   ],
+   "rtp_bounds": [
+    null,
+    null
+   ],
+   "hit_interval": [
+    null,
+    null
+   ],
+   "dropped_probability": [
+    null,
+    null
+   ],
+   "bar_states": [
+    123,
+    30
+   ],
+   "same": false,
+   "note": "P5 redefined: RUN HALF once -> DOUBLE HALF once"
+  }
+ }
+}
