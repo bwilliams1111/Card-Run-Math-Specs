@@ -1,0 +1,29 @@
+SAME-SEED COMPARISON with the v169 pack (build 97dbb75e…dba5, minimum run $0.02, run-bar v169, WITH RUN IT AGAIN / RUN HALF)
+66 chunks exist in both: 58 identical round for round (sum, sum of squares, hits, max, ends, bar actions, pay histogram, crypto draws), 8 differ.
+identical: P0_100_3001, P0_100_3002, P0_10_2001, P0_10_2002, P0_10_2003, P0_10_2004, P2_100_3201, P2_100_3202, P2_10_2201, P2_10_2202, P2_10_2203, P2_10_2204, P3_100_3301, P3_100_3302, P3_10_2301, P3_10_2302, P3_10_2303, P3_10_2304, base_10_1001, base_10_1002, base_10_1003, base_10_1004, base_10_1005, base_10_1006, base_10_1007, base_10_1008, base_10_1009, base_10_1010, base_10_1011, base_10_1012, base_10_1013, base_10_1014, base_10_1015, base_10_1016, base_10_1017, base_10_1018, base_10_1019, base_10_1020, top_1.1_4101, top_1.1_4102, top_1.1_4103, top_1.1_4104, top_1.1_4105, top_1.1_4106, top_1.1_4107, top_1.1_4108, top_1.1_4109, top_1.1_4110, top_10_4001, top_10_4002, top_10_4003, top_10_4004, top_10_4005, top_10_4006, top_10_4007, top_10_4008, top_10_4009, top_10_4010
+DIFFERS P4_100_3401: fields sumCents,sumsqCents2,hits,maxCents,ends,barActions,hist,cryptoU32; RTP 89.6955% -> 91.8551%; crypto draws 2860656 -> 2181288; histogram L1 change 20956
+    bar actions v169 {"cashOut": 17182, "double": 17366, "doubleHalf": 17282, "runHalf": 17216, "runIt": 17329}
+    bar actions v170 {"cashOut": 20619, "double": 20370, "doubleHalf": 20516}
+DIFFERS P4_100_3402: fields sumCents,sumsqCents2,hits,maxCents,ends,barActions,hist,cryptoU32; RTP 92.5049% -> 92.3597%; crypto draws 2867064 -> 2188104; histogram L1 change 20796
+    bar actions v169 {"cashOut": 17257, "double": 17500, "doubleHalf": 17349, "runHalf": 17213, "runIt": 17398}
+    bar actions v170 {"cashOut": 20613, "double": 20710, "doubleHalf": 20460}
+DIFFERS P4_10_2401: fields sumCents,sumsqCents2,hits,maxCents,ends,barActions,hist,cryptoU32; RTP 91.9633% -> 95.2871%; crypto draws 2858256 -> 2194872; histogram L1 change 20686
+    bar actions v169 {"cashOut": 17186, "double": 17357, "doubleHalf": 17416, "runHalf": 17215, "runIt": 17105}
+    bar actions v170 {"cashOut": 20565, "double": 20689, "doubleHalf": 20763}
+DIFFERS P4_10_2402: fields sumCents,sumsqCents2,hits,maxCents,ends,barActions,hist,cryptoU32; RTP 91.2967% -> 94.3725%; crypto draws 2855328 -> 2188968; histogram L1 change 20654
+    bar actions v169 {"cashOut": 17535, "double": 17299, "doubleHalf": 17351, "runHalf": 17265, "runIt": 17056}
+    bar actions v170 {"cashOut": 20677, "double": 20696, "doubleHalf": 20510}
+DIFFERS P4_10_2403: fields sumCents,sumsqCents2,hits,maxCents,ends,barActions,hist,cryptoU32; RTP 92.9200% -> 91.2823%; crypto draws 2849400 -> 2180592; histogram L1 change 20618
+    bar actions v169 {"cashOut": 17256, "double": 17226, "doubleHalf": 17216, "runHalf": 17142, "runIt": 17140}
+    bar actions v170 {"cashOut": 20464, "double": 20457, "doubleHalf": 20400}
+DIFFERS P4_10_2404: fields sumCents,sumsqCents2,hits,maxCents,ends,barActions,hist,cryptoU32; RTP 95.5376% -> 93.7518%; crypto draws 2880576 -> 2200992; histogram L1 change 21002
+    bar actions v169 {"cashOut": 17358, "double": 17346, "doubleHalf": 17590, "runHalf": 17607, "runIt": 17480}
+    bar actions v170 {"cashOut": 20737, "double": 20767, "doubleHalf": 20940}
+DIFFERS P4_1_5401: fields sumCents,sumsqCents2,hits,maxCents,ends,barActions,hist,cryptoU32; RTP 88.8946% -> 92.3989%; crypto draws 5719464 -> 4370448; histogram L1 change 41048
+    bar actions v169 {"cashOut": 34443, "double": 34556, "doubleHalf": 34462, "runHalf": 34402, "runIt": 34890}
+    bar actions v170 {"cashOut": 41109, "double": 41168, "doubleHalf": 40933}
+DIFFERS P4_1_5402: fields sumCents,sumsqCents2,hits,maxCents,ends,barActions,hist,cryptoU32; RTP 94.7897% -> 92.6357%; crypto draws 5704584 -> 4372728; histogram L1 change 40696
+    bar actions v169 {"cashOut": 35024, "double": 34486, "doubleHalf": 34268, "runHalf": 34631, "runIt": 34305}
+    bar actions v170 {"cashOut": 41271, "double": 41294, "doubleHalf": 40902}
+new chunks (no v169 counterpart; P5 is now DOUBLE HALF once, on new seeds): P5_100_3511, P5_100_3512, P5_10_2511, P5_10_2512, P5_10_2513, P5_10_2514, P5_1_5511, P5_1_5512
+v169 chunks retired (P1 = RUN IT AGAIN once, P5 = RUN HALF once): P1_100_3101, P1_100_3102, P1_10_2101, P1_10_2102, P1_10_2103, P1_10_2104, P1_1_5101, P1_1_5102, P5_100_3501, P5_100_3502, P5_10_2501, P5_10_2502, P5_10_2503, P5_10_2504, P5_1_5501, P5_1_5502

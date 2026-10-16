@@ -1,0 +1,1464 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Card Run Mines 20×</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Barlow+Semi+Condensed:wght@600;700;800&family=Anton&family=Chakra+Petch:wght@600;700&family=Montserrat:wght@600;700;800;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:wght@400&display=swap">
+<style>
+body{margin:0}
+/* Layout: one phone-width game column matching live Mines, with a prototype control rail beside it (below it on phones).
+   Single committed dark look, taken from the live game. */
+:root{
+  color-scheme: dark;
+  --navy-950:#060f20; --navy-900:#091a33; --navy-800:#0e2443; --navy-700:#143260;
+  --line:rgba(132,160,214,.22); --line-strong:rgba(150,178,230,.38);
+  --muted:#8a90b4; --text:#eef2fb; --gold:#f7c544; --gold-deep:#c8962a; --gold-dim:#7d6f3c;
+  --blue:#1f62e0; --pill-blue:#3f7be0; --red:#d8443c; --green:#3fcf8e;
+  --face:#ece5d8; --face-edge:#d8cfbf; --suit-red:#c6322e; --suit-black:#1d2536; --joker:#6b3fc4;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Barlow","Helvetica Neue",Arial,sans-serif;
+}
+html,body{height:100%}
+body{margin:0;background:radial-gradient(120% 70% at 50% 0%,#12305a 0%,var(--navy-900) 55%,var(--navy-950) 100%);color:var(--text);font-family:var(--body);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+.stage{min-height:100%;display:flex;justify-content:center;align-items:stretch;gap:24px;padding-inline:16px;box-sizing:border-box}
+.phone{position:relative;width:100%;max-width:430px;height:100vh;height:100dvh;max-height:940px;min-height:720px;display:flex;flex-direction:column;
+  background:linear-gradient(180deg,rgba(10,26,52,.65),rgba(8,20,42,.85));
+  box-shadow:0 0 0 1px var(--line),0 30px 80px rgba(0,0,0,.45);overflow:hidden}
+.phone::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.07;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cpath d='M60 18c-10 14-26 22-26 36 0 9 8 14 16 11 3-1 6-4 8-7l-3 16h10l-3-16c2 3 5 6 8 7 8 3 16-2 16-11 0-14-16-22-26-36z' fill='none' stroke='%239fb6dc' stroke-width='1.2'/%3E%3C/svg%3E");background-size:120px}
+
+/* top bar */
+.topbar{position:relative;display:flex;align-items:center;gap:8px;padding:7px 12px;border-bottom:1px solid var(--line);background:rgba(6,15,32,.55)}
+.ico{background:none;border:0;padding:4px;color:#9aa3c4;cursor:pointer;display:grid;place-items:center}
+.ico svg{width:18px;height:18px}
+.brand{font:800 15px/1 var(--display);letter-spacing:.04em;white-space:nowrap;display:flex;align-items:center;gap:6px;margin-right:auto}
+.brand small{color:var(--muted);font-size:11px}
+.pill{display:flex;align-items:center;gap:6px;border:1.5px solid var(--line-strong);border-radius:999px;padding:5px 10px;font:700 14px/1 var(--display);white-space:nowrap;flex:none;font-variant-numeric:tabular-nums;background:rgba(5,12,26,.5)}
+.pill .cur{color:var(--gold)}
+.pill.bal span:last-child{color:#e8c876}
+.pill.win svg{width:14px;height:14px;color:#c7d3f0}
+.pill.flash{animation:pillflash .9s ease}
+@keyframes pillflash{30%{border-color:var(--gold);box-shadow:0 0 14px rgba(247,197,68,.5)}}
+
+/* info panel */
+.info{position:relative;margin:6px 12px 0;border:1px solid var(--line);border-radius:12px;background:rgba(14,32,62,.55);padding:7px 12px}
+.info-row{display:flex;align-items:center;justify-content:space-between}
+.lab{font:700 12px/1 var(--display);letter-spacing:.12em;color:var(--muted)}
+.lab b{color:var(--gold);font-size:19px;letter-spacing:0;margin:0 2px;vertical-align:-2px}
+.lab .v{color:var(--text);letter-spacing:.02em;font-size:15px;margin-left:6px}
+.info hr{border:0;border-top:1px solid var(--line);margin:6px 0}
+.next{display:flex;align-items:center;gap:6px}
+.next .lab{margin-right:4px}
+.mults{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;flex:1;min-width:0}
+.m{border:1.5px solid rgba(110,135,190,.25);border-radius:7px;padding:4px 0;text-align:center;font:700 16px/1 var(--display);font-variant-numeric:tabular-nums;color:#9aa1c1;background:rgba(5,12,26,.35);white-space:nowrap;overflow:hidden}
+.m:nth-child(3){opacity:.75}.m:nth-child(4){opacity:.5}
+.m.on{border-color:var(--pill-blue);color:var(--gold);background:rgba(31,98,224,.12)}
+
+.info-row .lab{white-space:nowrap}
+.info-row .lab:first-child{margin-right:16px}
+.info-row .lab + .lab{margin-right:auto}
+/* bomb selector: expands in the info row before the first pick, collapses to "= n" once play starts */
+/* bomb selector lives in the top row; on the first pick the other numbers fold away, leaving "= n" */
+.bsel{display:flex;align-items:center;flex:none}
+.bsel svg{width:24px;height:24px;flex:none}
+.bsel .eq{display:inline-block;max-width:0;opacity:0;overflow:hidden;font:800 20px/1 var(--display);color:#fff;transition:max-width .35s,opacity .3s,margin .35s}
+.bsel.locked .eq{max-width:16px;opacity:1;margin:0 3px 0 4px}
+.bopts{display:flex;align-items:center;margin-left:4px}
+.bsel.locked .bopts{margin-left:0}
+.bopt{width:24px;height:24px;margin-left:3px;border-radius:50%;border:1.5px solid rgba(110,135,190,.32);background:rgba(5,12,26,.45);color:#7e86aa;font:700 13px/1 var(--display);cursor:pointer;display:grid;place-items:center;padding:0;overflow:hidden;
+  transition:width .35s cubic-bezier(.4,0,.2,1),margin .35s,opacity .25s,transform .35s,background .2s,border-color .2s,color .2s,font-size .3s}
+.bopt:first-child{margin-left:0}
+.bopt:not(:disabled):hover{border-color:rgba(150,178,230,.6);color:#c9d0ea}
+.bopt[aria-checked="true"]{background:var(--blue);border-color:#4f8bff;color:#fff;box-shadow:0 0 12px rgba(31,98,224,.55)}
+.bopt.pop{animation:bpop .3s ease}
+@keyframes bpop{40%{transform:scale(1.18)}}
+.bopt.away{width:0;margin-left:0;opacity:0;transform:scale(.3);border-width:0}
+.bsel.locked .bopt[aria-checked="true"]{background:transparent;border-color:transparent;box-shadow:none;font-size:21px;font-weight:800;width:16px;cursor:default}
+.info .lab{letter-spacing:.08em}
+.info .lab .v{font-size:14px}
+.info-row .lab:first-child{margin-right:12px}
+/* the top rows shrink together (via --is / --ts set in script) when the font or screen leaves no room */
+.info .lab{font-size:calc(12px * var(--is,1))}
+.info .lab b{font-size:calc(19px * var(--is,1))}
+.info .lab .v{font-size:calc(14px * var(--is,1))}
+.info-row .lab:first-child{margin-right:calc(12px * var(--is,1))}
+.bopt{width:calc(24px * var(--is,1));height:calc(24px * var(--is,1));font-size:calc(13px * var(--is,1))}
+.bsel svg{width:calc(24px * var(--is,1));height:calc(24px * var(--is,1))}
+.brand{font-size:calc(15px * var(--ts,1))}
+.pill{font-size:calc(14px * var(--ts,1));padding:5px calc(10px * var(--ts,1))}
+.topbar{gap:calc(8px * var(--ts,1))}
+/* shield toast and shielded-bomb tiles */
+.shieldtoast{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.9);opacity:0;pointer-events:none;z-index:6;display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:12px;background:rgba(6,16,36,.92);border:1.5px solid #4f8bff;box-shadow:0 0 24px rgba(31,98,224,.45);transition:opacity .2s,transform .25s;white-space:nowrap}
+.shieldtoast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.shieldtoast .icons{display:flex;gap:2px}
+.shieldtoast svg{width:26px;height:30px}
+.shieldtoast .icons svg{animation:shin .35s ease backwards}
+@keyframes shin{from{transform:scale(0) rotate(-20deg)}}
+.shieldtoast .tx{font:800 14px/1.1 var(--display);letter-spacing:.1em;color:#d9e4ff}
+.shieldtoast .tx small{display:block;font-size:11px;color:var(--muted);letter-spacing:.08em;margin-top:3px}
+.shieldface{width:100%;height:100%;border-radius:inherit;background:radial-gradient(80% 70% at 50% 45%,#1d3f78,#0b1a36);display:grid;place-items:center;position:relative;box-shadow:inset 0 0 0 1.5px rgba(120,170,255,.45)}
+.shieldface .bm{width:62%;opacity:.45;filter:grayscale(.6)}
+.shieldface .sh{position:absolute;width:52%;left:24%;top:30%;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5))}
+.shieldface .lbl{position:absolute;bottom:7%;left:0;right:0;text-align:center;font:800 calc(var(--cw,64px) * .14)/1 var(--display);letter-spacing:.08em;color:#9cc0ff}
+.tile.shieldhit .front{animation:shieldhit .6s ease}
+@keyframes shieldhit{0%{filter:brightness(2.2)}100%{filter:none}}
+
+@media (max-width:400px){.brand{font-size:14px}}
+
+/* grid */
+.gridwrap{position:relative;flex:1;min-height:0;display:grid;place-items:center;padding:6px 12px 4px}
+.grid{display:grid;grid-template-columns:repeat(5,var(--cw,64px));gap:var(--gap,8px)}
+.grid.shake{animation:shake .45s ease}
+@keyframes shake{20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(2px)}}
+.tile{width:var(--cw,64px);height:calc(var(--cw,64px) * 1.39);padding:0;border:0;background:none;cursor:pointer;perspective:600px;border-radius:8px}
+.tile:disabled{cursor:default}
+.tile .in{position:relative;width:100%;height:100%;transition:transform .42s cubic-bezier(.3,.7,.2,1);transform-style:preserve-3d}
+.tile.rev .in{transform:rotateY(180deg)}
+.side{position:absolute;inset:0;border-radius:8px;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.back{background:linear-gradient(160deg,#d3e0ec 0%,#8aa3bd 35%,#c4d4e3 60%,#7d97b2 100%);padding:3px;box-sizing:border-box;box-shadow:0 3px 8px rgba(0,0,0,.35)}
+.back .cb{width:100%;height:100%;border-radius:6px;background:
+  repeating-linear-gradient(45deg,rgba(255,255,255,.035) 0 2px,transparent 2px 5px),
+  radial-gradient(90% 70% at 50% 45%,#2a5a96,#1c4479);position:relative;overflow:hidden}
+.back .cb::before{content:"";position:absolute;inset:5%;border:1.6px solid #d4a43a;border-radius:4px}
+.back .cb svg{position:absolute;inset:0;width:100%;height:100%}
+.tile:not(:disabled):hover .back{filter:brightness(1.12)}
+.tile:not(:disabled):active .in{transform:scale(.96)}
+.front{transform:rotateY(180deg);overflow:hidden}
+.tile.ghost .front{opacity:.42}
+.tile.ghost.bombtile .front{opacity:.6}
+
+/* card face */
+
+.bombface{width:100%;height:100%;border-radius:inherit;background:radial-gradient(80% 70% at 50% 50%,#7e1d1b,#3a0b0d);display:grid;place-items:center;box-shadow:inset 0 0 0 1.5px rgba(255,120,90,.35)}
+.bombface svg{width:66%;height:auto}
+.tile.boom .front{animation:boom .5s ease}
+@keyframes boom{0%{filter:brightness(2.4)}100%{filter:none}}
+
+/* overlays */
+
+.result{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;z-index:4}
+.result .resbox{opacity:0;transform:scale(.85);transition:opacity .25s,transform .3s cubic-bezier(.2,1.4,.4,1);text-align:center;padding:16px 28px;border-radius:14px;background:rgba(6,14,30,.88);border:1.5px solid var(--line-strong);box-shadow:0 16px 40px rgba(0,0,0,.55)}
+.result.show .resbox{opacity:1;transform:none}
+.result .t{font:800 13px/1 var(--display);letter-spacing:.18em;color:var(--muted)}
+.result .big{font:800 40px/1.05 var(--display);color:var(--gold);margin-top:6px}
+.result .sub{font:700 14px/1.2 var(--display);color:#c9d0ea;margin-top:4px;letter-spacing:.04em}
+.result.bust .big{color:var(--red)}
+
+/* cash out */
+.cashwrap{padding:6px 28px calc(16px + env(safe-area-inset-bottom,0px))}
+.result .run{color:#8fb4ff}
+.cashwrap{padding-inline:12px}
+.runnote{min-height:66px;display:grid;place-items:center;text-align:center;border:1.5px dashed var(--line-strong);border-radius:8px;font:700 12px/1.3 var(--display);letter-spacing:.14em;color:var(--muted);padding:0 10px}
+/* Run Game HUD and tiles */
+.runhud{display:none;position:relative;margin:6px 12px 0;border:1px solid rgba(233,191,92,.45);border-radius:12px;background:rgba(14,32,62,.55);padding:7px 12px}
+.phone.runmode .runhud{display:block}
+.phone.runmode .info{display:none}
+.runhud hr{border:0;border-top:1px solid var(--line);margin:6px 0}
+.runhud .lab{white-space:nowrap;font-size:calc(12px * var(--rs,1))}
+.runhud .lab .v{font-size:calc(14px * var(--rs,1))}
+.runhud .runtitle{color:var(--gold);font-size:calc(14px * var(--rs,1));letter-spacing:.14em;margin-right:auto}
+.runhud .info-row .lab + .lab{margin-right:0;margin-left:calc(12px * var(--rs,1))}
+.runhud .v.gold{color:var(--gold)}
+.pips{display:flex;gap:calc(6px * var(--rs,1));margin-right:auto}
+.pip{flex:none;width:calc(26px * var(--rs,1));height:calc(26px * var(--rs,1));border-radius:6px;border:1.5px dashed rgba(140,160,210,.4);display:grid;place-items:center}
+.pip svg{width:70%;height:70%;opacity:0;transform:scale(.4);transition:opacity .25s,transform .3s cubic-bezier(.2,1.5,.4,1)}
+.pip.on{border:1.5px solid rgba(94,220,200,.8);background:rgba(60,200,180,.14)}
+.pip.on svg{opacity:1;transform:none}
+.gemface{width:100%;height:100%;border-radius:inherit;background:radial-gradient(80% 70% at 50% 40%,#17456a,#0b2440);display:grid;place-items:center;box-shadow:inset 0 0 0 1.5px rgba(94,220,200,.55)}
+.gemface svg{width:62%;height:auto;filter:drop-shadow(0 2px 5px rgba(40,200,190,.5))}
+.dudface{width:100%;height:100%;border-radius:inherit;background:radial-gradient(80% 70% at 50% 45%,#39414f,#1a1f2a);display:grid;place-items:center;position:relative;box-shadow:inset 0 0 0 1.5px rgba(170,180,200,.35)}
+.dudface .bm{width:58%;opacity:.5;filter:grayscale(1)}
+.dudface .lbl{position:absolute;bottom:8%;left:0;right:0;text-align:center;font:800 calc(var(--cw,64px) * .2)/1 var(--display);letter-spacing:.1em;color:#c3c9d6}
+.tile.gemhit .front{animation:shieldhit .5s ease}
+
+
+@media (max-width:760px){
+  .stage{flex-direction:column;align-items:center;padding-inline:0}
+  .phone{max-width:none;box-shadow:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* ---- v2: Classic tiles, cash-out lock ---- */
+.brand{letter-spacing:.08em}
+
+.bsel.locked .bopt[aria-checked="true"]{width:auto;min-width:16px}
+.gemface.classic{background:radial-gradient(80% 70% at 50% 40%,#27408f,#0f1a44);box-shadow:inset 0 0 0 1.5px rgba(140,168,255,.55)}
+.gemface.classic svg{filter:hue-rotate(52deg) saturate(1.15) drop-shadow(0 2px 5px rgba(80,120,255,.5))}
+.m.lock{border-style:dashed;color:#7e86aa}
+.m.on.lock{border-color:rgba(110,135,190,.5);color:#aab2d2;background:rgba(5,12,26,.35)}
+
+/* ---- v3: grid columns, result colours ---- */
+.grid{grid-template-columns:repeat(var(--cols,5),var(--cw,64px))}
+
+.result.go .big{color:var(--green)}
+
+/* with reduced motion, switch transitions off outright: a 0.01ms transition on every property makes the fit-to-width loops measure stale sizes */
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ---- v6: Run Game footer counts gems to go ---- */
+.runnote.big{border:0}
+.togo{display:flex;align-items:baseline;gap:10px;font:800 34px/1 var(--display);letter-spacing:.08em;color:var(--muted)}
+.togo b{font-size:46px;letter-spacing:0;color:#fff;font-variant-numeric:tabular-nums}
+
+/* v14: lobby. BUILD IT. RUN IT. (matches the Crash lobby) */
+.lobby{display:none;flex:1;min-height:0;flex-direction:column;padding:0 12px calc(14px + env(safe-area-inset-bottom,0px))}
+.phone.inlobby .lobby{display:flex}
+.phone.inlobby .info,.phone.inlobby .runhud,.phone.inlobby .gridwrap,.phone.inlobby .cashwrap{display:none!important}
+.lscroll{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;align-items:center;text-align:center;padding:18px 0 10px}
+.lh{margin:0;font:800 clamp(34px,10.5vw,46px)/1 Anton,var(--display);letter-spacing:.01em;color:var(--text)}
+.lh em{font-style:normal;color:var(--gold)}
+.ls{margin:8px 0 0;font:500 14px/1.4 var(--body);color:#b7bdd8}
+.licon{width:84px;height:116px;margin:14px 0 4px}
+.licon svg{width:100%;height:100%;display:block}
+.licon svg path:first-child{display:none}
+.licon svg g{stroke:var(--gold);stroke-width:4.2}
+.lname{font:800 clamp(34px,10vw,44px)/1 var(--display);letter-spacing:.06em;color:var(--text)}
+.lname em{font-style:normal;color:var(--gold)}
+.ldesc{margin:16px 0 0;max-width:34ch;font:500 15px/1.5 var(--body);color:#c9cee6}
+.leq{margin-top:auto;padding-top:18px;width:100%;display:grid;grid-template-columns:1fr auto 1fr auto 1.45fr;align-items:center;gap:6px}
+.lbox{border:1.5px solid var(--line-strong);border-radius:12px;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:6px;background:rgba(5,12,26,.35);min-width:0}
+.lbox small{font:700 10.5px/1 var(--display);letter-spacing:.12em;color:var(--muted);white-space:nowrap}
+.lbox b{font:800 clamp(15px,4.9vw,23px)/1 var(--display);color:var(--text);white-space:nowrap;font-variant-numeric:tabular-nums}
+.lbox.win{border-color:var(--gold);background:rgba(247,197,68,.08)}
+.lbox.win small{color:#d9c58a}
+.lbox.win b{color:var(--gold)}
+.lop{font:800 18px/1 var(--display);color:var(--muted)}
+.lplay{all:unset;box-sizing:border-box;margin-top:14px;height:58px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:var(--gold);color:#1e1a10;font:400 22px/1 Anton,var(--display);letter-spacing:.04em;cursor:pointer;box-shadow:0 0 0 2px rgba(255,255,255,.14),0 5px 14px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.45);transition:filter .15s,transform .12s}
+.lplay:hover{filter:brightness(1.06)}.lplay:active{transform:scale(.985)}
+.lplay:focus-visible{outline:2px solid #fff;outline-offset:4px}
+.lplay[disabled]{cursor:default;background:#3a4466;color:#9aa3c4;box-shadow:none}
+@media (max-width:420px){.lbox small{font-size:9.5px;letter-spacing:.07em}}
+@media (max-width:370px){.lbox small{font-size:9px;letter-spacing:.04em}.ldesc{font-size:14px}}
+
+/* v15: lobby bet entry, as in the Blackjack lobby: a free amount with MAX */
+.lbet{width:100%;margin-top:16px}
+
+.lamt{box-sizing:border-box;height:56px;border-radius:999px;border:1.5px solid var(--line-strong);background:rgba(5,12,26,.45);display:flex;align-items:center;gap:10px;padding:0 8px 0 22px;cursor:text}
+.lamt:focus-within{border-color:var(--pill-blue)}
+.lamt .cur{font:800 22px/1 var(--display);color:var(--gold)}
+.lamt input{all:unset;flex:1;text-align:left;min-width:0;font:800 22px/1 var(--display);color:var(--text);font-variant-numeric:tabular-nums}
+.lmax{all:unset;box-sizing:border-box;height:40px;padding:0 16px;border-radius:999px;border:1.5px solid var(--line-strong);font:800 14px/1 var(--display);letter-spacing:.1em;color:#b7bdd8;cursor:pointer}
+.lmax:hover{color:var(--text);border-color:var(--pill-blue)}
+.lmax:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.lerr{min-height:16px;margin-top:6px;font:600 12px/1.3 var(--body);color:#ff9d8a;text-align:center}
+.lplay{border-radius:999px;background:linear-gradient(180deg,#4f86f0,#2f62d8);color:#fff;font:800 20px/1 var(--display);letter-spacing:.08em;box-shadow:0 0 0 1.5px rgba(140,175,255,.55),0 0 24px rgba(63,123,224,.45),inset 0 1px 0 rgba(255,255,255,.25)}
+.lplay[disabled]{background:#2a3352;color:#7f88aa;box-shadow:none}
+@media (max-width:370px){.lplay{font-size:17px}}
+
+/* v17: tagline with a dot separator, as in the Crash lobby */
+.ls{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;column-gap:0;row-gap:2px}
+.ls span{white-space:nowrap}
+
+@media (max-width:400px){.ls{font-size:13px}}
+
+/* v18: BUILD IT. RUN IT. logo artwork in place of the text headline */
+.lh{line-height:0;width:100%;display:flex;justify-content:center}
+.lhimg{display:block;width:min(100%,360px);height:auto;filter:drop-shadow(0 2px 10px rgba(0,0,0,.35))}
+.ls{margin-top:10px}
+
+/* v19: Card Run button rules (GRP 1.2) */
+.cashwrap{position:relative;display:flex;flex-direction:column;gap:8px}
+.cashwrap > *{position:relative;z-index:1}
+.result.flat .big{color:#dfe4f3}
+.result.flat .sub{color:#aab2cc}
+
+/* board dim: the board and the button ribbon take the same overlay; buttons stay at full brightness */
+.phone{--dim:.36}
+.runtitle small{font-size:10px;letter-spacing:.14em;color:var(--gold);margin-left:6px}
+
+/* the lobby CTA is the one gold call to action: BUILD 20× · $N.NN (or RESUME ROUND) */
+.lplay{background:linear-gradient(180deg,#f3cd6a,#e2b24a);color:#1e1a10;box-shadow:0 0 0 2px rgba(255,255,255,.14),0 6px 18px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.45);font:400 23px/1 Anton,var(--display);letter-spacing:.04em}
+.lplay[hidden]{display:none}
+
+/* the lobby shows no game HUD */
+.phone.inlobby .runnote{display:none!important}
+
+/* the double game's live-bomb count (Run.renderHud), styled like the board's bomb selector */
+.vbombs{display:flex;align-items:center;gap:3px;flex:none;margin-left:auto}
+.vbombs svg{width:22px;height:22px}
+.vbombs .eq{font:800 18px/1 var(--display);color:#fff;margin:0 2px 0 3px}
+.vbombs b{font:800 21px/1 var(--display);color:#fff}
+
+/* CR-RUN-BANK: run-bar.js floats the RUN BANK pill on CASH OUT's top edge; the ribbon lets it overhang */
+
+.cashwrap{overflow:visible}
+
+/* ---------- Run Kit v152.2: the run-bar ribbon (run-bar.js draws the buttons) ---------- */
+.cashwrap.crk-ribbon{background:#0b1a33}
+
+/* v165 CASH OUT toast: run-bar.js 167 now draws it (one line each, see-through); the plain style below (at or below the stake) stays in game code */
+.crk-toast{width:max-content}.crk-toast .eh,.crk-toast .et,.crk-toast .es,.crk-toast .crk-chip{white-space:nowrap}
+.crk-toast .et.plain{color:#e6ebfa;font-size:24px}
+
+/* the [hidden] attribute always wins (the file must work outside the artifact wrapper too) */
+[hidden]{display:none!important}
+
+/* ===== launch alignment with the Blackjack and Crash launch builds ===== */
+/* v163-164: the whole-screen dim; the run bar's ribbon is the only thing above it */
+#scrim{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none;z-index:900;transition:opacity .2s ease}
+.phone.dimscreen #scrim{opacity:var(--dimA,.65);transition:opacity .35s cubic-bezier(.2,.8,.3,1) 0s}
+.phone.dimscreen .cashwrap{z-index:901}
+@media (prefers-reduced-motion:reduce){#scrim{transition:none!important}}
+.lscroll .ldesc{max-width:40ch;text-wrap:balance;margin-inline:auto}   /* balanced: the description lines come out the same width (as in the other lobbies) */
+.lscroll .lname{margin-top:2px}.lscroll .ldesc{margin-top:14px}   /* MINES 20× with no CLASSIC line under it: the title sits evenly between the icon and the description */
+
+/* ===== lobby brand: same logo, size and tagline as Kicks (63% of the lobby, max 357px; Saira tagline) ===== */
+.lscroll .lhimg{display:block;width:min(calc(.63 * (100vw - 32px)),357px,100%);max-width:none;height:auto;margin:0 auto}
+.lscroll p.ls{display:block;margin:8px 0 0;padding:0;font-family:Saira,system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:400;font-size:clamp(10px,2.7vw,12.5px);line-height:1.3;letter-spacing:normal;color:#b9c3e3;white-space:nowrap;text-align:center}
+.lscroll p.ls .tg-nw{white-space:nowrap}
+.lscroll p.ls .tg-dot{display:inline-block;width:4px;height:4px;border-radius:50%;background:#8491b8;margin:0 .6em;vertical-align:middle;flex:none}
+/* EBG shell: the Parlay window bar carries the game name and close, so the game's own lobby door and title are removed (hidden, not clickable) */
+#toLobby,.topbar .brand{display:none!important}
+.topbar #snd{margin-left:auto}   /* sound and balance stay on the right */
+/* rules ⓘ (rules-sheet.js styles it as a 44×44 tap target): on the left of the top bar without making the bar taller, and above
+   the 65% / 70% dims so the rules stay reachable while the run bar or PLAY AGAIN is up (the sheet itself opens above everything) */
+.topbar #rulesBtn{position:relative;z-index:903;margin:-10px 0 -10px -10px}
+.runnote:not(.big){font-size:14px}   /* +2px (was 12px) */
+.runnote .rn-line{white-space:nowrap}
+.runnote .rn-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:currentColor;margin:0 .7em;vertical-align:middle}
+/* EBG shell: while PLAY AGAIN (or CHANGE BET) is up, the whole game screen dims to 70%; the end bar and the end toast / BUSTED stamp sit above it */
+.phone.enddim #scrim{opacity:.7;transition:opacity .35s cubic-bezier(.2,.8,.3,1) 0s}
+.phone.enddim .cashwrap{z-index:901}
+.phone.enddim .crk-toast,.phone.enddim .crk-bust{z-index:902}
+
+/* ===== PLAY AGAIN (and CHANGE BET): the shared end-of-round button ===== */
+html body .crk-one .crk-gold:is([data-act="again"],[data-act="change"]){all:unset;box-sizing:border-box;cursor:pointer;width:100%;min-height:78px;border-radius:999px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 18px;text-align:center;
+  background:linear-gradient(180deg,#f9da80 0%,#efc356 50%,#e2aa3c 100%);border:1.5px solid #f7de90;color:#141a29;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -2px 0 rgba(150,95,10,.25),0 6px 16px rgba(0,0,0,.35);font-family:Montserrat,Rubik,system-ui,sans-serif;transition:transform .08s,filter .15s}
+html body .crk-one .crk-gold:is([data-act="again"],[data-act="change"]):hover{filter:brightness(1.05)}html body .crk-one .crk-gold:is([data-act="again"],[data-act="change"]):active{transform:scale(.98)}html body .crk-one .crk-gold:is([data-act="again"],[data-act="change"]):focus-visible{outline:2px solid #fff;outline-offset:3px}
+html body .crk-one .crk-gold:is([data-act="again"],[data-act="change"]) .t{font-family:Montserrat,Rubik,system-ui,sans-serif;font-size:15px;font-weight:800;letter-spacing:.16em;line-height:1.1;color:#1d2230;opacity:1;text-transform:uppercase;white-space:nowrap}
+html body .crk-one .crk-gold:is([data-act="again"],[data-act="change"]) .a{font-family:Montserrat,Rubik,system-ui,sans-serif;font-size:28px;font-weight:800;letter-spacing:.01em;line-height:1.05;color:#141a29;opacity:1;margin:0;font-variant-numeric:tabular-nums;white-space:nowrap}
+.phone.inlobby #scrim{opacity:0!important;transition:none!important}   /* the lobby is never dimmed */
+/* run-bar.js v170 is embedded verbatim; these keep this game's run deck exactly as it looked with its v167 hand port */
+html body .crk-dbl{height:auto;min-height:66px;overflow:visible}   /* DOUBLE OR NOTHING: 66px minimum, lines at 1.05 */
+html body .crk-dbl .t,html body .crk-dbl .a,html body .crk-dbl .s{line-height:inherit}
+html body .crk-hl{font-family:"Chakra Petch",Montserrat,system-ui,sans-serif}   /* half links */
+html body .crk-toast{background:rgba(8,12,30,.5);border:1px solid rgba(255,255,255,.16);box-shadow:0 10px 30px rgba(0,0,0,.3);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);animation:crkToastIn .3s cubic-bezier(.2,1.4,.4,1) both}   /* the see-through end toast */
+@keyframes crkToastIn{from{transform:translate(-50%,-50%) scale(.85);opacity:0}}
+@media (prefers-reduced-motion: reduce){html body .crk-toast{animation:none}}
+</style>
+<script>
+/* EBG shell: RUN BANK shows on the run bar only. Removes it from the end toast, the BUSTED stamp and LOCK IN as they are drawn. */
+(function () {
+  function strip(root) {
+    if (!root || !root.querySelectorAll) return;
+    root.querySelectorAll('.crk-chip, .eb').forEach(function (e) { if (/RUN BANK/.test(e.textContent)) e.remove(); });
+    root.querySelectorAll('.crk-lc .crk-rb').forEach(function (e) { e.remove(); });
+  }
+  function start() {
+    strip(document.body);
+    new MutationObserver(function (ms) { ms.forEach(function (m) { m.addedNodes.forEach(function (n) { if (n.nodeType === 1) { strip(n.parentNode || n); } }); }); })
+      .observe(document.body, { childList: true, subtree: true });
+  }
+  if (document.body) start(); else document.addEventListener('DOMContentLoaded', start);
+})();
+</script>
+</head>
+<body>
+<div class="stage">
+  <main class="phone" id="phone">
+    <header class="topbar">
+      <button class="ico" id="toLobby" aria-label="Back to lobby" title="Lobby"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 4h5v16h-5M10 8l-4 4 4 4M6 12h10"/></svg></button>
+      <div class="brand">MINES</div>
+      <button id="rulesBtn" type="button"></button>
+      <button class="ico" id="snd" aria-label="Sound on" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9h4l5-4v14l-5-4H4z"/><path id="sndwave" d="M16 9a4 4 0 010 6"/></svg></button>
+      <div class="pill bal" id="balPill"><span class="cur">$</span><span id="bal">1,000.00</span></div>
+    </header>
+
+    <section class="lobby" id="lobby" aria-label="Lobby">
+      <div class="lscroll">
+        <h1 class="lh"><img class="lhimg" src="data:image/webp;base64,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" alt="BUILD IT. RUN IT." width="1100" height="167"></h1>
+        <p class="ls"><span class="tg-nw">Build a 20× win</span><span class="tg-dot" aria-hidden="true"></span><span class="tg-nw">then take it on a 1,000× run</span></p>
+        <div class="licon" id="lIcon" aria-hidden="true"></div>
+        <div class="lname" id="lName"></div>
+        <p class="ldesc" id="lDesc"></p>
+        <div class="leq">
+          <div class="lbox"><small>BUILD</small><b id="lBuild"></b></div>
+          <span class="lop">×</span>
+          <div class="lbox"><small>RUN</small><b>1,000×</b></div>
+          <span class="lop">=</span>
+          <div class="lbox win"><small>WIN UP TO</small><b id="lWin"></b></div>
+        </div>
+        <div class="lbet" id="lBet">
+          <label class="lamt" id="lAmt"><span class="cur">$</span><input id="lAmtIn" type="text" inputmode="decimal" autocomplete="off" aria-label="Bet amount"><button type="button" class="lmax" id="lMax">MAX</button></label>
+          <div class="lerr" id="lErr" aria-live="polite"></div>
+        </div>
+      </div>
+      <button class="lplay" id="lPlay" type="button">PLAY</button>
+    </section>
+
+    <section class="info" aria-label="Round info">
+      <div class="info-row">
+        <div class="lab">CLEAR <b id="left">22</b> <span id="noun">GEMS</span></div>
+        <div class="lab"><span>MAX BUILD</span> <span class="v" id="maxwin">$0</span></div>
+        <div class="bsel" id="bsel"><svg viewBox="0 0 40 40"><defs><radialGradient id="bg1" cx="38%" cy="38%"><stop offset="0" stop-color="#5a6070"/><stop offset=".55" stop-color="#1b1e26"/><stop offset="1" stop-color="#07080b"/></radialGradient></defs><circle cx="18" cy="24" r="12" fill="url(#bg1)"/><rect x="21" y="9" width="7" height="5" rx="1.5" transform="rotate(35 24 11)" fill="#3a3f4c"/><path d="M27 9c2-3 4-3 6-2" stroke="#b9a37a" stroke-width="1.6" fill="none"/><path d="M34 3l1.2 3 3-.6-2.2 2.2 1.6 2.6-3-.9-1.4 2.7-.4-3-3-.6 2.8-1.2z" fill="#ffb02e"/><circle cx="34.5" cy="6.5" r="1.4" fill="#fff3c4"/><ellipse cx="13.5" cy="19.5" rx="3" ry="2" fill="#fff" opacity=".22"/></svg><span class="eq">=</span><div class="bopts" id="bopts" role="radiogroup" aria-label="Number of live bombs"></div></div>
+      </div>
+      <hr>
+      <div class="next"><span class="lab">NEXT</span><div class="mults" id="mults"></div></div>
+    </section>
+
+    <section class="runhud" id="runhud" aria-label="Double or nothing">
+      <div class="info-row">
+        <div class="lab runtitle">DOUBLE OR NOTHING <small>50/50</small></div>
+        <div class="lab"><span id="runStakeLab">RUNNING</span> <span class="v" id="runStakeTxt">$0.00</span></div>
+        <div class="lab"><span id="runPrizeLab">TO WIN</span> <span class="v gold" id="runPrizeTxt">$0.00</span></div>
+      </div>
+      <hr>
+      <div class="info-row">
+        <div class="pips" id="pips" aria-label="Gems found"></div>
+        <div class="lab" id="runCounts">2 LIVE · 4 DUDS HIDDEN</div>
+      </div>
+    </section>
+
+    <div class="gridwrap" id="gridwrap">
+      <div class="grid" id="grid"></div>
+      <div class="shieldtoast" id="shieldtoast" aria-live="polite"><div class="icons" id="shicons"></div><div class="tx" id="shtx"></div></div>
+      <div class="result" id="result" aria-live="polite"><div class="resbox"><div class="t" id="resT"></div><div class="big" id="resBig"></div><div class="sub" id="resSub"></div></div></div>
+    </div>
+
+    <div class="cashwrap crk-ribbon" id="cashwrap">
+      <div class="runnote" id="runnote" hidden></div>
+      <div class="crk" id="crk"></div>
+    </div>
+
+    <div id="scrim" aria-hidden="true"></div>
+  </main>
+
+</div>
+
+<script>
+/*!
+ * Card Run · RUN BAR reference module · v170 (v170: RUN IT AGAIN and RUN HALF removed for certification — the bar is CASH OUT, DOUBLE OR NOTHING and DOUBLE HALF (+ the RUN BANK); minimum $0.02 as v169; run deck style: calm amounts, half-bet links, whole-screen dim; CASHED OUT toast; GRP 1.2 with the LOCK IN, PLAY AGAIN, RUN BANK and run-bar-copy amendments)
+ * One file, no dependencies. The same mechanic, numbers, copy and design as Card Run Blackjack prototype v152.
+ *
+ *   RunBar.compute(state)                → the numbers and which controls show (pure; unit-tested in run-bar.test.js)
+ *   RunBar.render(el, state, on)         → draws the run bar into el (the action ribbon)
+ *   RunBar.renderEnd(el, {bet,balance}, on)        → PLAY AGAIN $bet  /  CHANGE BET · BALANCE $n
+ *   RunBar.renderHandoff(el, {label,amount,badge}, on)  → one gold label-over-amount button
+ *   RunBar.renderLockIn(el, {amount,maxWin,banked,half}, on) → LOCK IN $N (+ LOCK IN HALF $keep); returns {set(amount)} for a live board (crash)
+ *   RunBar.toast(host, {variant,title,paid,runBank,plain})  → end toast: CASHED OUT / MAX WIN / 1,000× RUN · PAID $total · INCLUDES RUN BANK $B
+ *       v165: CASH OUT shows it too (title 'CASHED OUT'); plain:true when the total is at or below the stake (shown, not celebrated)
+ *   RunBar.bustStamp(host, {runBank})               → BUSTED stamp (+ RUN BANK $B chip)
+ *   RunBar.setScreenDim(rootEl, barEl, on, opacity) → v167 whole-screen dim, default 65%, fades in with the bar
+ *   RunBar.setDim([boardEl, ribbonEl], on, opacity) → the old per-element dim (pre-v167 hosts only)
+ *
+ * state = { held, banked, ammo, maxWin, variant }   all money in dollars (handled internally as integer cents)
+ *   held    S: what the round holds and can run now
+ *   banked  B: the RUN BANK (round escrow; never in the wallet until the round ends)
+ *   ammo    A: what the build produced (the base round's win, the LOCK IN amount, or the P2 prize). Run cap = 1,000 × A
+ *   maxWin  MW: the operator MAX WIN in dollars (multiple × bet)
+ *   variant the variant name, e.g. 'CLASSIC' (accepted, not used since v170)
+ * on = { cashOut(total), double(stake), doubleHalf(stake, bank), paidOut(kind,total) }
+ *   The module never moves money. The host credits RUN BANK + held in ONE payment when the round ends.
+ */
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) module.exports = factory();
+  else root.RunBar = factory();
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+  var MIN_RUN = 2, CAP_X = 1000;                       // $0.02, in cents: the smallest amount DOUBLE OR NOTHING / DOUBLE HALF will take
+  var c = function (x) { return Math.round(Number(x) * 100); };        // dollars -> cents
+  var d = function (n) { return n / 100; };                             // cents -> dollars
+  var money = function (n) {                                            // cents -> "1,234.56"
+    var s = (Math.abs(n) / 100).toFixed(2).split('.');
+    return (n < 0 ? '-' : '') + s[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '.' + s[1];
+  };
+
+  /* ------------------------------------------------------------------ the numbers ------------------------------------------------------------------ */
+  function compute(st) {
+    var S = c(st.held), B = c(st.banked || 0), A = c(st.ammo), MW = c(st.maxWin), cap = CAP_X * A;
+    if (B + S > MW) S = MW - B;                                     // MAX WIN clips every payout
+    var total = B + S;
+    if (total >= MW) return { mode: 'max_win', held: S, banked: B, total: total };
+    if (total >= cap) return { mode: 'run_cap', held: S, banked: B, total: total };
+    var half = Math.floor(S / 2), keep = S - half;                  // integer cents: an odd cent is kept (banked)
+    var show = {
+      double: S >= MIN_RUN && B + 2 * S <= MW,
+      doubleHalf: half >= MIN_RUN && B + keep + 2 * half <= MW
+    };
+    show.halfPill = show.doubleHalf;
+    show.cashOutOnly = !show.double && !show.doubleHalf;
+    var nCap = Math.max(1, Math.ceil(Math.log2(Math.max(1, (cap - B) / S)) - 1e-9));
+    var nMW = Math.max(1, Math.floor(Math.log2((MW - B) / S) + 1e-9));
+    return {
+      mode: 'bar', held: S, banked: B, total: total, half: half, keep: keep, show: show,
+      nMax: Math.min(nCap, nMW), cap: cap, maxWin: MW,
+      copy: {
+        cashOut: '$' + money(total),
+        runBank: B > 0 ? '$' + money(B) : null,
+        double: '$' + money(2 * S),
+        doubleLine: Math.min(nCap, nMW) + (Math.min(nCap, nMW) === 1 ? ' DOUBLE MAX' : ' DOUBLES MAX'),
+        half: '$' + money(keep),
+        halfStake: '$' + money(half)      // the half link shows the stake (what doubles); the odd cent is banked
+      }
+    };
+  }
+
+  /* ------------------------------------------------------------------ styles ------------------------------------------------------------------ */
+  var CSS = [
+    '.crk-bar{position:relative;display:grid;grid-template-columns:minmax(0,1fr);gap:8px 10px;font-family:"Chakra Petch",Montserrat,system-ui,sans-serif;animation:crkIn .35s cubic-bezier(.2,1.5,.4,1) both}',
+    '@keyframes crkIn{from{transform:translateY(14px) scale(.96);opacity:.3}}',
+    '.crk-btn{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:999px;font-family:"Chakra Petch",Montserrat,system-ui,sans-serif;font-weight:700;-webkit-tap-highlight-color:transparent;transition:transform .08s,filter .15s}',
+    '.crk-btn:active{transform:scale(.97)}.crk-btn:hover{filter:brightness(1.07)}.crk-btn:focus-visible{outline:2px solid #e9bc57;outline-offset:3px}',
+    '.crk-c{justify-self:center;position:relative;display:flex;align-items:center;transform-origin:center;white-space:nowrap}',
+    '.crk-cash{flex:none;height:44px;padding:0 22px;gap:12px;background:rgba(9,16,38,.94);border:1.5px solid #4f5d8c;color:#c9d1ea;box-shadow:0 4px 14px rgba(0,0,0,.35)}',
+    '.crk-cash .t{font-size:14px;letter-spacing:.16em}.crk-cash .a{font-size:21px;color:#fff}',
+    '.crk-rb{position:absolute;left:50%;bottom:calc(100% - 9px);transform:translateX(-50%);z-index:2;display:flex;align-items:baseline;gap:7px;line-height:1;padding:4px 12px;border-radius:999px;background:#163a2a;border:1px solid #2f6b4b;box-shadow:0 2px 8px rgba(0,0,0,.35);font-family:Montserrat,system-ui,sans-serif;white-space:nowrap;pointer-events:none}',
+    '.crk-rb i{font-style:normal;font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#7fd8a4}.crk-rb b{font-family:"Chakra Petch",Montserrat,sans-serif;font-weight:700;font-size:14px;color:#9ff0bf}',
+    '.crk-dbl{height:66px;padding:4px 10px;flex-direction:column;line-height:1.05;text-align:center;min-width:0;overflow:hidden}',
+    '.crk-dbl .t{line-height:16px}.crk-dbl .a{line-height:26px}.crk-dbl .s{line-height:13px}',   /* fixed line boxes: shrinking a big amount never changes the bar height (v152.2) */
+    '.crk-dbl{background:#e9bc57;color:#1c1a12;box-shadow:0 0 0 3px rgba(233,188,87,.18),0 0 18px rgba(233,188,87,.35)}',
+    '.crk-dbl .t{font-size:clamp(12px,3.6vw,15px);letter-spacing:.05em;white-space:nowrap}',
+    '.crk-dbl .a{font-size:clamp(19px,6vw,26px);letter-spacing:.01em;white-space:nowrap}',
+    '.crk-dbl .s{font-family:Montserrat,system-ui,sans-serif;font-weight:800;white-space:nowrap;margin:2px 0 1px;font-size:11px;letter-spacing:.12em;opacity:.95}',
+    /* v167 run deck: the half bet is a text link under DOUBLE OR NOTHING: the stake (half-tone) over DOUBLE HALF + /BANK HALF, underlined; one 44px tap target */
+    '.crk-hl{all:unset;box-sizing:border-box;cursor:pointer;justify-self:center;align-self:start;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:44px;padding:2px 8px;font-family:"Chakra Petch",Montserrat,sans-serif;font-weight:700;white-space:nowrap;-webkit-tap-highlight-color:transparent;transition:transform .08s;animation:crkIn .35s cubic-bezier(.2,1.5,.4,1) both}',
+    '.crk-hl:active{transform:scale(.96)}.crk-hl:focus-visible{outline:2px solid #e9bc57;outline-offset:2px;border-radius:8px}',
+    '.crk-hl .ha{font-size:15px;line-height:1;color:#fff;opacity:.5;letter-spacing:.02em}',
+    '.crk-hl .hlt{font-size:12px;line-height:1;letter-spacing:.08em;color:#8a94b8;padding-bottom:4px;border-bottom:1.5px solid rgba(138,148,184,.75)}',
+    '.crk-hl .hlt b{font-weight:700;color:#e9bc57}',
+    /* v167 run deck: calm amounts. CASH OUT and RUN BANK amounts half-tone; the big buttons' amounts smaller at full strength; DOUBLE OR NOTHING in pure black */
+    '.crk-cash .a,.crk-rb b{opacity:.5}',
+    '.crk-dbl .a{font-size:clamp(16px,4.8vw,20px);line-height:24px;margin-top:2px}',
+    '.crk-dbl,.crk-dbl .t,.crk-dbl .a{color:#000}',
+    /* v167 run deck: ONE whole-screen dim (a scrim over the screen root), fading in with the bar; only the bar sits above it */
+    '.crk-scrim{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none;z-index:900;transition:opacity .2s ease}',
+    '.crk-scrim.on{opacity:var(--crk-dim,.65);transition:opacity .35s cubic-bezier(.2,.8,.3,1)}',
+    '.crk-lift>*{position:relative;z-index:901}',   /* only the bar\'s buttons sit above the scrim; its ribbon dims with the screen */
+    /* gold full-width buttons: the end bar (PLAY AGAIN), the phase hand-off and LOCK IN. Anton, label over amount */
+    '.crk-one{display:grid;grid-template-columns:1fr}',
+    '.crk-gold{all:unset;box-sizing:border-box;cursor:pointer;min-height:76px;border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:8px 4px;background:#e9bc57;color:#1c1a12;box-shadow:0 0 0 3px rgba(233,188,87,.18);font-family:Anton,Impact,"Arial Narrow",sans-serif;line-height:1.05;text-align:center;transition:transform .08s,filter .15s;animation:crkIn .35s cubic-bezier(.2,1.5,.4,1) both}',
+    '.crk-gold:active{transform:scale(.97)}.crk-gold:hover{filter:brightness(1.07)}.crk-gold:focus-visible{outline:2px solid #fff;outline-offset:3px}',
+    '.crk-gold .t{font-size:clamp(15px,4.9vw,21px);letter-spacing:.03em;white-space:nowrap}.crk-gold .a{font-size:clamp(18px,6vw,26px);letter-spacing:.03em;white-space:nowrap}',
+    '.crk-lock{gap:10px}.crk-lc{grid-area:auto;justify-self:stretch}.crk-lc .crk-gold{width:100%}.crk-lc .crk-rb{bottom:calc(100% - 9px)}',
+    '.crk-lh{justify-self:center;min-height:44px;padding:0 22px;gap:10px;background:#0f1a34;border:1.5px solid #8a7440;color:#e9e3d0}.crk-lh .t{font-size:11px;letter-spacing:.08em}.crk-lh .a{font-size:17px;color:#fff}.crk-lh[hidden]{display:none}',
+    '.crk-badge{margin-left:16px;font-family:Montserrat,system-ui,sans-serif;font-size:.5em;font-weight:900;letter-spacing:.08em;vertical-align:.22em;padding:3px 8px;border-radius:6px}',
+    '.crk-badge.on{background:#1f6b3f;color:#fff}.crk-badge.off{background:rgba(28,26,18,.18);color:rgba(28,26,18,.6)}',
+    /* toast and bust stamp (place host on the board, position:relative) */
+    '.crk-toast{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);z-index:46;min-width:62%;max-width:88%;padding:12px 22px 15px;border-radius:14px;text-align:center;pointer-events:none;background:rgba(6,12,32,.86);border:1px solid rgba(255,255,255,.12);font-family:Montserrat,system-ui,sans-serif}',
+    '.crk-toast .eh{font-size:10.5px;font-weight:800;letter-spacing:.24em;color:#c3c9de;opacity:.85}.crk-toast .et{margin-top:6px;font-size:28px;font-weight:900;letter-spacing:.04em;color:#f5c84b;line-height:1.05}',
+    '.crk-toast{width:max-content}.crk-toast .et,.crk-toast .es,.crk-toast .crk-chip{white-space:nowrap}.crk-toast .et.plain{color:#e6ebfa;font-size:24px}',   /* v165: one line each; plain = at or below the stake, never celebrated */
+    '.crk-toast .es{margin-top:6px;font-size:11px;font-weight:800;letter-spacing:.1em;color:#d5dcf2}',
+    '.crk-chip{margin-top:9px;display:inline-block;padding:4px 12px;border-radius:9px;background:rgba(53,107,65,.55);border:1px solid rgba(157,245,207,.5);font-size:14px;font-weight:900;letter-spacing:.08em;color:#fff;font-style:normal}',
+    '.crk-bust{position:absolute;left:0;right:0;top:38%;z-index:45;display:flex;flex-direction:column;align-items:center;gap:16px;pointer-events:none;font-family:Montserrat,system-ui,sans-serif}',
+    '.crk-bust span{font-family:Anton,Impact,sans-serif;font-size:clamp(54px,17vw,76px);letter-spacing:.04em;color:#ff4d5e;padding:0 18px;border:4px solid #ff4d5e;border-radius:10px;transform:rotate(-8deg);background:rgba(20,4,8,.55)}',
+    /* the board dim, "double cover": board and ribbon take the same black overlay at the same opacity and timing */
+    '.crk-dimmable{position:relative}.crk-dimmable::after{content:"";position:absolute;inset:0;border-radius:inherit;background:#000;opacity:0;pointer-events:none;z-index:40;transition:opacity .2s ease}',
+    '.crk-dimmable.crk-dim::after{opacity:var(--crk-dim,.36);transition:opacity .45s ease 1.2s}',
+    '.crk-ribbon.crk-dimmable::after{z-index:0}.crk-ribbon.crk-dimmable>*{position:relative;z-index:1}',   /* the bar sits above its ribbon's overlay; the buttons are never dimmed */
+    '@media (prefers-reduced-motion: reduce){.crk-bar,.crk-gold,.crk-hl{animation:none}.crk-dimmable::after,.crk-scrim{transition:none!important}}'
+  ].join('\n');
+  var injected = false;
+  function injectCSS() {
+    if (injected || typeof document === 'undefined') return; injected = true;
+    var s = document.createElement('style'); s.id = 'crk-run-bar-css'; s.textContent = CSS; document.head.appendChild(s);
+  }
+
+  /* ------------------------------------------------------------------ helpers ------------------------------------------------------------------ */
+  var lockUntil = 0;
+  if (typeof document !== 'undefined') {
+    ['keydown', 'keyup'].forEach(function (t) {
+      document.addEventListener(t, function (e) {
+        if ((e.key === 'Enter' || e.key === ' ') && performance.now() < lockUntil && e.target.closest && e.target.closest('.crk-bar,.crk-one')) { e.preventDefault(); e.stopPropagation(); }
+      }, true);
+    });
+  }
+  function mount(el, html, cls) {                       // swaps the ribbon's content; 350 ms input lock so a double tap can't land on the new buttons
+    injectCSS(); el.innerHTML = ''; var box = document.createElement('div'); box.className = cls; box.innerHTML = html; el.appendChild(box);
+    box.style.pointerEvents = 'none'; setTimeout(function () { box.style.pointerEvents = ''; }, 350); lockUntil = performance.now() + 350;
+    return box;
+  }
+  function fit(box) {
+    var cw = box.querySelector('.crk-c');               // CASH OUT (+ RUN BANK pill) never wraps: the row scales if it must
+    if (cw) { var avail = box.clientWidth - 8, w = cw.scrollWidth; if (w > avail) cw.style.transform = 'scale(' + (avail / w).toFixed(3) + ')'; }
+    box.querySelectorAll('.crk-dbl').forEach(function (b) {   // big amounts shrink a line rather than wrap or clip
+      var avail = b.clientWidth - 22;
+      b.querySelectorAll('.t,.a,.s').forEach(function (e) { e.style.fontSize = ''; var w = e.scrollWidth; if (w > avail) { var f = parseFloat(getComputedStyle(e).fontSize); e.style.fontSize = (f * avail / w).toFixed(2) + 'px'; } });
+    });
+    box.querySelectorAll('.crk-hl').forEach(function (h) { var cell = box.clientWidth - 12; h.querySelectorAll('.hlt,.ha').forEach(function (e) { e.style.fontSize = ''; var w = e.scrollWidth; if (w > cell) { var f = parseFloat(getComputedStyle(e).fontSize); e.style.fontSize = (f * cell / w).toFixed(2) + 'px'; } }); });   // a half link shrinks rather than wrap or clip
+  }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (ch) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]; }); }
+
+  /* ------------------------------------------------------------------ the run bar ------------------------------------------------------------------ */
+  function render(el, st, on) {
+    on = on || {}; var r = compute(st);
+    if (r.mode !== 'bar') { if (on.paidOut) on.paidOut(r.mode, d(r.total)); return r; }   // MAX WIN or the 1,000× run cap: pay at once, no bar
+    var s = r.show, k = r.copy, nD = r.nMax;
+    var html =
+      '<div class="crk-c">' + (k.runBank ? '<div class="crk-rb" aria-hidden="true"><i>RUN BANK</i><b>' + k.runBank + '</b></div>' : '') +
+        '<button class="crk-btn crk-cash" data-act="cashOut" aria-label="Cash out ' + k.cashOut + (k.runBank ? ', including run bank ' + k.runBank : '') + '"><span class="t">CASH OUT</span><span class="a">' + k.cashOut + '</span></button></div>' +
+      (s.double ? '<button class="crk-btn crk-dbl" data-act="double" aria-label="Double or nothing, ' + k.double + '"><span class="t">DOUBLE OR NOTHING</span><span class="a">' + k.double + '</span></button>' : '') +
+      (s.doubleHalf ? '<button class="crk-hl dh" data-act="doubleHalf" aria-label="Double half: ' + k.halfStake + ' doubles, ' + k.half + ' to the run bank"><span class="ha">' + k.halfStake + '</span><span class="hlt"><b>DOUBLE HALF</b>/BANK HALF</span></button>' : '');
+    var box = mount(el, html, 'crk-bar');
+    fit(box);
+    var S = d(r.held), half = d(r.half), keep = d(r.keep);
+    box.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-act]'); if (!b) return; var a = b.getAttribute('data-act');
+      if (a === 'cashOut' && on.cashOut) on.cashOut(d(r.total));
+      if (a === 'double' && on.double) on.double(S);
+      if (a === 'doubleHalf' && on.doubleHalf) on.doubleHalf(half, keep);
+    });
+    var f = box.querySelector('[data-act="cashOut"]'); if (f) f.focus({ preventScroll: true });   // focus on the safe default
+    return r;
+  }
+
+  function renderEnd(el, st, on) {
+    on = on || {}; var bet = c(st.bet), bal = c(st.balance), can = bal >= bet;
+    var html = can ? '<button class="crk-gold" data-act="again" aria-label="Play again, bet $' + money(bet) + '"><span class="t">PLAY AGAIN</span><span class="a">$' + money(bet) + '</span></button>'
+                   : '<button class="crk-gold" data-act="change" aria-label="Change bet"><span class="t">CHANGE BET</span><span class="a">BALANCE $' + money(bal) + '</span></button>';
+    var box = mount(el, html, 'crk-one'); var b = box.querySelector('button');
+    b.addEventListener('click', function () { if (can) { if (on.playAgain) on.playAgain(d(bet)); } else if (on.changeBet) on.changeBet(); });
+    b.focus({ preventScroll: true }); return can;
+  }
+
+  function renderHandoff(el, st, on) {
+    on = on || {}; var badge = st.badge ? ' <span class="crk-badge ' + (st.badge.on ? 'on' : 'off') + '">' + esc(st.badge.label) + ' ' + (st.badge.on ? 'ON' : 'OFF') + '</span>' : '';
+    var html = '<button class="crk-gold" data-act="go"><span class="t">' + esc(st.label) + '</span><span class="a">' + (st.amount != null ? '$' + money(c(st.amount)) : esc(st.sub || '')) + badge + '</span></button>';
+    var box = mount(el, html, 'crk-one'); var b = box.querySelector('button');
+    b.addEventListener('click', function () { if (on.go) on.go(); }); b.focus({ preventScroll: true });
+  }
+
+  function renderLockIn(el, st, on) {                 // LOCK IN $N: the stop that leads to the run bar (a build that can be stopped early, or a crash board's own stop)
+    // st = { amount, maxWin, banked, half }   on = { lockIn(amount), lockInHalf(keep, flying), paidOut('max_win', total) }
+    // Returns { set(amount), amount() }: a live board (crash) calls set() every tick; the button updates in place (no remount, no new input lock).
+    on = on || {}; var B = c(st.banked || 0), MW = st.maxWin != null ? c(st.maxWin) : Infinity, amt = 0, done = false;
+    var html = '<div class="crk-c crk-lc">' + (B > 0 ? '<div class="crk-rb" aria-hidden="true"><i>RUN BANK</i><b>$' + money(B) + '</b></div>' : '') +
+      '<button class="crk-gold" data-act="lock"><span class="t">LOCK IN</span><span class="a"></span></button></div>' +
+      (st.half ? '<button class="crk-btn crk-lh" data-act="lockHalf"><span class="t">LOCK IN HALF</span><span class="a"></span></button>' : '');
+    var box = mount(el, html, 'crk-one crk-lock'), b = box.querySelector('[data-act="lock"]'), h = box.querySelector('[data-act="lockHalf"]');
+    function set(x) {
+      if (done) return; amt = c(x); if (B + amt > MW) amt = MW - B;             // clipped to MAX WIN
+      b.querySelector('.a').textContent = '$' + money(amt); b.setAttribute('aria-label', 'Lock in $' + money(amt));
+      if (h) { var keep = amt - Math.floor(amt / 2); h.hidden = Math.floor(amt / 2) < MIN_RUN; h.querySelector('.a').textContent = '$' + money(keep); h.setAttribute('aria-label', 'Lock in half: $' + money(keep) + ' to the run bank'); }
+      if (B + amt >= MW) { done = true; if (on.paidOut) on.paidOut('max_win', d(B + amt)); }   // reaching MAX WIN pays at once
+    }
+    b.addEventListener('click', function () { if (done) return; done = true; if (on.lockIn) on.lockIn(d(amt)); });
+    if (h) h.addEventListener('click', function () { if (done) return; var fly = Math.floor(amt / 2), keep = amt - fly; if (fly < MIN_RUN) return; done = true; if (on.lockInHalf) on.lockInHalf(d(keep), d(fly)); });
+    set(st.amount || 0);
+    return { set: set, amount: function () { return d(amt); } };
+  }
+
+  function toast(host, st) {
+    injectCSS(); var t = document.createElement('div'); t.className = 'crk-toast'; t.setAttribute('role', 'status'); t.setAttribute('aria-live', 'polite');
+    t.innerHTML = '<div class="eh">' + esc(st.variant || '') + '</div><div class="et' + (st.plain ? ' plain' : '') + '">' + esc(st.title) + '</div>' + (st.paid != null ? '<div class="es">PAID $' + money(c(st.paid)) + '</div>' : '') +
+      (st.runBank > 0 ? '<i class="crk-chip">INCLUDES RUN BANK $' + money(c(st.runBank)) + '</i>' : '');
+    host.appendChild(t); return t;
+  }
+  function bustStamp(host, st) {
+    injectCSS(); var t = document.createElement('div'); t.className = 'crk-bust'; t.setAttribute('role', 'status');
+    t.innerHTML = '<span>BUSTED</span>' + (st && st.runBank > 0 ? '<i class="crk-chip">RUN BANK $' + money(c(st.runBank)) + '</i>' : '');
+    host.appendChild(t); return t;
+  }
+  // v167: the run deck dims the WHOLE screen: one scrim inside the screen root (must be position:relative/absolute), fading in with the bar (0.35 s).
+  // The bar (barEl: the element holding the run bar, e.g. the ribbon) is lifted above the scrim. Default 65%.
+  // barEl must not sit inside an ancestor that makes its own stacking context below the scrim (z-index/transform/filter/opacity on an ancestor).
+  function setScreenDim(root, barEl, on, opacity) {
+    injectCSS(); if (!root) return; var sc = root.querySelector(':scope > .crk-scrim');
+    if (!sc) { sc = document.createElement('div'); sc.className = 'crk-scrim'; sc.setAttribute('aria-hidden', 'true'); root.appendChild(sc); }
+    if (opacity != null) sc.style.setProperty('--crk-dim', opacity);
+    if (barEl) barEl.classList.toggle('crk-lift', !!on);
+    sc.classList.toggle('on', !!on);
+  }
+  function setDim(els, on, opacity) {   // v129-v165 per-element dim (kept for old hosts; v167 uses setScreenDim)
+    injectCSS(); (Array.isArray(els) ? els : [els]).forEach(function (e) { if (!e) return; e.classList.add('crk-dimmable'); if (opacity != null) e.style.setProperty('--crk-dim', opacity); e.classList.toggle('crk-dim', !!on); });
+  }
+
+  return { compute: compute, render: render, renderEnd: renderEnd, renderHandoff: renderHandoff, renderLockIn: renderLockIn, toast: toast, bustStamp: bustStamp, setDim: setDim, setScreenDim: setScreenDim, CSS: CSS, money: function (x) { return money(c(x)); }, version: '170' };
+});
+</script>
+<script>
+/*!
+ * Card Run · RULES SHEET (shared by all four 20× games) · v1 · 14 Oct 2026
+ * One ⓘ button that opens a full-height rules & pays sheet over the game. No dependencies, no globals except CardRunRules.
+ *
+ *   CardRunRules.mount({ button: el, title: 'BLACKJACK 20×', content: () => html, onOpen(), onClose() })
+ *     button   an element to turn into the ⓘ (the game places it; 44×44 tap target, aria-label "Rules and pays")
+ *     content  a FUNCTION returning the sheet's HTML each time it opens (so tables show pays at the current bet)
+ *     onOpen / onClose  optional: a game that deals on its own (Crash auto-deal) pauses while the sheet is open
+ *   CardRunRules.open() / close() / isOpen()
+ * Building blocks for content (classes styled here): <h3>, <p>, <table class="crr-t"> (first column left, others right),
+ *   <p class="crr-note"> small print, <div class="crr-key"> a highlighted line (e.g. the 20× / 1,000× rule).
+ */
+(function (root) {
+  'use strict';
+  var CSS = [
+    '.crr-btn{all:unset;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;flex:none;border-radius:50%;cursor:pointer;color:#c9d1ea;-webkit-tap-highlight-color:transparent}',
+    '.crr-btn svg{width:24px;height:24px}.crr-btn:hover{color:#fff}.crr-btn:focus-visible{outline:2px solid #e9bc57;outline-offset:2px}',
+    '.crr-wrap{position:fixed;inset:0;z-index:2000;display:flex;align-items:stretch;justify-content:center;background:rgba(0,0,0,.6);animation:crrIn .2s ease both}',
+    '@keyframes crrIn{from{opacity:0}}',
+    '.crr-sheet{position:relative;box-sizing:border-box;width:100%;max-width:460px;height:100%;display:flex;flex-direction:column;background:#0b1430;color:#dfe5f6;font:400 14px/1.5 Montserrat,system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 0 40px rgba(0,0,0,.5)}',
+    '.crr-head{flex:none;display:flex;align-items:center;gap:8px;padding:6px 6px 6px 18px;border-bottom:1px solid #24305a}',
+    '.crr-head h2{flex:1;margin:0;font:800 15px/1.2 Montserrat,system-ui,sans-serif;letter-spacing:.12em;color:#fff}',
+    '.crr-x{all:unset;box-sizing:border-box;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;cursor:pointer;color:#c9d1ea}',
+    '.crr-x:focus-visible{outline:2px solid #e9bc57;outline-offset:2px}.crr-x svg{width:22px;height:22px}',
+    '.crr-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:6px 18px 28px}',
+    '.crr-body h3{margin:18px 0 6px;font:800 12px/1.3 Montserrat,system-ui,sans-serif;letter-spacing:.16em;color:#e9bc57;text-transform:uppercase}',
+    '.crr-body p{margin:6px 0}.crr-body b{color:#fff}',
+    '.crr-t{width:100%;border-collapse:collapse;margin:6px 0 4px;font-variant-numeric:tabular-nums;font-size:13px}',
+    '.crr-t th,.crr-t td{padding:5px 6px;border-bottom:1px solid #1e2a50;text-align:right;vertical-align:top}',
+    '.crr-t th:first-child,.crr-t td:first-child{text-align:left}',
+    '.crr-t th{font-weight:700;font-size:11px;letter-spacing:.06em;color:#9aa6c9;text-transform:uppercase}',
+    '.crr-key{margin:10px 0;padding:10px 12px;border-radius:10px;background:#121e44;border:1px solid #2c3a6b;color:#fff}',
+    '.crr-note{font-size:12px;color:#9aa6c9}',
+    '@media (prefers-reduced-motion: reduce){.crr-wrap{animation:none}}'
+  ].join('\n');
+  var ICON_I = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 11v6" stroke-linecap="round"/><circle cx="12" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></svg>';
+  var ICON_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  var cfg = null, wrap = null, lastFocus = null, injected = false;
+  function inject() { if (injected) return; injected = true; var s = document.createElement('style'); s.id = 'crr-css'; s.textContent = CSS; document.head.appendChild(s); }
+  function onKey(e) {
+    if (!wrap) return;
+    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(); return; }
+    if (e.key === 'Tab') {                                     // keep focus inside the sheet
+      var f = wrap.querySelectorAll('button,[href],[tabindex]:not([tabindex="-1"])'); if (!f.length) return;
+      var a = f[0], z = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); }
+      else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+    }
+    e.stopPropagation();                                       // game shortcuts (e.g. H / S) don't fire behind the sheet
+  }
+  function open() {
+    if (!cfg || wrap) return; inject(); lastFocus = document.activeElement;
+    wrap = document.createElement('div'); wrap.className = 'crr-wrap'; wrap.setAttribute('role', 'dialog'); wrap.setAttribute('aria-modal', 'true'); wrap.setAttribute('aria-label', cfg.title + ' rules and pays');
+    wrap.innerHTML = '<div class="crr-sheet"><div class="crr-head"><h2></h2><button type="button" class="crr-x" aria-label="Close rules">' + ICON_X + '</button></div><div class="crr-body" tabindex="0"></div></div>';
+    wrap.querySelector('h2').textContent = cfg.title;
+    wrap.querySelector('.crr-body').innerHTML = cfg.content();
+    wrap.querySelector('.crr-x').addEventListener('click', close);
+    wrap.addEventListener('click', function (e) { if (e.target === wrap) close(); });
+    document.addEventListener('keydown', onKey, true);
+    document.body.appendChild(wrap);
+    if (cfg.onOpen) try { cfg.onOpen(); } catch (e) {}
+    wrap.querySelector('.crr-x').focus({ preventScroll: true });
+  }
+  function close() {
+    if (!wrap) return; document.removeEventListener('keydown', onKey, true); wrap.remove(); wrap = null;
+    if (cfg && cfg.onClose) try { cfg.onClose(); } catch (e) {}
+    if (lastFocus && lastFocus.focus) try { lastFocus.focus({ preventScroll: true }); } catch (e) {}
+  }
+  function mount(c) {
+    inject(); cfg = c; var b = c.button;
+    b.classList.add('crr-btn'); b.setAttribute('type', 'button'); b.setAttribute('aria-label', 'Rules and pays'); b.setAttribute('title', 'Rules and pays'); b.innerHTML = ICON_I;
+    b.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); open(); });
+    return { open: open, close: close };
+  }
+  root.CardRunRules = { mount: mount, open: open, close: close, isOpen: function () { return !!wrap; }, version: '1' };
+})(typeof self !== 'undefined' ? self : this);
+</script>
+<script>
+(() => {
+  // =====================================================================================
+  // Card Run Mines launch build: the Classic game only (the prototype's other variants are removed).
+  //
+  //   SHELL      wallet, bet, tile grid, lobby, run bar, result card
+  //   CLASSIC    the base game: gems and mines, 93% ladder (id, title, noun, options, B, S, base[], setMines,
+  //              deal, onMines, pick, revealRest, renderHud)
+  //   RUN        DOUBLE OR NOTHING: the Mines double game
+  // =====================================================================================
+
+  // ---------- global rules shared by every game ----------
+  const T = 25;
+  const RUN_X = 1000;             // the run bar can grow the amount held up to 1,000× (the double that reaches it is paid in full)
+  const THRESHOLD_X = 1000;        // default limit; the game sets its own capX (Classic 20×)
+  const UNLOCK = 10100;            // cash-out lock: Display >= 1.01, held as an integer × 10,000
+  const MIN_RUN = 0.02;             // minimum run $0.02 (run-bar v170): a held amount under $0.02 shows CASH OUT only
+  // MAX WIN: one platform ceiling, 20,000× the bet that started the round (integer cents). No UI changes it.
+  const MAX_WIN_X = 20000;               // platform ceiling (x bet)
+  const OPERATOR_MAX_WIN_X = MAX_WIN_X;  // server/operator config point: may be lowered, never raised
+  const TARGET = [93n, 100n];      // 93% for both base games
+
+  // ---------- RNG (v1, launch): the ONE source of every outcome-affecting random number ----------
+  // crypto.getRandomValues with rejection sampling: rngInt(n) is exactly uniform on 0..n-1 (no modulo bias).
+  // Fails closed: no crypto -> throws, never falls back to Math.random. Production replaces rngU32 with the platform RNG.
+  const RNG_VERSION = 'crypto-rejection-v1';
+  function rngU32(){ const c = globalThis.crypto; if(!c || typeof c.getRandomValues !== 'function') throw new Error('Certified RNG unavailable'); const a = new Uint32Array(1); c.getRandomValues(a); return a[0]; }
+  function rngInt(n){ if(!Number.isInteger(n) || n < 1 || n > 4294967296) throw new RangeError('rngInt: bad range ' + n); const lim = 4294967296 - (4294967296 % n); let x; do x = rngU32(); while(x >= lim); return x % n; }
+  const round2 = x => Math.round(x * 100 + 1e-9) / 100;                 // sums of cent amounts only
+  const halfOf = v => Math.floor(v * 50 + 1e-9) / 100;                  // half, rounded down to the cent
+  const toC = v => Math.round(v * 100);                                  // dollars (always whole cents) -> integer cents
+
+  // exact fractions on BigInt: the ladder is never built in floating point
+  const gcd = (a, b) => { if (a < 0n) a = -a; while (b) [a, b] = [b, a % b]; return a; };
+  const fr = (n, d = 1n) => { const g = gcd(n, d) || 1n; return [n / g, d / g]; };
+  const fmul = (a, b) => fr(a[0] * b[0], a[1] * b[1]);
+  const fadd = (a, b) => fr(a[0] * b[1] + b[0] * a[1], a[1] * b[1]);
+  const fsub = (a, b) => fr(a[0] * b[1] - b[0] * a[1], a[1] * b[1]);
+  // M_B(k) = Fair_B(k) × H exactly, as BigInt fractions [num, den]. Pays are floor(bet cents × M), rounded once,
+  // as in Crash; the multiplier shown is floor4(M) (2 decimals on the board, 4 in the rules). No floors, no minimum step, no cap.
+  function ladder(b, H) {
+    const out = [[1n, 1n]]; let fair = [1n, 1n];
+    for (let k = 1; k <= T - b; k++) {
+      fair = fmul(fair, fr(BigInt(T - (k - 1)), BigInt(T - b - (k - 1))));
+      out[k] = fmul(fair, H);
+    }
+    return out;
+  }
+
+  // ---------- shell state ----------
+  const st = {
+    balance: 1000, lastWin: 0, nextStake: 10, sound: true,
+    R: null,                  // the round (see SHELL)
+    phase: 'idle',            // dealing | play | handoff | run | over
+    k: 0, maxWin: false, gen: 0, tiles: [], fxTimers: [], cw: 64, cols: 5,
+  };
+  let G = null;                                    // the base game on the board
+
+  // ---------- dom + formatting ----------
+  const $ = id => document.getElementById(id);
+  const grid = $('grid');
+  const money = v => '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const num = v => v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const xfmt = di => '×' + (Math.floor(di / 100) / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });   // 2 decimals, rounded down
+  const x4 = di => (di / 1e4).toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const flashPills = () => ['balPill'].forEach(id => { const p = $(id); p.classList.remove('flash'); void p.offsetWidth; p.classList.add('flash'); });
+  const later = (fn, ms) => st.fxTimers.push(setTimeout(fn, reduce ? 0 : ms));
+
+    const LOGO = `<svg viewBox="0 0 100 140" aria-hidden="true"><g fill="none" stroke="#d9a93c" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M50 26 L84 70 L50 114 L16 70 Z" stroke-width="1" opacity=".35"/>
+    <path d="M49 46c-7 10-19 16-19 27 0 7 6 11 12 9 3-1 5-3 6-5l-3 13h10l-3-13c1 2 3 4 6 5 6 2 12-2 12-9 0-11-12-17-21-27z"/>
+    <path d="M38 92 L70 50"/><path d="M60 49 L71 49 L70 60"/></g></svg>`;
+    const BOMBSVG = `<svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="18" cy="24" r="12" fill="#14161c"/><circle cx="18" cy="24" r="12" fill="url(#bg1)"/><rect x="21" y="9" width="7" height="5" rx="1.5" transform="rotate(35 24 11)" fill="#3a3f4c"/><path d="M27 9c2-3 4-3 6-2" stroke="#b9a37a" stroke-width="1.6" fill="none"/><path d="M34 3l1.2 3 3-.6-2.2 2.2 1.6 2.6-3-.9-1.4 2.7-.4-3-3-.6 2.8-1.2z" fill="#ffb02e"/></svg>`;
+    const SHIELDSVG = `<svg viewBox="0 0 40 46" aria-hidden="true"><defs><linearGradient id="shg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7fb2ff"/><stop offset="1" stop-color="#1f5fd6"/></linearGradient></defs><path d="M20 3l15 6v11c0 11-7 18-15 22C12 38 5 31 5 20V9z" fill="url(#shg)" stroke="#d9e8ff" stroke-width="2"/><path d="M13 22l5 5 9-10" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    const GEMSVG = `<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M8 15l6-8h12l6 8-12 19z" fill="#3fd8c4"/><path d="M8 15h24L20 34z" fill="#27b3a6"/><path d="M14 7l-6 8h8zM26 7l6 8h-8z" fill="#8ff2e3"/><path d="M14 7h12l-2 8h-8z" fill="#c9fbf3"/><path d="M16 15h8l-4 19z" fill="#5ee6d3"/><path d="M8 15l6-8h12l6 8-12 19z" fill="none" stroke="#eafffb" stroke-width="1.2" stroke-linejoin="round"/></svg>`;
+
+  // ---------- the tile grid: one board, lent to whichever game is on it ----------
+  for (let i = 0; i < 25; i++) {                      // the 5×5 board
+    const b = document.createElement('button');
+    b.className = 'tile'; b.dataset.i = i; b.setAttribute('aria-label', 'Tile, face down');
+    b.innerHTML = `<div class="in"><div class="side back"><div class="cb">${LOGO}</div></div><div class="side front"></div></div>`;
+    b.addEventListener('click', () => pick(i));
+    grid.appendChild(b);
+  }
+  const tileEls = [...grid.children];
+  function resetTiles() {                            // 25 tiles as 5×5
+    st.tiles = Array.from({ length: 25 }, () => ({ rev: false }));
+    st.cols = 5; grid.style.setProperty('--cols', st.cols);
+    tileEls.forEach(t => { t.hidden = false; t.className = 'tile'; t.disabled = true; t.querySelector('.front').innerHTML = ''; t.setAttribute('aria-label', 'Tile, face down'); });
+  }
+  function showTile(i, html, label, o = {}) {
+    const t = tileEls[i];
+    st.tiles[i].rev = true;
+    t.querySelector('.front').innerHTML = html;
+    t.classList.add('rev'); if (o.ghost) t.classList.add('ghost'); if (o.bomb) t.classList.add('bombtile'); if (o.fx) t.classList.add(o.fx);
+    t.disabled = true; t.setAttribute('aria-label', label);
+  }
+  const hidden = () => st.tiles.map((t, i) => t.rev ? -1 : i).filter(i => i >= 0);
+  const lockTiles = on => tileEls.forEach((t, i) => t.disabled = on || !st.tiles[i] || st.tiles[i].rev);
+  const bombHTML = `<div class="bombface">${BOMBSVG}</div>`;
+  function boomAt(i) {
+    tileEls[i].classList.add('boom'); sfx.boom();
+    grid.classList.remove('shake'); void grid.offsetWidth; grid.classList.add('shake');
+  }
+  function toast(icons, text, ms) {
+    const el = $('shieldtoast'); $('shicons').innerHTML = icons; $('shtx').innerHTML = text;
+    el.classList.add('show'); clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove('show'), ms);
+  }
+  function resultCard(t, big, sub, cls, delay) {
+    $('resT').textContent = t; $('resBig').textContent = big; $('resSub').textContent = sub;
+    const g = st.gen, show = () => { if (st.gen === g) $('result').className = 'result show' + (cls ? ' ' + cls : ''); };
+    if (delay && !reduce) setTimeout(show, delay); else show();
+  }
+  function deal() {
+    fit();                                                   // size the tiles for the final layout first, so cards land at their game size
+    if (reduce) return Promise.resolve();
+    const wr = $('gridwrap').getBoundingClientRect();
+    const ox = wr.left + wr.width / 2, oy = wr.top - 40;
+    const order = shuffle([...Array(25).keys()]);
+    return Promise.all(tileEls.filter(t => !t.hidden).map((t, i) => {
+      const r = t.getBoundingClientRect();
+      const dx = ox - (r.left + r.width / 2), dy = oy - (r.top + r.height / 2), rot = (Math.random() * 24 - 12).toFixed(1);
+      return t.animate([
+        { transform: `translate(${dx}px,${dy}px) rotate(${rot}deg) scale(.85)`, opacity: 0 },
+        { opacity: 1, offset: .15 },
+        { transform: 'none', opacity: 1 }
+      ], { duration: 460, delay: order.indexOf(i) * 32, easing: 'cubic-bezier(.2,.8,.25,1)', fill: 'backwards' }).finished;
+    }));
+  }
+  function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = rngInt(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; }   // Fisher-Yates on the certified RNG
+
+  // ---------- layout fit ----------
+  function fit() {
+    const w = $('gridwrap'), cs = getComputedStyle(w);
+    const W = w.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    const Hh = w.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+    const gap = Math.max(5, Math.min(9, W * 0.022));
+    const n = st.cols - 1;
+    const cw = Math.floor(Math.max(36, Math.min((W - n * gap) / st.cols, ((Hh - n * gap) / st.cols) / 1.39, 92)));
+    grid.style.setProperty('--cw', cw + 'px'); grid.style.setProperty('--gap', gap + 'px');
+    st.cw = cw;
+  }
+  new ResizeObserver(fit).observe($('gridwrap'));
+  function shrinkToFit(row, host, name) {
+    host.style.setProperty(name, 1);
+    for (let k = 1; row.scrollWidth > row.clientWidth + 1 && k > 0.7; ) { k = Math.round((k - 0.03) * 100) / 100; host.style.setProperty(name, k); }
+  }
+  function fitTop() {
+    shrinkToFit(document.querySelector('.info-row'), document.querySelector('.info'), '--is');
+    shrinkToFit(document.querySelector('.topbar'), document.querySelector('.topbar'), '--ts');
+    const rh = $('runhud'), rows = [...rh.querySelectorAll('.info-row')];
+    rh.style.setProperty('--rs', 1);
+    for (let k = 1; k > 0.66 && rows.some(r => r.scrollWidth > r.clientWidth + 1); ) { k = Math.round((k - 0.03) * 100) / 100; rh.style.setProperty('--rs', k); }
+  }
+  { let lastW = 0;        // refit on width changes only: fitTop changes the panel's height, which must not call it again
+    new ResizeObserver(es => { const w = Math.round(es[0].contentRect.width); if (w !== lastW) { lastW = w; fitTop(); } }).observe(document.querySelector('.info')); }
+
+  // ---------- sound ----------
+  let ac = null;
+  function tone(f, d = .08, type = 'sine', vol = .06, when = 0) {
+    if (!st.sound) return;
+    try {
+      ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+      const o = ac.createOscillator(), g = ac.createGain(), t = ac.currentTime + when;
+      o.type = type; o.frequency.setValueAtTime(f, t);
+      g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t + d);
+      o.connect(g).connect(ac.destination); o.start(t); o.stop(t + d + .02);
+    } catch (e) {}
+  }
+  const sfx = {
+    bonus: () => [523, 659, 784, 1047].forEach((f, i) => tone(f, .22, 'triangle', .06, i * .09)),
+    boom: () => { tone(110, .4, 'sawtooth', .08); tone(70, .5, 'sine', .1, .02); },
+    cash: () => [784, 988, 1175].forEach((f, i) => tone(f, .16, 'sine', .05, i * .07)),
+    shield: () => { tone(420, .14, 'triangle', .06); tone(840, .2, 'sine', .04, .06); },
+  };
+  $('snd').addEventListener('click', () => {
+    st.sound = !st.sound; $('snd').setAttribute('aria-pressed', String(st.sound));
+    $('snd').setAttribute('aria-label', st.sound ? 'Sound on' : 'Sound off');
+    $('sndwave').style.opacity = st.sound ? 1 : .2;
+  });
+
+  // ---------- money: every credit goes through here ----------
+  function credit(amount) {
+    if (amount <= 0) return;
+    console.info('wallet_credit', { amount });
+    st.balance = round2(st.balance + amount);
+    st.lastWin = amount;
+    flashPills();
+  }
+
+  // =====================================================================================
+  // DOUBLE OR NOTHING: the Mines double game (this game's own, RUN-PHASE-SPEC v152.2 §5). One hand:
+  // 19 gems, 2 live bombs, 4 dud bombs; six gems double the stake, a live bomb loses it, a dud does nothing.
+  // Exactly 50/50 (P(6 gems before a live bomb) = 1/2), so it returns exactly 100.000%; no ties. Win pays 2 × the stake. The run bar, banking, caps and payouts
+  // belong to the shell; this module only plays the hand and reports won or lost.
+  // =====================================================================================
+  const Run = (() => {
+    const GEM = { gem: true }, DUD = { dud: true }, LIVE = { bomb: true };
+    const r = { active: false, phase: 'idle', stake: 0, gems: 0, duds: 0, board: [], onEnd: null };
+    function play(stake, onEnd) {
+      Object.assign(r, { active: true, stake, onEnd, gems: 0, duds: 0 });
+      st.fxTimers.forEach(clearTimeout); st.fxTimers = [];
+      st.gen++;
+      r.board = shuffle(Array(19).fill(GEM).concat([LIVE, LIVE], Array(4).fill(DUD)));   // fixed before the first pick
+      r.phase = 'deal';
+      $('result').className = 'result';
+      resetTiles();
+      render();
+      const g = st.gen;
+      deal().then(() => { if (st.gen !== g) return; r.phase = 'play'; lockTiles(false); render(); });
+    }
+    function show(i, ghost) {
+      const c = r.board[i];
+      showTile(i, c.bomb ? bombHTML : c.dud ? `<div class="dudface"><div class="bm">${BOMBSVG}</div><div class="lbl">DUD</div></div>` : `<div class="gemface">${GEMSVG}</div>`,
+        c.bomb ? 'Live bomb' : c.dud ? 'Dud bomb, no effect' : 'Gem', { ghost, bomb: c.bomb });
+      return c;
+    }
+    function revealRest() {
+      const g = st.gen;
+      hidden().forEach((i, n) => setTimeout(() => { if (st.gen === g && !st.tiles[i].rev) show(i, true); }, reduce ? 0 : 200 + n * 18));
+    }
+    function pick(i) {
+      if (r.phase !== 'play' || st.tiles[i].rev) return;
+      const c = show(i);                              // reveals what was placed; no new draw
+      if (c.bomb) {
+        boomAt(i); r.phase = 'lost'; r.active = false; lockTiles(true); revealRest();
+        console.info('run_result', { kind: 'double', result: 'lost', pay: 0, deal_count: 1 }); r.onEnd(false); return;
+      }
+      if (c.dud) {                                    // neutral: not a pick, not a gem, no protection
+        r.duds++; tone(200, .12, 'square', .03);
+        toast(`<span style="display:inline-block;width:30px;filter:grayscale(1);opacity:.7">${BOMBSVG}</span>`, 'DUD BOMB<small>NO EFFECT · PICK AGAIN</small>', 1000);
+        render(); return;
+      }
+      r.gems++; tileEls[i].classList.add('gemhit');
+      tone(620 + r.gems * 70, .12, 'triangle', .06); tone(1240 + r.gems * 70, .16, 'sine', .03, .04);
+      if (r.gems === 6) { r.phase = 'won'; r.active = false; lockTiles(true); revealRest(); sfx.bonus(); console.info('run_result', { kind: 'double', result: 'won', pay: round2(2 * r.stake), deal_count: 1 }); r.onEnd(true); return; }
+      render();
+    }
+    function renderHud() {
+      $('runStakeLab').textContent = 'RUNNING';
+      $('runStakeTxt').textContent = money(r.stake);
+      $('runPrizeLab').parentNode.hidden = false;
+      $('runPrizeTxt').textContent = money(round2(2 * r.stake));
+      $('pips').innerHTML = Array.from({ length: 6 }, (_, i) => `<span class="pip${i < r.gems ? ' on' : ''}">${GEMSVG}</span>`).join('');
+      // the live bombs, shown like the bomb count on every other board: bomb icon = 2
+      const html = r.phase === 'play' || r.phase === 'deal' ? `<span class="vbombs" aria-label="2 live bombs">${BOMBSVG}<span class="eq">=</span><b>2</b></span>` : `${r.gems} OF 6 GEMS`;
+      if ($('runCounts').innerHTML !== html) $('runCounts').innerHTML = html;
+    }
+    return {
+      play, pick, renderHud,
+      reset() { r.active = false; r.phase = 'idle'; },
+      get active() { return r.active; }, get phase() { return r.phase; }, get stake() { return r.stake; },
+      get left() { return 6 - r.gems; },
+    };
+  })();
+
+  // =====================================================================================
+  // BASE GAME 1: CLASSIC. 25 tiles: 21 gems + 4 bomb tiles. The player picks B = 1–4 live
+  // bombs; the other 4 − B are shielded (safe, counted as a safe pick).
+  // Display(k) = floor4(Fair_B(k) × 0.93).
+  // =====================================================================================
+  const Classic = (() => {
+    const BOMB = { bomb: true }, GEM = { gem: true }, SHIELD = { shield: true };
+    let board = [];
+    const g = {
+      id: 'classic', title: 'MINES 20×', noun: 'GEMS', options: [1, 2, 3, 4], B: 4, S: 21, M: [], base: [], top: 21, capX: 20,
+      // 20× is the build target: the board stops at the first pick whose multiplier is at or over 20× (top) and that pick pays in full
+      setMines(n) {
+        g.B = n; g.S = T - n; g.M = ladder(n, TARGET);
+        g.top = g.M.findIndex((m, k) => k > 0 && m[0] >= BigInt(g.capX) * m[1]); if (g.top < 0) g.top = g.S;
+        g.base = g.M.slice(0, g.top + 1).map(m => Number(m[0] * 10000n / m[1]));
+      },
+      // the pay at pick k in integer cents: floor(cents × M_B(k)), BigInt, rounded down once
+      payC(cents, k) { const m = g.M[k]; return Number(BigInt(cents) * m[0] / m[1]); },
+      // fixed before the first pick; which bomb tiles are shielded is part of the shuffle
+      deal() { board = shuffle(Array(g.B).fill(BOMB).concat(Array(4 - g.B).fill(SHIELD), Array(21).fill(GEM))); },
+      onMines() {
+        g.deal();                                   // re-draw which bomb tiles are shielded
+        tone(600 + g.B * 80, .08, 'triangle', .05);
+        const n = 4 - g.B;
+        toast(n ? Array.from({ length: n }, (_, i) => `<span style="display:inline-block">${SHIELDSVG.replace('<svg', `<svg style="animation-delay:${i * 90}ms"`)}</span>`).join('')
+            : `<span style="display:inline-block;width:30px">${BOMBSVG}</span>`,
+          n ? `${n} BOMB${n > 1 ? 'S' : ''} SHIELDED<small>${g.B} LIVE · PAYOUTS ADJUSTED</small>` : `ALL 4 BOMBS LIVE<small>HIGHEST PAYOUTS</small>`, 1400);
+      },
+      show(i, ghost) {
+        const c = board[i];
+        showTile(i, c.bomb ? bombHTML
+            : c.shield ? `<div class="shieldface"><div class="bm">${BOMBSVG}</div><div class="sh">${SHIELDSVG}</div><div class="lbl">SHIELDED</div></div>`
+            : `<div class="gemface classic">${GEMSVG}</div>`,
+          c.bomb ? 'Bomb' : c.shield ? 'Shielded bomb, safe' : 'Gem', { ghost, bomb: c.bomb, fx: ghost || c.bomb ? '' : c.shield ? 'shieldhit' : 'gemhit' });
+        return c;
+      },
+      pick(i) {
+        const c = g.show(i);
+        if (c.bomb) return 'bust';
+        if (c.shield) { sfx.shield(); return 'safe'; }             // safe pick: the multiplier still rises
+        tone(620 + Math.min(st.k, 12) * 40, .1, 'triangle', .055); tone(1240 + Math.min(st.k, 12) * 40, .12, 'sine', .03, .03);
+        return 'safe';
+      },
+      revealRest() {
+        const gen = st.gen;
+        hidden().forEach((i, n) => setTimeout(() => { if (st.gen === gen && !st.tiles[i].rev) g.show(i, true); }, reduce ? 0 : 200 + n * 18));
+      },
+      renderHud() {},
+    };
+    g.setMines(4);
+    return g;
+  })();
+
+  // =====================================================================================
+  // SHELL: Card Run button rules (GRP 1.2) on a Mines board.
+  //   LOBBY ─► BUILD (the Classic board) ─► AMMO ─► RUN BAR ⟲ ─► END BAR
+  // st.R is the round: the wager, the stage, the ammo and the run bar's held and banked money.
+  //   stage  build  the base game
+  //          bar    the run bar on R.held (CASH OUT · DOUBLE OR NOTHING | $keep | DOUBLE HALF)
+  //          double DOUBLE OR NOTHING: the Mines double game (6 gems before a live bomb, exactly 50/50)
+  //          over   the end bar: one gold PLAY AGAIN $N.NN (the round's bet), or CHANGE BET when the balance can't cover it
+  // =====================================================================================
+  const capX = () => G.capX || THRESHOLD_X;                  // the game's build headline (× the bet)
+  // MAX WIN in dollars: min(MAX_WIN_X, OPERATOR_MAX_WIN_X) × the bet that started the round, computed in integer cents
+  const maxWinFor = bet => Math.round(bet * 100) * Math.min(MAX_WIN_X, OPERATOR_MAX_WIN_X) / 100;
+  const MW = () => maxWinFor(st.R ? st.R.bet : st.nextStake);   // st.R.bet = the wager; every cap, clip, LOCK IN and run-bar maxWin reads this
+  // what the board pays now, in full (integer cents from the exact multiplier); MAX WIN clips it at the run bar
+  const cashValue = () => st.k ? G.payC(toC(st.R.bet), st.k) / 100 : 0;
+  // the most this build can pay at a bet: the top pick in full, clipped to that bet's MAX WIN
+  const topPay = bet => Math.min(Classic.payC(toC(bet), Classic.top, false) / 100, maxWinFor(bet));
+  const unlocked = () => st.k >= 1 && G.base[st.k] >= UNLOCK;
+  const roundOpen = () => !!st.R && st.R.stage !== 'over';
+  const canChoose = () => !!st.R && st.R.stage === 'build' && (st.phase === 'play' || st.phase === 'dealing') && st.k === 0;
+  const headlineX = g => (LOBBY[g.id] || {}).top || g.capX;  // the most a build can reach, × the bet
+  const buildUpTo = (g, bet) => Math.min(toC(bet) * headlineX(g) / 100, maxWinFor(bet));   // the lobby BUILD 20× · $N (20× the bet, the target), integer cents, clipped to that bet's MAX WIN
+
+  function newRound(betArg) {
+    Run.reset(); st.gen++; clearDim(); clearMarks();
+    const bet = betArg || st.nextStake;
+    st.nextStake = bet;
+    st.balance = round2(st.balance - bet);
+    st.R = { bet, stage: 'build', ammo: 0, limit: Infinity, held: 0, bank: 0, doubles: 0, fromBank: false };
+    st.k = 0; st.built = false; st.phase = 'dealing';
+    $('result').className = 'result'; $('shieldtoast').classList.remove('show');
+    st.fxTimers.forEach(clearTimeout); st.fxTimers = [];
+    resetTiles();
+    G.deal();
+    render();
+    const g = st.gen;
+    deal().then(() => { if (st.gen !== g) return; st.phase = 'play'; lockTiles(false); render(); });
+  }
+
+  function pick(i) {
+    if (Run.active) { Run.pick(i); return; }
+    if (st.phase !== 'play' || st.built || !st.tiles[i] || st.tiles[i].rev) return;
+    if (st.R.stage !== 'build') return;
+    if (G.pick(i) === 'bust') { boomAt(i); boardBust(); return; }
+    st.k++;
+    afterSafePick(st.k === G.S);
+  }
+  // after every safe pick: the board stops itself at its top pick (the first at or over 20×, paid in full), a cleared board or MAX WIN
+  function afterSafePick(cleared) {
+    const v = cashValue(), tot = round2(st.R.bank + v);
+    const capped = st.k >= G.top || toC(v) >= capX() * toC(st.R.bet);   // at or over 20× the board's stake: paid in full, the board stops
+    if (cleared || capped || tot >= MW()) { boardDone(cleared ? 'clear' : capped ? 'cap' : 'limit'); return; }
+    render();
+  }
+
+  // STOP (the Mines decision button): the board's cash value becomes the ammo
+  function stopBoard() {
+    if (st.R.stage !== 'build' || st.phase !== 'play' || st.built || !unlocked()) return;
+    boardDone('stop');
+  }
+  // what the board pays if stopped now, clipped to MAX WIN (less anything already banked this round)
+  const lockInValue = () => Math.min(cashValue(), Math.max(0, round2(MW() - (st.R ? st.R.bank : 0))));
+  function boardDone(why) {
+    const v = cashValue();
+    if (why === 'stop' || why === 'abandon') console.info('lock_in', { variant: G.id, amount: Math.min(v, lockInValue()), build_step: st.k, pay_x: round2(v / st.R.bet), phase: 'build', half: false });
+    st.built = true; lockTiles(true); G.revealRest();
+    st.R.ammo = v; st.R.limit = round2(RUN_X * v);              // the ammo: the Run cap is 1,000 × ammo
+    st.R.held = v; st.R.fromBank = false;
+    if (why === 'cap' || why === 'clear') {
+      resultCard(why === 'cap' ? 'MAX BUILD' : 'BOARD CLEARED', money(v), 'YOUR AMMO', v > st.R.bet ? 'go' : 'flat', 380);
+      if (v > st.R.bet) sfx.bonus();
+    }
+    toBar();
+  }
+
+  // ---------- the run bar (RUN-PHASE-SPEC v152, drawn by run-bar.js) ----------
+  const DIM = 0.65;                                          // run deck v164: one whole-screen dim at 65% (Blackjack v164), fades in with the run bar
+  const barState = () => ({ held: st.R.held, banked: st.R.bank, ammo: st.R.ammo, maxWin: MW(), variant: G.title });
+  function clearMarks() { document.querySelectorAll('#gridwrap .crk-toast, #gridwrap .crk-bust').forEach(e => e.remove()); }
+  function toBar() {
+    const R = st.R;
+    // order of checks after every result: clip S to MW − B, then MAX WIN, then the 1,000× run cap, else the bar
+    if (round2(R.bank + R.held) > MW()) R.held = Math.max(0, round2(MW() - R.bank));
+    const tot = round2(R.bank + R.held);
+    R.stage = 'bar'; st.phase = 'bar';
+    if (tot >= MW()) { endRound('maxwin'); return; }
+    if (tot >= R.limit) { endRound('runcap'); return; }
+    const c = RunBar.compute(barState()), shown = Object.keys(c.show || {}).filter(k => c.show[k] && k !== 'halfPill' && k !== 'cashOutOnly');
+    console.info('run_offer', { variant: G.id, held: R.held, banked: R.bank, ammo: R.ammo, options_shown: ['cash_out'].concat(shown), n_max: c.nMax });
+    render();
+    setDim(true);
+  }
+  // the same numbers run-bar.js draws
+  function barOffer() { const c = RunBar.compute(barState()); return { S: c.held / 100, B: c.banked / 100, half: (c.half || 0) / 100, bankHalf: (c.keep || 0) / 100, dbl: !!(c.show && c.show.double), dblHalf: !!(c.show && c.show.doubleHalf), n: c.nMax }; }
+  const choice = (kind, stake) => console.info('run_choice', { variant: G.id, choice: kind, stake, banked_amount: st.R.bank });
+  function barCash() {
+    if (st.R.stage !== 'bar') return;
+    choice('cash_out', round2(st.R.held + st.R.bank));
+    endRound('cash');
+  }
+  function barDouble(full) {
+    const o = barOffer(); if (st.R.stage !== 'bar' || !(full ? o.dbl : o.dblHalf)) return;
+    const stake = full ? o.S : o.half;
+    if (!full) st.R.bank = round2(st.R.bank + o.bankHalf);
+    choice(full ? 'double_it' : 'double_half', stake);
+    const R = st.R; R.stage = 'double'; R.held = 0; R.doubles++; R.lastBoard = 'run';
+    setDim(false); clearMarks(); st.phase = 'run';
+    resultCard('DOUBLE OR NOTHING', money(stake), '50/50', 'run');
+    [523, 659, 880].forEach((f, i) => tone(f, .14, 'triangle', .05, i * .06));
+    render();
+    later(() => Run.play(stake, won => {                         // the Mines double game: six gems before a live bomb, exactly 50/50
+      if (!won) { bust(); return; }
+      R.held = round2(2 * stake);                                // a win pays exactly 2 × the stake
+      resultCard('DOUBLED', money(R.held), '', R.held > R.bet ? '' : 'flat', 300);
+      toBar();
+    }), 900);
+  }
+  // a board found a live bomb
+  function boardBust() {
+    st.built = true; lockTiles(true); G.revealRest();
+    bust();
+  }
+  function bust() {
+    const R = st.R;
+    if (R.bank > 0) {                                          // banked-bust return: the RUN BANK becomes the held amount
+      const b = R.bank;
+      R.stage = 'bust'; st.phase = 'bust';
+      clearMarks(); $('result').className = 'result';
+      RunBar.bustStamp($('gridwrap'), { runBank: b });          // BUSTED + chip RUN BANK $B
+      $('grid').classList.remove('shake'); void $('grid').offsetWidth; $('grid').classList.add('shake');
+      render();
+      st.fxTimers.push(setTimeout(() => {                     // about 1.3 s later the pays pill reads RUN BANK $B and the bar returns on it
+        clearMarks();
+        R.held = b; R.bank = 0; R.fromBank = true; R.continues = (R.continues || 0) + 1;
+        console.info('banked_continue', { variant: G.id, banked_amount: b, continue_count: R.continues });
+        toBar();
+      }, 1300));
+      return;
+    }
+    endRound('bust');
+  }
+
+  // ---------- end states: one credit per round ----------
+  function endRound(kind) {
+    const R = st.R;
+    let paid = 0, bank = R.bank;
+    if (kind === 'cash' || kind === 'runcap') paid = R.held;
+    if (kind === 'maxwin') paid = Math.max(0, round2(MW() - bank));
+    // RUN BANK is the round's escrow: the wallet never moves while the round is open; RUN BANK + held is paid in ONE credit
+    const total = round2(paid + bank);
+    if (total > 0) { credit(total); st.lastWin = total; }
+    console.info('round_settle', { variant: G.id, amount: total, run_bank: bank, held: paid, end: kind });
+    if (kind === 'maxwin' || kind === 'runcap') console.info('cap_reached', { variant: G.id, total: round2(paid + bank), source: kind === 'maxwin' ? 'max_win' : 'run_cap' });
+    R.stage = 'over'; R.held = 0; R.bank = 0; st.phase = 'over'; Run.reset();
+    setDim(false); lockTiles(true); clearMarks();
+    $('result').className = 'result';
+    if (kind === 'maxwin' || kind === 'runcap') {
+      RunBar.toast($('gridwrap'), { variant: G.title, title: kind === 'maxwin' ? 'MAX WIN' : '1,000× RUN', paid: round2(paid + bank), runBank: bank });
+      sfx.bonus();
+    } else if (kind === 'bust') {
+      RunBar.bustStamp($('gridwrap'), { runBank: 0 });
+      $('grid').classList.remove('shake'); void $('grid').offsetWidth; $('grid').classList.add('shake');
+    } else if (kind === 'cash') {                               // cash-out confirmation: what was paid, in the one credit
+      // v165 CASH OUT toast; run-bar.js (v168+) draws the plain style itself (plain: at or below the stake, shown, not celebrated)
+      RunBar.toast($('gridwrap'), { variant: G.title, title: 'CASHED OUT', paid: total, runBank: bank, plain: total <= R.bet });
+      if (total > R.bet) sfx.cash();
+    }
+    render();
+  }
+
+  // ---------- v163-164 screen dim: ONE scrim over the whole phone at 65%, fading in with the run bar (0.35 s, no 1.2 s beat); only the run bar sits above it ----------
+  function setDim(on) { const ph = $('phone'); ph.style.setProperty('--dimA', DIM); ph.classList.toggle('dimscreen', !!on); }
+  const clearDim = () => setDim(false);
+
+  // ---------- the ribbon: one control set at a time, drawn by run-bar.js ----------
+  let ribbonKey = '', lockHandle = null;
+  function playAgain() {
+    if (!st.R || st.R.stage !== 'over') return;
+    if (st.balance < st.R.bet) { showLobby(true); render(); return; }    // CHANGE BET: the balance can't cover the bet
+    newRound(st.R.bet);                                                // PLAY AGAIN: same bet
+  }
+
+
+  // ---------- bomb / mine selector (options come from the game) ----------
+  function buildSelector() {
+    $('bopts').innerHTML = '';
+    $('bopts').setAttribute('aria-label', 'Number of live bombs');
+    G.options.forEach(n => {
+      const b = document.createElement('button');
+      b.className = 'bopt'; b.textContent = n; b.id = 'bopt' + n;
+      b.setAttribute('role', 'radio'); b.setAttribute('aria-label', n + (n === 1 ? ' bomb' : ' bombs'));
+      b.addEventListener('click', () => {
+        if (!canChoose() || n === G.B) return;
+        G.setMines(n);
+        b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
+        G.onMines();
+        render();
+      });
+      $('bopts').appendChild(b);
+    });
+  }
+
+  // ---------- lobby: BUILD IT. RUN IT. ----------
+  // build = the game's limit; the run bar can then grow it up to 1,000× on top (RUN_X)
+  const LOBBY = {
+    classic: { top: 20, name: 'MINES 20×', build: '20×', win: '20,000×', desc: '21 gems and your choice of 1–4 live bombs. Every safe pick pays more, and the board stops by itself at the pick that reaches 20×.' },
+  };
+  function renderLobby() {
+    const L = LOBBY[G.id];
+    $('lIcon').innerHTML = LOGO;
+    $('lName').textContent = L.name; $('lDesc').textContent = L.desc;
+    $('lBuild').textContent = L.build;
+    $('lWin').textContent = L.win;                             // WIN UP TO = BUILD × 1,000, never cut to MAX WIN (CR: WIN UP TO figures)
+    renderLobbyBet();
+  }
+  // bet entry, as in the Blackjack lobby: any amount (with MAX)
+  const MIN_BET = 1, MAX_BET = 100;   // bets: $1.00 to $100.00 in $0.10 steps
+  // a typed bet: a plain decimal only (no sign, no exponent) -> dollars on the $0.10 grid (snapped DOWN), clamped to [$1, $100]; NaN = not a bet
+  function parseBet(text) {
+    const m = /^\s*(\d*)(?:\.(\d*))?\s*$/.exec(String(text));
+    if (!m || (m[1] === '' && !m[2])) return NaN;
+    const ip = m[1].replace(/^0+(?=\d)/, ''), d1 = (m[2] || '0').charAt(0);
+    if (ip.length > 4) return MAX_BET;                                // far above the maximum
+    const dimes = Number(ip || '0') * 10 + Number(d1);                // whole $0.10 steps, exact (no float maths)
+    return Math.min(MAX_BET * 10, Math.max(MIN_BET * 10, dimes)) / 10;
+  }
+  const betTxt = v => '$' + (Number.isInteger(v) ? v : v.toFixed(2));
+  let amtErr = '';
+  function setStake(v) { st.nextStake = v; amtErr = ''; renderLobbyBet(); render(); }
+  function renderLobbyBet() {
+    if (document.activeElement !== $('lAmtIn')) $('lAmtIn').value = Number.isInteger(st.nextStake) ? st.nextStake : st.nextStake.toFixed(2);
+    $('lErr').textContent = amtErr;
+    const resume = roundOpen();
+    $('lPlay').hidden = !!amtErr && !resume;                         // a bet that isn't allowed has no button (never greyed)
+    $('lPlay').textContent = resume ? 'RESUME ROUND' : 'BUILD ' + LOBBY[G.id].build + ' · ' + money(buildUpTo(G, st.nextStake));   // BUILD 20× · $N, N = 20 × the bet
+    $('lBet').hidden = resume;
+    if (!resume) $('lWin').textContent = LOBBY[G.id].win;
+  }
+  $('lAmtIn').addEventListener('input', () => {                     // validated, never stripped: the field keeps what was typed
+    const raw = $('lAmtIn').value, v = parseBet(raw);
+    amtErr = !raw.trim() ? 'Enter a bet' : Number.isNaN(v) ? `Enter a bet from ${money(MIN_BET)} to ${money(MAX_BET)}` : '';
+    if (!amtErr) { st.nextStake = v; }                               // shown snapped/clamped when the field loses focus
+    renderLobbyBet();
+  });
+  $('lAmtIn').addEventListener('blur', () => { if (!amtErr) renderLobbyBet(); });
+  $('lAmtIn').addEventListener('keydown', e => { if (e.key === 'Enter') $('lPlay').click(); });
+  $('lMax').addEventListener('click', () => {                       // MAX = min(balance floored to $0.10, $100)
+    setStake(Math.max(MIN_BET, Math.min(MAX_BET, Math.floor(Math.round(st.balance * 100) / 10) / 10)));
+    if (st.balance < st.nextStake) { amtErr = 'Not enough balance'; renderLobbyBet(); }   // under $1.00: the existing too-low state
+  });
+  function showLobby(on) {
+    st.lobby = on;
+    $('phone').classList.toggle('inlobby', on);
+    if (on) $('phone').classList.remove('enddim', 'dimscreen');   // the lobby is never dimmed
+    if (on) renderLobby();
+  }
+  $('lPlay').addEventListener('click', (() => {
+    if (!st.lobby) return;
+    if (roundOpen()) { showLobby(false); render(); return; }        // RESUME ROUND: back to the open decision
+    if (amtErr) return;
+    if (st.balance < st.nextStake) { amtErr = 'Not enough balance'; renderLobbyBet(); return; }   // a short balance cannot buy in
+    tone(660, .08, 'triangle', .05);
+    showLobby(false); buildSelector(); newRound();
+  }));
+  // the door: always goes to the lobby. A pending run bar is cashed out first; a board in play waits (RESUME ROUND).
+  $('toLobby').addEventListener('click', () => {
+    if (st.lobby) return;
+    const R = st.R;
+    // abandoned at a LOCK IN decision: lock in and cash out the amount shown (never doubled)
+    if (R && R.stage === 'build' && st.phase === 'play' && !st.built && unlocked() && cashValue() > 0) { boardDone('abandon'); }
+    if (st.R && st.R.stage === 'bar') endRound('cash');
+    showLobby(true); render();
+  });
+
+  // big amounts shrink to fit on one line; they never wrap or clip
+  function fitAmounts() {
+    document.querySelectorAll('.cashwrap .amt, .cashwrap .k').forEach(el => {
+      if (el.closest('[hidden]')) return;
+      el.style.fontSize = '';
+      let fs = parseFloat(getComputedStyle(el).fontSize);
+      while (el.scrollWidth > el.clientWidth + 1 && fs > 10) { fs -= 1; el.style.fontSize = fs + 'px'; }
+    });
+  }
+  // ---------- render ----------
+  function render() {
+    fit();
+    $('bal').textContent = num(st.balance);
+    const kNow = st.k;
+    $('left').textContent = G.S - kNow; $('noun').textContent = G.noun;
+    const choosing = canChoose();
+    $('bsel').classList.toggle('locked', !choosing);
+    G.options.forEach(n => {
+      const b = $('bopt' + n);
+      b.setAttribute('aria-checked', String(n === G.B));
+      b.classList.toggle('away', !choosing && n !== G.B);
+      b.disabled = !choosing;
+      b.tabIndex = !choosing && n !== G.B ? -1 : 0;
+    });
+    // header: MAX BUILD (the most this build can pay: the top pick in full)
+    if (st.R) {
+      const bet = st.R.stage === 'over' ? st.nextStake : st.R.bet;
+      $('maxwin').textContent = money(topPay(bet));   // the top pick, paid in full, at these live bombs
+    }
+    const m = $('mults'); m.innerHTML = '';
+    for (let j = 1; !st.built && j <= 4; j++) {   // nothing next once the board has stopped
+      const k = kNow + j; if (k > G.S) break;
+      const d = document.createElement('div'); d.className = 'm' + (j === 1 ? ' on' : '') + (G.base[k] < UNLOCK ? ' lock' : '');
+      d.textContent = xfmt(G.base[k]);
+      if (G.base[k] < UNLOCK) d.title = 'Below 1.01×: no LOCK IN yet';
+      m.appendChild(d);
+    }
+
+    G.renderHud();
+
+    // ---------- the ribbon: one control set at a time (RUN-PHASE-SPEC v152; run-bar.js draws every button) ----------
+    const R = st.R, stage = R ? R.stage : 'idle';
+    const inRun = !!R && R.lastBoard === 'run';
+    $('phone').classList.toggle('runmode', inRun);
+    if (inRun) Run.renderHud();
+    const board = stage === 'build' && st.phase === 'play' && !st.built;
+    const lock = board && unlocked() && cashValue() > 0;           // LOCK IN: the Mines decision (stop the board now)
+    const left = stage === 'double' ? (Run.phase === 'deal' || Run.phase === 'play' ? Run.left : null) : null;
+    const toGo = left !== null;
+    const unit = stage === 'double' ? (left === 1 ? ' GEM' : ' GEMS') : '';   // the double game counts gems: N GEMS TO GO
+    const note = lock ? '' : toGo ? `<span class="togo"><b>${left}</b>${unit} TO GO</span>`
+      : (board || (stage === 'build' && st.phase === 'dealing')) ? '<span class="rn-line">SELECT YOUR BOMBS<i class="rn-dot" aria-hidden="true"></i>PICK A TILE</span>' : '';
+    $('runnote').innerHTML = note; $('runnote').hidden = !note; $('runnote').classList.toggle('big', toGo);
+    $('runnote').setAttribute('aria-label', toGo ? `${left}${unit.toLowerCase()} to go` : '');
+    const rb = $('crk');
+    let key = 'none';
+    if (stage === 'bar') key = 'bar|' + [R.held, R.bank, R.ammo, MW(), G.title].join('|');
+    else if (stage === 'over') key = 'end|' + R.bet + '|' + (st.balance >= R.bet ? 'can' : st.balance);
+    else if (lock) key = 'lock';
+    if (key !== ribbonKey) {
+      ribbonKey = key;
+      if (key === 'none') rb.innerHTML = '';
+      else if (key.startsWith('bar|')) RunBar.render(rb, barState(), { cashOut: barCash, double: () => barDouble(true), doubleHalf: () => barDouble(false), paidOut: () => {} });
+      else if (key.startsWith('end|')) RunBar.renderEnd(rb, { bet: R.bet, balance: st.balance }, { playAgain, changeBet: playAgain });
+      else if (key === 'lock') lockHandle = RunBar.renderLockIn(rb, { amount: lockInValue(), maxWin: MW(), banked: R.bank }, { lockIn: stopBoard, paidOut: () => setTimeout(stopBoard, 0) });
+    }
+    if (key === 'lock' && lockHandle) lockHandle.set(lockInValue());
+    $('phone').classList.toggle('enddim', key.startsWith('end|'));   // end of round: 70% screen dim under PLAY AGAIN   // LOCK IN follows the board in place (no remount, no new input lock)
+
+    fitTop(); setTimeout(fitTop, 400);
+  }
+
+  // ---------- rules and pays: the shared rules sheet (rules-sheet.js), wording from RULES-CONTENT.txt (MINES 20× + common blocks) ----------
+  // Built each time it opens: the PAYS table is the game's own ladder (Classic.M / Classic.base up to Classic.top, the pick that reaches
+  // 20×, paid in full) paid with Classic.payC(), at the current bet and bomb count, exactly as LOCK IN would pay on the build board.
+  // Nothing in Mines deals on a timer, so the game does not pause while the sheet is open.
+  function rulesHTML() {
+    const bet = st.R && st.R.stage !== 'over' ? st.R.bet : st.nextStake;
+    const B = Classic.B, top = Classic.top, mw = maxWinFor(bet);
+    const x2 = di => (Math.floor(di / 100) / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '×';
+    const oneIn = n => n < 10 ? n.toFixed(2) : n < 100 ? n.toFixed(1) : Math.round(n).toLocaleString('en-US');
+    let rows = '', fair = 1, firstLock = 0;
+    for (let k = 1; k <= top; k++) {                                       // the board ends at the top pick
+      fair = fair * (T - (k - 1)) / (T - B - (k - 1));                    // 1 / P(the first k picks are all safe)
+      const di = Classic.base[k], pay = Math.min(mw, Classic.payC(toC(bet), k) / 100);
+      if (!firstLock && di >= UNLOCK) firstLock = k;
+      rows += `<tr><td>${k}</td><td>${x4(di)}×</td><td>${money(pay)}</td><td>1 in ${oneIn(fair)}</td></tr>`;
+    }
+    return `<h3>How to play</h3>
+<p>The board has 25 tiles: 21 gems and 4 bombs. Choose how many of the bombs are live, 1 to 4; the others are shielded and count as safe picks. Every safe pick raises your pay; a live bomb ends the build and it pays nothing. <b>LOCK IN</b> takes the current pay once it reaches 1.01×. Pick ${top} is the top of the build with ${B} live bomb${B > 1 ? 's' : ''}: it is the first pick to reach 20×, it pays its full ${x2(Classic.base[top])} and the board stops there.</p>
+<h3>Pays</h3>
+<p>With ${B} live bomb${B > 1 ? 's' : ''} at your bet of ${money(bet)}:</p>
+<table class="crr-t"><thead><tr><th>Pick</th><th>× bet</th><th>Pays</th><th>Chance</th></tr></thead><tbody>${rows}</tbody></table>
+<p class="crr-note">Chance is the chance of reaching that pick from the start of the board.${firstLock > 1 ? ` LOCK IN opens at pick ${firstLock}.` : ''} Choose the live bombs on the board before your first pick; this table follows your choice.</p>
+<h3>The run bar</h3>
+<div class="crr-key">20× is the build target: the pick that reaches it pays its full multiplier, which can be over 20× (with ${B} live bomb${B > 1 ? 's' : ''}, pick ${top} pays ${x2(Classic.base[top])}). A 1,000× run works the same way: you can keep running until your total reaches 1,000× your first win, and the run that crosses 1,000× pays in full. No round pays more than the max win of 20,000× your bet.</div>
+<p>After any win, including a return of your bet or less, the run bar opens:</p>
+<p><b>CASH OUT</b> takes everything you hold.</p>
+<p><b>DOUBLE OR NOTHING</b> is a 25-tile board with 19 gems, 2 live bombs and 4 duds (a dud just lets you pick again). Find 6 gems before a live bomb to double the amount: exactly 50/50.</p>
+<p><b>DOUBLE HALF</b> doubles half of what you hold and puts the other half (plus any odd cent) in your <b>RUN BANK</b>.</p>
+<p>The RUN BANK is paid with everything else when the round ends; if a run loses, the RUN BANK comes back to cash out or run again.</p>
+<p>The minimum run is ${money(MIN_RUN)}. A run that pays nothing ends the round.</p>
+<h3>Return to player</h3>
+<table class="crr-t"><thead><tr><th>Play</th><th>Return</th></tr></thead><tbody>
+<tr><td>Build, any stop and any live bombs</td><td>93.0%</td></tr>
+<tr><td>Lowest at small bets (rounding to the cent)</td><td>92.3%</td></tr>
+<tr><td>DOUBLE OR NOTHING</td><td>100.0%</td></tr>
+</tbody></table>
+<p class="crr-note">When you lock in, and how many bombs are live, doesn't change the return.</p>
+<h3>Limits</h3>
+<p>Bets: ${money(MIN_BET)} to ${money(MAX_BET)} in $0.10 steps.</p>
+<p>Max win: 20,000× your bet per round. Your operator may set a lower max win; every payout stops at the max win.</p>
+<p>Pays are rounded down to the cent.</p>
+<p class="crr-note">Results are decided by the game's random number generator. A malfunction voids all pays and plays.</p>
+<p class="crr-note">Return-to-player figures are long-run averages for the play described; any single round can return more or less.</p>`;
+  }
+  CardRunRules.mount({ button: $('rulesBtn'), title: 'MINES 20×', content: rulesHTML });
+
+  // ---------- start: the Classic game, in the lobby ----------
+  G = Classic;
+  showLobby(true);                                           // the game opens in the lobby
+  requestAnimationFrame(() => { fit(); buildSelector(); renderLobby(); render(); });
+})();
+
+</script>
+</body>
+</html>

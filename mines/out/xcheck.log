@@ -1,0 +1,8 @@
+ok    exact.json was made on this build 2f73b626f7889810d499dbb863632ff42645ff6c6300f3b8f3b47a0b24974426
+ok    no ride API left: Classic.setRide / rideK / DI undefined, payC(cents, k), RunBar.version 170
+ok    top pick (first at or over 20×) = the build's Classic.top for 1-4 bombs: 1 live pick 24, 2 live pick 20, 3 live pick 16, 4 live pick 13 []
+ok    base displays (bombs 1-4, every pick to the top pick) = the build's Classic.setMines []
+ok    pays at $1 / $10 / $100 = the build's Classic.payC on every row []
+ok    with the build's Classic.payC the board stops at the top pick and not before on all 991 grid bets and on every cent stake $0.02-$1,000.00 (399,996 bet / bomb pairs) []
+ok    RunBar.compute = the solver's run-bar rules on 3078 states (2420 bars, 229 MAX WIN, 429 run cap) []
+XCHECK PASSED

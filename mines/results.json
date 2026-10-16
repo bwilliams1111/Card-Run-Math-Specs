@@ -1,0 +1,877 @@
+{
+ "build": "../builds-final/card-run-mines-classic-launch.html",
+ "build_sha256": "2f73b626f7889810d499dbb863632ff42645ff6c6300f3b8f3b47a0b24974426",
+ "game": "MINES 20×",
+ "min_run": "$0.02 (run-bar v170: DOUBLE OR NOTHING needs a held amount >= $0.02, DOUBLE HALF a half >= $0.02)",
+ "run_bar": "CASH OUT / DOUBLE OR NOTHING / DOUBLE HALF (RUN IT AGAIN and RUN HALF removed in v170)",
+ "base_rtp_exact": {
+  "best (13 stops tie at the $10 maximum; shown: 3 live, LOCK IN at pick 15)": {
+   "$1": {
+    "rtp_pct": 92.9739,
+    "sd": 3.9628,
+    "hit_pct": 5.2174,
+    "top_x": 17.82,
+    "top_one_in": 19.167
+   },
+   "$10": {
+    "rtp_pct": 93.0,
+    "sd": 3.9639,
+    "hit_pct": 5.2174,
+    "top_x": 17.825,
+    "top_one_in": 19.167
+   },
+   "$100": {
+    "rtp_pct": 93.0,
+    "sd": 3.9639,
+    "hit_pct": 5.2174,
+    "top_x": 17.825,
+    "top_one_in": 19.167
+   }
+  },
+  "typical (4 live bombs, LOCK IN after 3 picks)": {
+   "$1": {
+    "rtp_pct": 92.5217,
+    "sd": 0.7901,
+    "hit_pct": 57.8261,
+    "top_x": 1.6,
+    "top_one_in": 1.729
+   },
+   "$10": {
+    "rtp_pct": 92.9843,
+    "sd": 0.7941,
+    "hit_pct": 57.8261,
+    "top_x": 1.608,
+    "top_one_in": 1.729
+   },
+   "$100": {
+    "rtp_pct": 92.9959,
+    "sd": 0.7942,
+    "hit_pct": 57.8261,
+    "top_x": 1.6082,
+    "top_one_in": 1.729
+   }
+  },
+  "play to the top pick, 1 live bomb (pick 24 pays 23.2500×)": {
+   "$1": {
+    "rtp_pct": 93.0,
+    "sd": 4.5561,
+    "hit_pct": 4.0,
+    "top_x": 23.25,
+    "top_one_in": 25.0
+   },
+   "$10": {
+    "rtp_pct": 93.0,
+    "sd": 4.5561,
+    "hit_pct": 4.0,
+    "top_x": 23.25,
+    "top_one_in": 25.0
+   },
+   "$100": {
+    "rtp_pct": 93.0,
+    "sd": 4.5561,
+    "hit_pct": 4.0,
+    "top_x": 23.25,
+    "top_one_in": 25.0
+   }
+  },
+  "play to the top pick, 2 live bombs (pick 20 pays 27.9000×)": {
+   "$1": {
+    "rtp_pct": 93.0,
+    "sd": 5.0082,
+    "hit_pct": 3.3333,
+    "top_x": 27.9,
+    "top_one_in": 30.0
+   },
+   "$10": {
+    "rtp_pct": 93.0,
+    "sd": 5.0082,
+    "hit_pct": 3.3333,
+    "top_x": 27.9,
+    "top_one_in": 30.0
+   },
+   "$100": {
+    "rtp_pct": 93.0,
+    "sd": 5.0082,
+    "hit_pct": 3.3333,
+    "top_x": 27.9,
+    "top_one_in": 30.0
+   }
+  },
+  "play to the top pick, 3 live bombs (pick 16 pays 25.4643×)": {
+   "$1": {
+    "rtp_pct": 92.9843,
+    "sd": 4.7759,
+    "hit_pct": 3.6522,
+    "top_x": 25.46,
+    "top_one_in": 27.381
+   },
+   "$10": {
+    "rtp_pct": 92.999,
+    "sd": 4.7766,
+    "hit_pct": 3.6522,
+    "top_x": 25.464,
+    "top_one_in": 27.381
+   },
+   "$100": {
+    "rtp_pct": 92.9997,
+    "sd": 4.7767,
+    "hit_pct": 3.6522,
+    "top_x": 25.4642,
+    "top_one_in": 27.381
+   }
+  },
+  "play to the top pick, 4 live bombs (pick 13 pays 23.7667×)": {
+   "$1": {
+    "rtp_pct": 92.9739,
+    "sd": 4.6072,
+    "hit_pct": 3.913,
+    "top_x": 23.76,
+    "top_one_in": 25.556
+   },
+   "$10": {
+    "rtp_pct": 92.9974,
+    "sd": 4.6084,
+    "hit_pct": 3.913,
+    "top_x": 23.766,
+    "top_one_in": 25.556
+   },
+   "$100": {
+    "rtp_pct": 92.9997,
+    "sd": 4.6085,
+    "hit_pct": 3.913,
+    "top_x": 23.7666,
+    "top_one_in": 25.556
+   }
+  },
+  "random player (bombs 1-4, stop uniform up to the top pick)": {
+   "$1": {
+    "rtp_pct": 92.7975,
+    "sd": 2.1016,
+    "hit_pct": 38.0063,
+    "top_x": 27.9,
+    "top_one_in": 2400.0
+   },
+   "$10": {
+    "rtp_pct": 92.9812,
+    "sd": 2.1027,
+    "hit_pct": 38.0063,
+    "top_x": 27.9,
+    "top_one_in": 2400.0
+   },
+   "$100": {
+    "rtp_pct": 92.9982,
+    "sd": 2.1028,
+    "hit_pct": 38.0063,
+    "top_x": 27.9,
+    "top_one_in": 2400.0
+   }
+  },
+  "any stop": "93.0000% exactly before rounding (pay = floor(bet cents × Fair × 0.93)); lowest after rounding to the cent: $1: 92.4% (1 live, pick 3), $10: 92.92% (1 live, pick 2), $100: 92.9929% (2 live, pick 3); lowest on the whole $0.10 grid: 92.3636% ($1.10, 1 live, pick 5)"
+ },
+ "top_pick": {
+  "1 live": {
+   "pick": 24,
+   "x": 23.25,
+   "one_in": 25.0,
+   "rtp_exact_pct": 93.0,
+   "rtp_1_pct": 93.0,
+   "rtp_10_pct": 93.0,
+   "rtp_100_pct": 93.0,
+   "unlock_pick": 2
+  },
+  "2 live": {
+   "pick": 20,
+   "x": 27.9,
+   "one_in": 30.0,
+   "rtp_exact_pct": 93.0,
+   "rtp_1_pct": 93.0,
+   "rtp_10_pct": 93.0,
+   "rtp_100_pct": 93.0,
+   "unlock_pick": 1
+  },
+  "3 live": {
+   "pick": 16,
+   "x": 25.464286,
+   "one_in": 27.381,
+   "rtp_exact_pct": 93.0,
+   "rtp_1_pct": 92.9843,
+   "rtp_10_pct": 92.999,
+   "rtp_100_pct": 92.9997,
+   "unlock_pick": 1
+  },
+  "4 live": {
+   "pick": 13,
+   "x": 23.766667,
+   "one_in": 25.556,
+   "rtp_exact_pct": 93.0,
+   "rtp_1_pct": 92.9739,
+   "rtp_10_pct": 92.9974,
+   "rtp_100_pct": 92.9997,
+   "unlock_pick": 1
+  }
+ },
+ "rounding_effect": {
+  "typical (4 live, LOCK IN after 3) at $1": 92.5217,
+  "typical (4 live, LOCK IN after 3) at $10": 92.9843,
+  "typical (4 live, LOCK IN after 3) at $100": 92.9959,
+  "lowest stop at $1": 92.4,
+  "lowest stop at $10": 92.92,
+  "lowest stop at $100": 92.9929,
+  "lowest stop on the $0.10 grid": 92.3636,
+  "before rounding to the cent": "every pick, every bomb count, the top pick included: 93.0000%-93.0000%"
+ },
+ "double": {
+  "p_win": "1/2",
+  "rtp_pct": 100.0
+ },
+ "top_pay": {
+  "base": "the top pick, paid in full: 23.2500× with 1 live (pick 24, 1 in 25.00), 27.9000× with 2 live (pick 20, 1 in 30.00), 25.4643× with 3 live (pick 16, 1 in 27.38), 23.7667× with 4 live (pick 13, 1 in 25.56)",
+  "round": "20,000× the bet (MAX WIN) through the run bar"
+ },
+ "policies": {
+  "P0_1": {
+   "rtp_pct": 92.5217,
+   "sd": 0.7901,
+   "hit_pct": 57.8261,
+   "top_pay": 1.6,
+   "top_one_in": 1.729
+  },
+  "P2_1": {
+   "rtp_pct": 92.5217,
+   "sd": 1.4507,
+   "hit_pct": 28.913,
+   "top_pay": 3.2,
+   "top_one_in": 3.459
+  },
+  "P3_1": {
+   "rtp_pct": 92.5217,
+   "sd": 38.9233,
+   "hit_pct": 0.0565,
+   "top_pay": 1638.4,
+   "top_one_in": 1770.827
+  },
+  "P5_1": {
+   "rtp_pct": 92.5217,
+   "sd": 0.9972,
+   "hit_pct": 57.8261,
+   "top_pay": 2.4,
+   "top_one_in": 3.459
+  },
+  "P0_10": {
+   "rtp_pct": 92.9843,
+   "sd": 0.7941,
+   "hit_pct": 57.8261,
+   "top_pay": 16.08,
+   "top_one_in": 1.729
+  },
+  "P2_10": {
+   "rtp_pct": 92.9843,
+   "sd": 1.458,
+   "hit_pct": 28.913,
+   "top_pay": 32.16,
+   "top_one_in": 3.459
+  },
+  "P3_10": {
+   "rtp_pct": 92.9843,
+   "sd": 39.1179,
+   "hit_pct": 0.0565,
+   "top_pay": 16465.92,
+   "top_one_in": 1770.827
+  },
+  "P5_10": {
+   "rtp_pct": 92.9843,
+   "sd": 1.0022,
+   "hit_pct": 57.8261,
+   "top_pay": 24.12,
+   "top_one_in": 3.459
+  },
+  "P0_100": {
+   "rtp_pct": 92.9959,
+   "sd": 0.7942,
+   "hit_pct": 57.8261,
+   "top_pay": 160.82,
+   "top_one_in": 1.729
+  },
+  "P2_100": {
+   "rtp_pct": 92.9959,
+   "sd": 1.4582,
+   "hit_pct": 28.913,
+   "top_pay": 321.64,
+   "top_one_in": 3.459
+  },
+  "P3_100": {
+   "rtp_pct": 92.9959,
+   "sd": 39.1227,
+   "hit_pct": 0.0565,
+   "top_pay": 164679.68,
+   "top_one_in": 1770.827
+  },
+  "P5_100": {
+   "rtp_pct": 92.9959,
+   "sd": 1.0023,
+   "hit_pct": 57.8261,
+   "top_pay": 241.23,
+   "top_one_in": 3.459
+  },
+  "P4_1": {
+   "rtp_pct": 92.5217,
+   "note": "simulation only for the distribution (random choices: the state graph cycles through the RUN BANK); the mean is derived = P0 (every bar action is fair and unclipped: optional stopping)"
+  },
+  "P4_10": {
+   "rtp_pct": 92.9843,
+   "note": "simulation only for the distribution (random choices: the state graph cycles through the RUN BANK); the mean is derived = P0 (every bar action is fair and unclipped: optional stopping)"
+  },
+  "P4_100": {
+   "rtp_pct": 92.9959,
+   "note": "simulation only for the distribution (random choices: the state graph cycles through the RUN BANK); the mean is derived = P0 (every bar action is fair and unclipped: optional stopping)"
+  }
+ },
+ "simulation": {
+  "base mix, $10": {
+   "rounds": 2000000,
+   "seeds": [
+    1001,
+    1002,
+    1003,
+    1004,
+    1005,
+    1006,
+    1007,
+    1008,
+    1009,
+    1010,
+    1011,
+    1012,
+    1013,
+    1014,
+    1015,
+    1016,
+    1017,
+    1018,
+    1019,
+    1020
+   ],
+   "rtp_pct": 93.0338,
+   "ci95_pct": [
+    92.9361,
+    93.1315
+   ],
+   "sd": 0.7048,
+   "hit_pct": 69.4199,
+   "max_pay": 30.35,
+   "exact_pct": 92.9583,
+   "exact_inside_ci": true,
+   "z": 1.51,
+   "ends": {
+    "cash": 1388397,
+    "bust": 611603
+   }
+  },
+  "top, $10": {
+   "rounds": 1000000,
+   "seeds": [
+    4001,
+    4002,
+    4003,
+    4004,
+    4005,
+    4006,
+    4007,
+    4008,
+    4009,
+    4010
+   ],
+   "rtp_pct": 93.8011,
+   "ci95_pct": [
+    92.868,
+    94.7341
+   ],
+   "sd": 4.7604,
+   "hit_pct": 3.7564,
+   "max_pay": 279.0,
+   "exact_pct": 92.9991,
+   "exact_inside_ci": true,
+   "z": 1.68,
+   "ends": {
+    "bust": 962436,
+    "cash": 37564
+   }
+  },
+  "top, $1.10": {
+   "rounds": 1000000,
+   "seeds": [
+    4101,
+    4102,
+    4103,
+    4104,
+    4105,
+    4106,
+    4107,
+    4108,
+    4109,
+    4110
+   ],
+   "rtp_pct": 92.8438,
+   "ci95_pct": [
+    91.9155,
+    93.7721
+   ],
+   "sd": 4.7363,
+   "hit_pct": 3.7192,
+   "max_pay": 30.69,
+   "exact_pct": 92.9919,
+   "exact_inside_ci": true,
+   "z": -0.31,
+   "ends": {
+    "bust": 962808,
+    "cash": 37192
+   }
+  },
+  "P0, $10": {
+   "rounds": 200000,
+   "seeds": [
+    2001,
+    2002,
+    2003,
+    2004
+   ],
+   "rtp_pct": 93.1458,
+   "ci95_pct": [
+    92.7979,
+    93.4937
+   ],
+   "sd": 0.7938,
+   "hit_pct": 57.9265,
+   "max_pay": 16.08,
+   "exact_pct": 92.9843,
+   "exact_inside_ci": true,
+   "z": 0.91,
+   "ends": {
+    "bust": 84147,
+    "cash": 115853
+   },
+   "pay_distribution_check": {
+    "rows": [
+     {
+      "pay": 0.0,
+      "sim": 84147,
+      "expected": 84347.8,
+      "z": -0.91
+     },
+     {
+      "pay": 16.08,
+      "sim": 115853,
+      "expected": 115652.2,
+      "z": 0.91
+     }
+    ],
+    "pays_not_in_exact": [],
+    "chi2": 0.827,
+    "df": 1,
+    "p_value": 0.3632
+   }
+  },
+  "P0, $100": {
+   "rounds": 100000,
+   "seeds": [
+    3001,
+    3002
+   ],
+   "rtp_pct": 92.8398,
+   "ci95_pct": [
+    92.3474,
+    93.3322
+   ],
+   "sd": 0.7944,
+   "hit_pct": 57.729,
+   "max_pay": 160.82,
+   "exact_pct": 92.9959,
+   "exact_inside_ci": true,
+   "z": -0.62,
+   "ends": {
+    "bust": 42271,
+    "cash": 57729
+   },
+   "pay_distribution_check": {
+    "rows": [
+     {
+      "pay": 0.0,
+      "sim": 42271,
+      "expected": 42173.9,
+      "z": 0.62
+     },
+     {
+      "pay": 160.82,
+      "sim": 57729,
+      "expected": 57826.1,
+      "z": -0.62
+     }
+    ],
+    "pays_not_in_exact": [],
+    "chi2": 0.387,
+    "df": 1,
+    "p_value": 0.5341
+   }
+  },
+  "P2, $10": {
+   "rounds": 200000,
+   "seeds": [
+    2201,
+    2202,
+    2203,
+    2204
+   ],
+   "rtp_pct": 93.2351,
+   "ci95_pct": [
+    92.5955,
+    93.8746
+   ],
+   "sd": 1.4592,
+   "hit_pct": 28.991,
+   "max_pay": 32.16,
+   "exact_pct": 92.9843,
+   "exact_inside_ci": true,
+   "z": 0.77,
+   "ends": {
+    "bust": 142018,
+    "cash": 57982
+   },
+   "pay_distribution_check": {
+    "rows": [
+     {
+      "pay": 0.0,
+      "sim": 142018,
+      "expected": 142173.9,
+      "z": -0.77
+     },
+     {
+      "pay": 32.16,
+      "sim": 57982,
+      "expected": 57826.1,
+      "z": 0.77
+     }
+    ],
+    "pays_not_in_exact": [],
+    "chi2": 0.591,
+    "df": 1,
+    "p_value": 0.4419
+   }
+  },
+  "P2, $100": {
+   "rounds": 100000,
+   "seeds": [
+    3201,
+    3202
+   ],
+   "rtp_pct": 93.7291,
+   "ci95_pct": [
+    92.8232,
+    94.635
+   ],
+   "sd": 1.4616,
+   "hit_pct": 29.141,
+   "max_pay": 321.64,
+   "exact_pct": 92.9959,
+   "exact_inside_ci": true,
+   "z": 1.59,
+   "ends": {
+    "cash": 29141,
+    "bust": 70859
+   },
+   "pay_distribution_check": {
+    "rows": [
+     {
+      "pay": 0.0,
+      "sim": 70859,
+      "expected": 71087.0,
+      "z": -1.59
+     },
+     {
+      "pay": 321.64,
+      "sim": 29141,
+      "expected": 28913.0,
+      "z": 1.59
+     }
+    ],
+    "pays_not_in_exact": [],
+    "chi2": 2.528,
+    "df": 1,
+    "p_value": 0.1118
+   }
+  },
+  "P3, $10": {
+   "rounds": 200000,
+   "seeds": [
+    2301,
+    2302,
+    2303,
+    2304
+   ],
+   "rtp_pct": 93.0324,
+   "ci95_pct": [
+    75.8838,
+    110.1811
+   ],
+   "sd": 39.1281,
+   "hit_pct": 0.0565,
+   "max_pay": 16465.92,
+   "exact_pct": 92.9843,
+   "exact_inside_ci": true,
+   "z": 0.01,
+   "ends": {
+    "bust": 199887,
+    "runcap": 113
+   }
+  },
+  "P3, $100": {
+   "rounds": 100000,
+   "seeds": [
+    3301,
+    3302
+   ],
+   "rtp_pct": 97.161,
+   "ci95_pct": [
+    72.3756,
+    121.9464
+   ],
+   "sd": 39.989,
+   "hit_pct": 0.059,
+   "max_pay": 164679.68,
+   "exact_pct": 92.9959,
+   "exact_inside_ci": true,
+   "z": 0.33,
+   "ends": {
+    "bust": 99941,
+    "runcap": 59
+   }
+  },
+  "P4, $1": {
+   "rounds": 200000,
+   "seeds": [
+    5401,
+    5402
+   ],
+   "rtp_pct": 92.5173,
+   "ci95_pct": [
+    91.5538,
+    93.4808
+   ],
+   "sd": 2.1984,
+   "hit_pct": 41.19,
+   "max_pay": 205.6,
+   "exact_pct": 92.5217,
+   "exact_inside_ci": true,
+   "z": -0.01,
+   "ends": {
+    "bust": 117620,
+    "cash": 82380
+   }
+  },
+  "P4, $10": {
+   "rounds": 200000,
+   "seeds": [
+    2401,
+    2402,
+    2403,
+    2404
+   ],
+   "rtp_pct": 93.6734,
+   "ci95_pct": [
+    92.4736,
+    94.8732
+   ],
+   "sd": 2.7376,
+   "hit_pct": 41.2215,
+   "max_pay": 4534.56,
+   "exact_pct": 92.9843,
+   "exact_inside_ci": true,
+   "z": 1.13,
+   "ends": {
+    "bust": 117557,
+    "cash": 82443
+   }
+  },
+  "P4, $100": {
+   "rounds": 100000,
+   "seeds": [
+    3401,
+    3402
+   ],
+   "rtp_pct": 92.1074,
+   "ci95_pct": [
+    90.8816,
+    93.3332
+   ],
+   "sd": 1.9777,
+   "hit_pct": 41.232,
+   "max_pay": 12865.6,
+   "exact_pct": 92.9959,
+   "exact_inside_ci": true,
+   "z": -1.42,
+   "ends": {
+    "bust": 58768,
+    "cash": 41232
+   }
+  },
+  "P5, $1": {
+   "rounds": 200000,
+   "seeds": [
+    5511,
+    5512
+   ],
+   "rtp_pct": 92.2244,
+   "ci95_pct": [
+    91.7874,
+    92.6614
+   ],
+   "sd": 0.997,
+   "hit_pct": 57.6355,
+   "max_pay": 2.4,
+   "exact_pct": 92.5217,
+   "exact_inside_ci": true,
+   "z": -1.33,
+   "ends": {
+    "bust": 84729,
+    "cash": 115271
+   },
+   "pay_distribution_check": {
+    "rows": [
+     {
+      "pay": 0.0,
+      "sim": 84729,
+      "expected": 84347.8,
+      "z": 1.73
+     },
+     {
+      "pay": 0.8,
+      "sim": 57626,
+      "expected": 57826.1,
+      "z": -0.99
+     },
+     {
+      "pay": 2.4,
+      "sim": 57645,
+      "expected": 57826.1,
+      "z": -0.89
+     }
+    ],
+    "pays_not_in_exact": [],
+    "chi2": 2.982,
+    "df": 2,
+    "p_value": 0.2252
+   }
+  },
+  "P5, $10": {
+   "rounds": 200000,
+   "seeds": [
+    2511,
+    2512,
+    2513,
+    2514
+   ],
+   "rtp_pct": 92.8089,
+   "ci95_pct": [
+    92.3698,
+    93.2481
+   ],
+   "sd": 1.002,
+   "hit_pct": 57.721,
+   "max_pay": 24.12,
+   "exact_pct": 92.9843,
+   "exact_inside_ci": true,
+   "z": -0.78,
+   "ends": {
+    "bust": 84558,
+    "cash": 115442
+   },
+   "pay_distribution_check": {
+    "rows": [
+     {
+      "pay": 0.0,
+      "sim": 84558,
+      "expected": 84347.8,
+      "z": 0.95
+     },
+     {
+      "pay": 8.04,
+      "sim": 57729,
+      "expected": 57826.1,
+      "z": -0.48
+     },
+     {
+      "pay": 24.12,
+      "sim": 57713,
+      "expected": 57826.1,
+      "z": -0.56
+     }
+    ],
+    "pays_not_in_exact": [],
+    "chi2": 0.908,
+    "df": 2,
+    "p_value": 0.6351
+   }
+  },
+  "P5, $100": {
+   "rounds": 100000,
+   "seeds": [
+    3511,
+    3512
+   ],
+   "rtp_pct": 92.9869,
+   "ci95_pct": [
+    92.3654,
+    93.6085
+   ],
+   "sd": 1.0028,
+   "hit_pct": 57.769,
+   "max_pay": 241.23,
+   "exact_pct": 92.9959,
+   "exact_inside_ci": true,
+   "z": -0.03,
+   "ends": {
+    "cash": 57769,
+    "bust": 42231
+   },
+   "pay_distribution_check": {
+    "rows": [
+     {
+      "pay": 0.0,
+      "sim": 42231,
+      "expected": 42173.9,
+      "z": 0.37
+     },
+     {
+      "pay": 80.41,
+      "sim": 28833,
+      "expected": 28913.0,
+      "z": -0.56
+     },
+     {
+      "pay": 241.23,
+      "sim": 28936,
+      "expected": 28913.0,
+      "z": 0.16
+     }
+    ],
+    "pays_not_in_exact": [],
+    "chi2": 0.317,
+    "df": 2,
+    "p_value": 0.8534
+   }
+  }
+ },
+ "grid": {
+  "bets": "$1.00-$100.00 in $0.10 steps (991 bets) × 1-4 live bombs",
+  "top_pick_stop_rule": "the board stops at the top pick (first pay >= 20× the bet) and not before, for every bet and bomb count",
+  "top_pick_stop_failures": [],
+  "lowest_stop": {
+   "rtp": 0.9236363636363636,
+   "bet": 1.1,
+   "bombs": 1,
+   "pick": 5
+  },
+  "cent_stakes": "every cent $0.02-$10,000.00 × 1-4 live bombs",
+  "cent_stake_stop_failure_count": 0,
+  "cent_stake_stop_failures": []
+ }
+}

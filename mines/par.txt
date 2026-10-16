@@ -1,0 +1,168 @@
+CARD RUN MINES 20× — PAR SHEET (final launch build)
+build ../builds-final/card-run-mines-classic-launch.html  sha256 2f73b626f7889810d499dbb863632ff42645ff6c6300f3b8f3b47a0b24974426
+All exact values from exact.py (fractions; pays in the build's own integer cents). Simulations: sim.js through the shipped code.
+
+GAME: 25 tiles = 21 gems + 4 bombs; the player sets 1-4 bombs live (the rest shielded = safe picks). M(k) = Fair(k) × 0.93 exactly,
+Fair(k) = C(25,k)/C(25-B,k). Pay = floor(bet cents × M(k)), one rounding. 20× is the build target: the TOP PICK is the first pick with
+M >= 20; it pays in full and the board stops there. Display = floor4(M) (2 decimals on the board). LOCK IN from Display >= 1.01.
+Run bar after any win: CASH OUT / DOUBLE OR NOTHING / DOUBLE HALF (+ the RUN BANK). DOUBLE OR NOTHING: 19 gems / 2 live / 4 duds, 6 gems first = exactly 1/2.
+DOUBLE HALF doubles half of the held amount and puts the other half (plus an odd cent) in the RUN BANK. (RUN IT AGAIN and RUN HALF were removed in v170.)
+Run cap 1,000× the build win (the run that crosses it pays in full). MAX WIN 20,000× the bet. Bets $1.00-$100.00 in $0.10 steps.
+Minimum run $0.02 (run-bar v170): DOUBLE OR NOTHING needs a held amount >= $0.02, DOUBLE HALF a half >= $0.02.
+
+LADDER — 1 live bomb (24 safe tiles; LOCK IN from pick 2; top pick 24 = 23.2500×, paid in full)
+pick      x bet      1 in RTP exact   $1 pay   RTP $1   $10 pay  RTP $10   $100 pay  RTP $100
+   1    0.9687*     1.042  93.0000%     0.96  92.160%      9.68  92.928%      96.87  92.9952%
+   2    1.0108      1.087  93.0000%     1.01  92.920%     10.10  92.920%     101.08  92.9936%
+   3    1.0568      1.136  93.0000%     1.05  92.400%     10.56  92.928%     105.68  92.9984%
+   4    1.1071      1.190  93.0000%     1.10  92.400%     11.07  92.988%     110.71  92.9964%
+   5    1.1625      1.250  93.0000%     1.16  92.800%     11.62  92.960%     116.25  93.0000%
+   6    1.2236      1.316  93.0000%     1.22  92.720%     12.23  92.948%     122.36  92.9936%
+   7    1.2916      1.389  93.0000%     1.29  92.880%     12.91  92.952%     129.16  92.9952%
+   8    1.3676      1.471  93.0000%     1.36  92.480%     13.67  92.956%     136.76  92.9968%
+   9    1.4531      1.562  93.0000%     1.45  92.800%     14.53  92.992%     145.31  92.9984%
+  10    1.5500      1.667  93.0000%     1.55  93.000%     15.50  93.000%     155.00  93.0000%
+  11    1.6607      1.786  93.0000%     1.66  92.960%     16.60  92.960%     166.07  92.9992%
+  12    1.7884      1.923  93.0000%     1.78  92.560%     17.88  92.976%     178.84  92.9968%
+  13    1.9375      2.083  93.0000%     1.93  92.640%     19.37  92.976%     193.75  93.0000%
+  14    2.1136      2.273  93.0000%     2.11  92.840%     21.13  92.972%     211.36  92.9984%
+  15    2.3250      2.500  93.0000%     2.32  92.800%     23.25  93.000%     232.50  93.0000%
+  16    2.5833      2.778  93.0000%     2.58  92.880%     25.83  92.988%     258.33  92.9988%
+  17    2.9062      3.125  93.0000%     2.90  92.800%     29.06  92.992%     290.62  92.9984%
+  18    3.3214      3.571  93.0000%     3.32  92.960%     33.21  92.988%     332.14  92.9992%
+  19    3.8750      4.167  93.0000%     3.87  92.880%     38.75  93.000%     387.50  93.0000%
+  20    4.6500      5.000  93.0000%     4.65  93.000%     46.50  93.000%     465.00  93.0000%
+  21    5.8125      6.250  93.0000%     5.81  92.960%     58.12  92.992%     581.25  93.0000%
+  22    7.7500      8.333  93.0000%     7.75  93.000%     77.50  93.000%     775.00  93.0000%
+  23   11.6250     12.500  93.0000%    11.62  92.960%    116.25  93.000%    1162.50  93.0000%
+  24   23.2500     25.000  93.0000%    23.25  93.000%    232.50  93.000%    2325.00  93.0000%
+
+LADDER — 2 live bombs (23 safe tiles; LOCK IN from pick 1; top pick 20 = 27.9000×, paid in full)
+pick      x bet      1 in RTP exact   $1 pay   RTP $1   $10 pay  RTP $10   $100 pay  RTP $100
+   1    1.0108      1.087  93.0000%     1.01  92.920%     10.10  92.920%     101.08  92.9936%
+   2    1.1027      1.186  93.0000%     1.10  92.767%     11.02  92.935%     110.27  92.9944%
+   3    1.2077      1.299  93.0000%     1.20  92.400%     12.07  92.939%     120.77  92.9929%
+   4    1.3285      1.429  93.0000%     1.32  92.400%     13.28  92.960%     132.85  92.9950%
+   5    1.4684      1.579  93.0000%     1.46  92.467%     14.68  92.973%     146.84  92.9987%
+   6    1.6315      1.754  93.0000%     1.63  92.910%     16.31  92.967%     163.15  92.9955%
+   7    1.8235      1.961  93.0000%     1.82  92.820%     18.23  92.973%     182.35  92.9985%
+   8    2.0514      2.206  93.0000%     2.05  92.933%     20.51  92.979%     205.14  92.9968%
+   9    2.3250      2.500  93.0000%     2.32  92.800%     23.25  93.000%     232.50  93.0000%
+  10    2.6571      2.857  93.0000%     2.65  92.750%     26.57  92.995%     265.71  92.9985%
+  11    3.0659      3.297  93.0000%     3.06  92.820%     30.65  92.972%     306.59  92.9990%
+  12    3.5769      3.846  93.0000%     3.57  92.820%     35.76  92.976%     357.69  92.9994%
+  13    4.2272      4.545  93.0000%     4.22  92.840%     42.27  92.994%     422.72  92.9984%
+  14    5.0727      5.455  93.0000%     5.07  92.950%     50.72  92.987%     507.27  92.9995%
+  15    6.2000      6.667  93.0000%     6.20  93.000%     62.00  93.000%     620.00  93.0000%
+  16    7.7500      8.333  93.0000%     7.75  93.000%     77.50  93.000%     775.00  93.0000%
+  17    9.9642     10.714  93.0000%     9.96  92.960%     99.64  92.997%     996.42  92.9992%
+  18   13.2857     14.286  93.0000%    13.28  92.960%    132.85  92.995%    1328.57  92.9999%
+  19   18.6000     20.000  93.0000%    18.60  93.000%    186.00  93.000%    1860.00  93.0000%
+  20   27.9000     30.000  93.0000%    27.90  93.000%    279.00  93.000%    2790.00  93.0000%
+
+LADDER — 3 live bombs (22 safe tiles; LOCK IN from pick 1; top pick 16 = 25.4643×, paid in full)
+pick      x bet      1 in RTP exact   $1 pay   RTP $1   $10 pay  RTP $10   $100 pay  RTP $100
+   1    1.0568      1.136  93.0000%     1.05  92.400%     10.56  92.928%     105.68  92.9984%
+   2    1.2077      1.299  93.0000%     1.20  92.400%     12.07  92.939%     120.77  92.9929%
+   3    1.3889      1.494  93.0000%     1.38  92.400%     13.88  92.936%     138.89  92.9959%
+   4    1.6082      1.729  93.0000%     1.60  92.522%     16.08  92.984%     160.82  92.9959%
+   5    1.8763      2.018  93.0000%     1.87  92.687%     18.76  92.984%     187.63  92.9992%
+   6    2.2074      2.374  93.0000%     2.20  92.687%     22.07  92.982%     220.74  92.9987%
+   7    2.6213      2.819  93.0000%     2.62  92.953%     26.21  92.989%     262.13  92.9992%
+   8    3.1455      3.382  93.0000%     3.14  92.835%     31.45  92.983%     314.55  92.9974%
+   9    3.8196      4.107  93.0000%     3.81  92.765%     38.19  92.984%     381.96  92.9990%
+  10    4.7010      5.055  93.0000%     4.70  92.978%     47.01  92.998%     470.10  92.9980%
+  11    5.8763      6.319  93.0000%     5.87  92.899%     58.76  92.994%     587.63  92.9988%
+  12    7.4790      8.042  93.0000%     7.47  92.888%     74.79  93.000%     747.90  92.9997%
+  13    9.7227     10.455  93.0000%     9.72  92.974%     97.22  92.993%     972.27  92.9997%
+  14   12.9636     13.939  93.0000%    12.96  92.974%    129.63  92.995%    1296.36  92.9997%
+  15   17.8250     19.167  93.0000%    17.82  92.974%    178.25  93.000%    1782.50  93.0000%
+  16   25.4642     27.381  93.0000%    25.46  92.984%    254.64  92.999%    2546.42  92.9997%
+
+LADDER — 4 live bombs (21 safe tiles; LOCK IN from pick 1; top pick 13 = 23.7667×, paid in full)
+pick      x bet      1 in RTP exact   $1 pay   RTP $1   $10 pay  RTP $10   $100 pay  RTP $100
+   1    1.1071      1.190  93.0000%     1.10  92.400%     11.07  92.988%     110.71  92.9964%
+   2    1.3285      1.429  93.0000%     1.32  92.400%     13.28  92.960%     132.85  92.9950%
+   3    1.6082      1.729  93.0000%     1.60  92.522%     16.08  92.984%     160.82  92.9959%
+   4    1.9656      2.114  93.0000%     1.96  92.732%     19.65  92.969%     196.56  92.9970%
+   5    2.4281      2.611  93.0000%     2.42  92.687%     24.28  92.993%     242.81  92.9972%
+   6    3.0352      3.264  93.0000%     3.03  92.840%     30.35  92.993%     303.52  92.9995%
+   7    3.8446      4.134  93.0000%     3.84  92.889%     38.44  92.985%     384.46  92.9998%
+   8    4.9430      5.315  93.0000%     4.94  92.942%     49.43  92.999%     494.30  92.9987%
+   9    6.4640      6.951  93.0000%     6.46  92.942%     64.64  93.000%     646.40  92.9998%
+  10    8.6186      9.267  93.0000%     8.61  92.906%     86.18  92.993%     861.86  92.9991%
+  11   11.7527     12.637  93.0000%    11.75  92.978%    117.52  92.994%    1175.27  92.9996%
+  12   16.4538     17.692  93.0000%    16.45  92.978%    164.53  92.995%    1645.38  92.9997%
+  13   23.7666     25.556  93.0000%    23.76  92.974%    237.66  92.997%    2376.66  92.9997%
+
+* below 1.01×: no LOCK IN at that pick (the player must pick on). x bet = floor4(M); RTP exact = M × P(reach) before rounding to the cent.
+
+BASE GAME BY STRATEGY (exact)
+strategy                                                                     bet       RTP       SD      hit      top  top 1 in
+best (13 stops tie at the $10 maximum; shown: 3 live, LOCK IN at pick 15)     $1  92.9739%   3.9628   5.217%  17.820×    19.167
+best (13 stops tie at the $10 maximum; shown: 3 live, LOCK IN at pick 15)    $10  93.0000%   3.9639   5.217%  17.825×    19.167
+best (13 stops tie at the $10 maximum; shown: 3 live, LOCK IN at pick 15)   $100  93.0000%   3.9639   5.217%  17.825×    19.167
+typical (4 live bombs, LOCK IN after 3 picks)                                 $1  92.5217%   0.7901  57.826%   1.600×     1.729
+typical (4 live bombs, LOCK IN after 3 picks)                                $10  92.9843%   0.7941  57.826%   1.608×     1.729
+typical (4 live bombs, LOCK IN after 3 picks)                               $100  92.9959%   0.7942  57.826%   1.608×     1.729
+play to the top pick, 1 live bomb (pick 24 pays 23.2500×)                     $1  93.0000%   4.5561   4.000%  23.250×    25.000
+play to the top pick, 1 live bomb (pick 24 pays 23.2500×)                    $10  93.0000%   4.5561   4.000%  23.250×    25.000
+play to the top pick, 1 live bomb (pick 24 pays 23.2500×)                   $100  93.0000%   4.5561   4.000%  23.250×    25.000
+play to the top pick, 2 live bombs (pick 20 pays 27.9000×)                    $1  93.0000%   5.0082   3.333%  27.900×    30.000
+play to the top pick, 2 live bombs (pick 20 pays 27.9000×)                   $10  93.0000%   5.0082   3.333%  27.900×    30.000
+play to the top pick, 2 live bombs (pick 20 pays 27.9000×)                  $100  93.0000%   5.0082   3.333%  27.900×    30.000
+play to the top pick, 3 live bombs (pick 16 pays 25.4643×)                    $1  92.9843%   4.7759   3.652%  25.460×    27.381
+play to the top pick, 3 live bombs (pick 16 pays 25.4643×)                   $10  92.9990%   4.7766   3.652%  25.464×    27.381
+play to the top pick, 3 live bombs (pick 16 pays 25.4643×)                  $100  92.9997%   4.7767   3.652%  25.464×    27.381
+play to the top pick, 4 live bombs (pick 13 pays 23.7667×)                    $1  92.9739%   4.6072   3.913%  23.760×    25.556
+play to the top pick, 4 live bombs (pick 13 pays 23.7667×)                   $10  92.9974%   4.6084   3.913%  23.766×    25.556
+play to the top pick, 4 live bombs (pick 13 pays 23.7667×)                  $100  92.9997%   4.6085   3.913%  23.767×    25.556
+random player (bombs 1-4, stop uniform up to the top pick)                    $1  92.7975%   2.1016  38.006%  27.900×  2400.000
+random player (bombs 1-4, stop uniform up to the top pick)                   $10  92.9812%   2.1027  38.006%  27.900×  2400.000
+random player (bombs 1-4, stop uniform up to the top pick)                  $100  92.9982%   2.1028  38.006%  27.900×  2400.000
+Every stop, the top pick included, returns exactly 93% before rounding to the cent; lowest after rounding: $1 92.4000% (1 live, pick 3), $10 92.9200% (1 live, pick 2), $100 92.9929% (2 live, pick 3); lowest on the whole $0.10 grid 92.3636% ($1.10, 1 live, pick 5).
+
+PAY DISTRIBUTION — typical play (4 live bombs, LOCK IN after 3 picks), $10:  0.000× p=0.421739, 1.608× p=0.578261
+PAY DISTRIBUTION — best (13 stops tie at the $10 maximum; shown: 3 live, LOCK IN at pick 15), $10:  0.000× p=0.947826, 17.825× p=0.052174
+
+DOUBLE OR NOTHING: P(6 gems before a live bomb) = C(19,6)/C(21,6) = 1/2; return 100.0000% of the amount run.
+
+RUN-BAR POLICIES (base: 4 live bombs, LOCK IN after 3 picks; MAX WIN 20,000×)
+P0 cash out · P2 double once · P3 double whenever shown (to the cap) · P4 random shown button (CASH OUT / DOUBLE OR NOTHING / DOUBLE HALF) every bar · P5 DOUBLE HALF once, then cash out · (P1, RUN IT AGAIN once, retired in v170)
+policy     bet  exact RTP        SD      hit      top pay     sim RTP                95% CI    rounds   sim SD  sim hit      sim max  in CI
+P0          $1   92.5217%    0.7901  57.826%         1.60   (not run)
+P0         $10   92.9843%    0.7941  57.826%        16.08    93.1458% [92.7979, 93.4937]%   200,000   0.7938  57.927%        16.08  yes
+P0        $100   92.9959%    0.7942  57.826%       160.82    92.8398% [92.3474, 93.3322]%   100,000   0.7944  57.729%       160.82  yes
+P2          $1   92.5217%    1.4507  28.913%         3.20   (not run)
+P2         $10   92.9843%    1.4580  28.913%        32.16    93.2351% [92.5955, 93.8746]%   200,000   1.4592  28.991%        32.16  yes
+P2        $100   92.9959%    1.4582  28.913%       321.64    93.7291% [92.8232, 94.6350]%   100,000   1.4616  29.141%       321.64  yes
+P3          $1   92.5217%   38.9233   0.056%     1,638.40   (not run)
+P3         $10   92.9843%   39.1179   0.056%    16,465.92    93.0324% [75.8838, 110.1811]%   200,000  39.1281   0.056%    16,465.92  yes
+P3        $100   92.9959%   39.1227   0.056%   164,679.68    97.1610% [72.3756, 121.9464]%   100,000  39.9890   0.059%   164,679.68  yes
+P4          $1   92.5217%*                                    92.5173% [91.5538, 93.4808]%   200,000   2.1984  41.190%       205.60  yes
+P4         $10   92.9843%*                                    93.6734% [92.4736, 94.8732]%   200,000   2.7376  41.221%     4,534.56  yes
+P4        $100   92.9959%*                                    92.1074% [90.8816, 93.3332]%   100,000   1.9777  41.232%    12,865.60  yes
+P5          $1   92.5217%    0.9972  57.826%         2.40    92.2244% [91.7874, 92.6614]%   200,000   0.9970  57.635%         2.40  yes
+P5         $10   92.9843%    1.0022  57.826%        24.12    92.8089% [92.3698, 93.2481]%   200,000   1.0020  57.721%        24.12  yes
+P5        $100   92.9959%    1.0023  57.826%       241.23    92.9869% [92.3654, 93.6085]%   100,000   1.0028  57.769%       241.23  yes
+* P4: the mean is derived, not enumerated: every action on the bar is a fair, unclipped bet (DOUBLE is shown only when RUN BANK + 2 × held <= MAX WIN), so held + RUN BANK is a bounded
+  martingale that ends with probability 1 and ANY policy over CASH OUT / DOUBLE / DOUBLE HALF returns exactly what P0 returns (optional stopping). P4 is simulation only for the distribution.
+P5 closed form: every base pay c (cents) held at the first bar becomes (c + floor(c/2)) with probability 1/2 (win: 2 halves + the RUN BANK keep) and ceil(c/2) with 1/2 (lost half: the RUN BANK returns),
+  when floor(c/2) >= $0.02; exact.py asserts this equals the full enumeration fraction for fraction. Same mean as P0 (so the same RTP), larger SD; the hit rate is P0's (a lost half still returns the RUN BANK).
+P0 $10, every pay vs the exact distribution: $0.00 84,147 (exact 84,347.8, z -0.91), $16.08 115,853 (exact 115,652.2, z +0.91); other pays seen: none; chi-square 0.827 on 1 df (p = 0.3632)
+P0 $100, every pay vs the exact distribution: $0.00 42,271 (exact 42,173.9, z +0.62), $160.82 57,729 (exact 57,826.1, z -0.62); other pays seen: none; chi-square 0.387 on 1 df (p = 0.5341)
+P2 $10, every pay vs the exact distribution: $0.00 142,018 (exact 142,173.9, z -0.77), $32.16 57,982 (exact 57,826.1, z +0.77); other pays seen: none; chi-square 0.591 on 1 df (p = 0.4419)
+P2 $100, every pay vs the exact distribution: $0.00 70,859 (exact 71,087.0, z -1.59), $321.64 29,141 (exact 28,913.0, z +1.59); other pays seen: none; chi-square 2.528 on 1 df (p = 0.1118)
+P5 $1, every pay vs the exact distribution: $0.00 84,729 (exact 84,347.8, z +1.73), $0.80 57,626 (exact 57,826.1, z -0.99), $2.40 57,645 (exact 57,826.1, z -0.89); other pays seen: none; chi-square 2.982 on 2 df (p = 0.2252)
+P5 $10, every pay vs the exact distribution: $0.00 84,558 (exact 84,347.8, z +0.95), $8.04 57,729 (exact 57,826.1, z -0.48), $24.12 57,713 (exact 57,826.1, z -0.56); other pays seen: none; chi-square 0.908 on 2 df (p = 0.6351)
+P5 $100, every pay vs the exact distribution: $0.00 42,231 (exact 42,173.9, z +0.37), $80.41 28,833 (exact 28,913.0, z -0.56), $241.23 28,936 (exact 28,913.0, z +0.16); other pays seen: none; chi-square 0.317 on 2 df (p = 0.8534)
+$1: the base pays $1.60, so P5 doubles a $0.80 half (P5 pays $0 / $0.80 / $2.40) and P4's halves and RUN BANK returns go down to $0.02.
+P4 $1 is the small-amount check through the shipped code: its rounds end on pays down to $0.02 (pays of $0.01-$0.99 in 12,396 rounds).
+
+BASE SIMULATION ($10; round r: bombs 1+((r>>2)%4), LOCK IN after 1+(r%6) picks): 2,000,000 rounds, seeds 1001-1020: 93.0338% [92.9361, 93.1315] vs exact 92.9583% (inside); SD 0.7048, hit 69.420%, max $30.35
+TOP-PICK SIMULATION ($10; round r: bombs 1+(r%4), never LOCK IN: the board runs to its top pick or a live bomb): 1,000,000 rounds, seeds 4001-4010: 93.8011% [92.8680, 94.7341] vs exact 92.9991% (inside); SD 4.7604, hit 3.756%, max $279.00, ends {'bust': 962436, 'cash': 37564}
+TOP-PICK SIMULATION ($1.10; round r: bombs 1+(r%4), never LOCK IN: the board runs to its top pick or a live bomb): 1,000,000 rounds, seeds 4101-4110: 92.8438% [91.9155, 93.7721] vs exact 92.9919% (inside); SD 4.7363, hit 3.719%, max $30.69, ends {'bust': 962808, 'cash': 37192}
+
+STOP RULE, every bet: with the build's Classic.payC the board stops at the top pick, and not before, on all 991 bets of the $0.10 grid
+and 1-4 live bombs (0 failures), and on every cent stake $0.02-$10,000.00 (0 failures).
+(The previous build worked the pay out in floating point: 79 of the 991 bets missed the 20× stop. Fixed: pays are integer cents.)

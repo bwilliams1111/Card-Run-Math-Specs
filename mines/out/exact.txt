@@ -1,0 +1,330 @@
+{
+ "build": "../builds-final/card-run-mines-classic-launch.html",
+ "build_sha256": "2f73b626f7889810d499dbb863632ff42645ff6c6300f3b8f3b47a0b24974426",
+ "constants_checked": true,
+ "constants": {
+  "T": 25,
+  "gems": 21,
+  "bomb_tiles": 4,
+  "live_bomb_options": [
+   1,
+   2,
+   3,
+   4
+  ],
+  "H": "93/100",
+  "cap_x": 20,
+  "unlock": 1.01,
+  "run_x": 1000,
+  "max_win_x": 20000,
+  "min_run": 0.02,
+  "double": {
+   "gems": 19,
+   "live": 2,
+   "duds": 4,
+   "need": 6
+  }
+ },
+ "double": {
+  "p_win": "1/2",
+  "rtp": 1.0
+ },
+ "best": {
+  "1": {
+   "rtp": 0.93,
+   "bombs": 2,
+   "stop": 20
+  },
+  "10": {
+   "rtp": 0.93,
+   "bombs": 3,
+   "stop": 15
+  },
+  "100": {
+   "rtp": 0.93,
+   "bombs": 3,
+   "stop": 15
+  }
+ },
+ "lowest_any_stop": {
+  "1": {
+   "rtp": 0.924,
+   "bombs": 1,
+   "stop": 3
+  },
+  "10": {
+   "rtp": 0.9292,
+   "bombs": 1,
+   "stop": 2
+  },
+  "100": {
+   "rtp": 0.929929,
+   "bombs": 2,
+   "stop": 3
+  }
+ },
+ "top_pick": {
+  "1": {
+   "pick": 24,
+   "x": 23.25,
+   "rtp_exact": 0.93,
+   "one_in": 25.0,
+   "rtp_1": 0.93,
+   "rtp_10": 0.93,
+   "rtp_100": 0.93
+  },
+  "2": {
+   "pick": 20,
+   "x": 27.9,
+   "rtp_exact": 0.93,
+   "one_in": 30.0,
+   "rtp_1": 0.93,
+   "rtp_10": 0.93,
+   "rtp_100": 0.93
+  },
+  "3": {
+   "pick": 16,
+   "x": 25.464285714285715,
+   "rtp_exact": 0.93,
+   "one_in": 27.38095238095238,
+   "rtp_1": 0.9298434782608695,
+   "rtp_10": 0.9299895652173913,
+   "rtp_100": 0.9299968695652174
+  },
+  "4": {
+   "pick": 13,
+   "x": 23.766666666666666,
+   "rtp_exact": 0.93,
+   "one_in": 25.555555555555557,
+   "rtp_1": 0.9297391304347826,
+   "rtp_10": 0.9299739130434782,
+   "rtp_100": 0.9299973913043478
+  }
+ },
+ "best_ties_at_10": [
+  [
+   1,
+   10
+  ],
+  [
+   1,
+   15
+  ],
+  [
+   1,
+   19
+  ],
+  [
+   1,
+   20
+  ],
+  [
+   1,
+   22
+  ],
+  [
+   1,
+   23
+  ],
+  [
+   1,
+   24
+  ],
+  [
+   2,
+   9
+  ],
+  [
+   2,
+   15
+  ],
+  [
+   2,
+   16
+  ],
+  [
+   2,
+   19
+  ],
+  [
+   2,
+   20
+  ],
+  [
+   3,
+   15
+  ]
+ ],
+ "sim_mix_exact": {
+  "10_100000": {
+   "rtp": 0.9295831373818182,
+   "sd": 0.704637808519982,
+   "hit": 0.6938451379446641,
+   "top_pay": 30.35,
+   "top_x": 3.035,
+   "top_one_in": 78.34070788787507,
+   "total_prob": "1"
+  },
+  "top_1.1_100000": {
+   "rtp": 0.9299189723320158,
+   "sd": 4.740252921357289,
+   "hit": 0.037246376811594206,
+   "top_pay": 30.69,
+   "top_x": 27.9,
+   "top_one_in": 120.0,
+   "total_prob": "1"
+  },
+  "top_10_100000": {
+   "rtp": 0.9299908695652174,
+   "sd": 4.740595485700828,
+   "hit": 0.037246376811594206,
+   "top_pay": 279.0,
+   "top_x": 27.9,
+   "top_one_in": 120.0,
+   "total_prob": "1"
+  }
+ },
+ "grid": {
+  "bets": "$1.00-$100.00 in $0.10 steps (991 bets) \u00d7 1-4 live bombs",
+  "top_pick_stop_rule": "the board stops at the top pick (first pay >= 20\u00d7 the bet) and not before, for every bet and bomb count",
+  "top_pick_stop_failures": [],
+  "lowest_stop": {
+   "rtp": 0.9236363636363636,
+   "bet": 1.1,
+   "bombs": 1,
+   "pick": 5
+  },
+  "cent_stakes": "every cent $0.02-$10,000.00 \u00d7 1-4 live bombs",
+  "cent_stake_stop_failure_count": 0,
+  "cent_stake_stop_failures": []
+ },
+ "policies": {
+  "P0_1": {
+   "rtp": 0.9252173913043479,
+   "sd": 0.790139611027655,
+   "hit": 0.5782608695652174,
+   "top_pay": 1.6,
+   "top_x": 1.6,
+   "top_one_in": 1.7293233082706767,
+   "total_prob": "1",
+   "outcomes": 2,
+   "max_win_rounds": 0.0,
+   "dist_cents": {
+    "0": "97/230",
+    "160": "133/230"
+   }
+  },
+  "P2_1": {
+   "rtp": 0.9252173913043479,
+   "sd": 1.4507475421319487,
+   "hit": 0.2891304347826087,
+   "top_pay": 3.2,
+   "top_x": 3.2,
+   "top_one_in": 3.4586466165413534,
+   "total_prob": "1",
+   "outcomes": 2,
+   "max_win_rounds": 0.0,
+   "closed_form_equals_enumeration": true,
+   "dist_cents": {
+    "0": "327/460",
+    "320": "133/460"
+   }
+  },
+  "P3_1": {
+   "rtp": 0.9252173913043479,
+   "sd": 38.923259713079936,
+   "hit": 0.0005647078804347826,
+   "top_pay": 1638.4,
+   "top_x": 1638.4,
+   "top_one_in": 1770.827067669173,
+   "total_prob": "1",
+   "outcomes": 2,
+   "max_win_rounds": 0.0,
+   "dist_cents": {
+    "0": "235387/235520",
+    "163840": "133/235520"
+   }
+  },
+  "P5_1": {
+   "rtp": 0.9252173913043479,
+   "sd": 0.9971998603272431,
+   "hit": 0.5782608695652174,
+   "top_pay": 2.4,
+   "top_x": 2.4,
+   "top_one_in": 3.4586466165413534,
+   "total_prob": "1",
+   "outcomes": 3,
+   "max_win_rounds": 0.0,
+   "closed_form_equals_enumeration": true,
+   "dist_cents": {
+    "0": "97/230",
+    "80": "133/460",
+    "240": "133/460"
+   }
+  },
+  "P4_1": {
+   "rtp": 0.9252173913043479,
+   "derived": "optional stopping: every bar action is fair and unclipped, so P4 = P0 exactly (simulation only for the distribution)"
+  },
+  "P0_10": {
+   "rtp": 0.9298434782608695,
+   "sd": 0.7940903090827932,
+   "hit": 0.5782608695652174,
+   "top_pay": 16.08,
+   "top_x": 1.608,
+   "top_one_in": 1.7293233082706767,
+   "total_prob": "1",
+   "outcomes": 2,
+   "max_win_rounds": 0.0,
+   "dist_cents": {
+    "0": "97/230",
+    "1608": "133/230"
+   }
+  },
+  "P2_10": {
+   "rtp": 0.9298434782608695,
+   "sd": 1.4580012798426085,
+   "hit": 0.2891304347826087,
+   "top_pay": 32.16,
+   "top_x": 3.216,
+   "top_one_in": 3.4586466165413534,
+   "total_prob": "1",
+   "outcomes": 2,
+   "max_win_rounds": 0.0,
+   "closed_form_equals_enumeration": true,
+   "dist_cents": {
+    "0": "327/460",
+    "3216": "133/460"
+   }
+  },
+  "P3_10": {
+   "rtp": 0.9298434782608695,
+   "sd": 39.117876011645336,
+   "hit": 0.0005647078804347826,
+   "top_pay": 16465.92,
+   "top_x": 1646.592,
+   "top_one_in": 1770.827067669173,
+   "total_prob": "1",
+   "outcomes": 2,
+   "max_win_rounds": 0.0
+  },
+  "P5_10": {
+   "rtp": 0.9298434782608695,
+   "sd": 1.0021858596288793,
+   "hit": 0.5782608695652174,
+   "top_pay": 24.12,
+   "top_x": 2.412,
+   "top_one_in": 3.4586466165413534,
+   "total_prob": "1",
+   "outcomes": 3,
+   "max_win_rounds": 0.0,
+   "closed_form_equals_enumeration": true,
+   "dist_cents": {
+    "0": "97/230",
+    "804": "133/460",
+    "2412": "133/460"
+   }
+  },
+  "P4_10": {
+   "rtp": 0.9298434782608695,
+   "derived": "o
