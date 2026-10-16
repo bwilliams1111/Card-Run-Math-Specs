@@ -232,6 +232,7 @@ The same-seed comparison with the previous run (`compare_prev.py`) needs that ru
 
 ```
 README.md            this file
+CHANGELOG.md         what each delivery contains, rule changes carried, open items, pre-repo build history
 VERIFICATION.md      verification guide: scope, platform rules, RNG, run bar, checklist (covers all four games)
 blackjack/           Blackjack 20× math pack: document, PAR sheet, solvers, simulators, raw outputs
 mines/               Mines 20× math pack: document, PAR sheet, solver, simulators, raw outputs
