@@ -1,0 +1,22 @@
+{
+ "policy": "P0",
+ "build": "lock1",
+ "rounds": 250000,
+ "seed": 31002,
+ "stake": 10000,
+ "rtp": 0.9299999999950596,
+ "ci95": [
+  0.9299999922325938,
+  0.9300000077575253
+ ],
+ "se": 3.960514484396448e-9,
+ "sd": 0.000001980257242198224,
+ "hit": 1,
+ "win_freq": 0,
+ "max_paid_x": 0.93,
+ "run_cap_rounds": 0,
+ "max_win_rounds": 0,
+ "secs": 1.939,
+ "rng": "cards xoshiro128**(splitmix32(seed)); player xoshiro128**(splitmix32(seed^0x5bd1e995))",
+ "build_sha256": "123d6bced443c4c42038569cbc107af207b3dc49ed6bef05fcb621bf6adaa075"
+}

@@ -1,0 +1,255 @@
+CARD RUN  CRASH 20×  —  PAR SHEET (launch build, batch 3; run-bar v170, minimum run $0.02)
+====================================================================================================
+Build: builds-final/card-run-crash-classic-launch.html   sha256 123d6bced443c4c42038569cbc107af207b3dc49ed6bef05fcb621bf6adaa075
+Bets $1.00 to $100.00 in $0.10 steps · max win 20,000× the bet per round · pays rounded down to the cent · every card a fresh draw (8-deck shoe, replaced)
+Ladder: red #j pays floor(0.93 × 1.2^(j−1) × bet) (exact integer arithmetic); red #18 is the top (pays in full, ends the build).
+Bust: after the first red, a club straight after a club or a spade straight after a spade. P(next red before a bust) = 5/6 exactly.
+
+1. PAY TABLE (build)
+----------------------------------------------------------------------------------------------------
+ red     × bet   P(reach)     1 in    RTP $1   RTP $10  RTP $100   pays $1   pays $10   pays $100
+   1    0.9300   1.000000    1.000  93.0000%  93.0000%  93.0000%      0.93       9.30       93.00
+   2    1.1160   0.833333    1.200  92.5000%  93.0000%  93.0000%      1.11      11.16      111.60
+   3    1.3392   0.694444    1.440  92.3611%  92.9861%  93.0000%      1.33      13.39      133.92
+   4    1.6070   0.578704    1.728  92.5926%  92.9977%  92.9977%      1.60      16.07      160.70
+   5    1.9284   0.482253    2.074  92.5926%  92.9784%  92.9977%      1.92      19.28      192.84
+   6    2.3141   0.401878    2.488  92.8337%  92.9945%  92.9985%      2.31      23.14      231.41
+   7    2.7770   0.334898    2.986  92.7667%  92.9677%  92.9978%      2.77      27.76      277.69
+   8    3.3324   0.279082    3.583  92.9342%  92.9900%  92.9984%      3.33      33.32      333.23
+   9    3.9988   0.232568    4.300  92.7946%  92.9807%  92.9993%      3.99      39.98      399.88
+  10    4.7986   0.193807    5.160  92.8334%  92.9885%  92.9981%      4.79      47.98      479.85
+  11    5.7583   0.161506    6.192  92.8657%  92.9949%  92.9998%      5.75      57.58      575.83
+  12    6.9100   0.134588    7.430  92.8657%  92.9868%  92.9990%      6.90      69.09      690.99
+  13    8.2920   0.112157    8.916  92.9779%  92.9891%  92.9992%      8.29      82.91      829.19
+  14    9.9504   0.093464   10.699  92.9966%  92.9966%  92.9994%      9.95      99.50      995.03
+  15   11.9404   0.077887   12.839  92.9966%  92.9966%  92.9997%     11.94     119.40     1194.04
+  16   14.3285   0.064905   15.407  92.9446%  92.9966%  92.9998%     14.32     143.28     1432.85
+  17   17.1942   0.054088   18.488  92.9771%  92.9987%  92.9998%     17.19     171.94     1719.42
+  18   20.6331   0.045073   22.186  92.9861%  92.9996%  92.9996%     20.63     206.33     2063.30
+Nominal RTP of every stop: 0.93 × 1.2^(j−1) × (5/6)^(j−1) = 93.0000% (when you lock in does not change the return).
+
+2. BASE RTP BY STRATEGY (exact; rounding to the cent included)
+----------------------------------------------------------------------------------------------------
+strategy                                             $1        $10       $100    SD ($10)  hit ($10)
+best stop (red #1 at every bet)                93.0000%   93.0000%   93.0000%      0.0000   1.000000
+AUTO, never tap (red #18 or bust)              92.9861%   92.9996%   92.9996%      4.2806   0.045073
+uniformly random stop (#1..#18)                92.8233%   92.9912%   92.9991%      2.3001   0.320813
+worst stop at that bet                         92.3611%   92.9677%   92.9977%
+worst stops: $1.00 red #3, $10.00 red #7, $100.00 red #4
+Whole bet grid (991 bets): lowest 92.3077% (bet $1.30, LOCK IN at red #1); highest 93.0000%; AUTO between 92.9636% and 93.0000%.
+Top pay: red #18 = 20.6330× at $10 (20.63× at $1), 1 in 22.186 builds. Max win per round (with runs): 20,000× the bet.
+AUTO pay distribution ($10): 20.633× with p 0.045073, 0 otherwise. Uniform random stop distribution: see results.json exact.base.1000.uniform_random_stop.
+
+3. DOUBLE OR NOTHING (exact); RUN IT AGAIN and RUN HALF are removed in this build
+----------------------------------------------------------------------------------------------------
+DOUBLE OR NOTHING: first to three, every card red or black 1/2 → played out exactly 100.0000%; LOCK IN offers = floor(2 × amount × P(win)) ≤ fair.
+   P(three reds first) by score r–b: 0-0 1/2, 0-1 5/16, 0-2 1/8, 1-0 11/16, 1-1 1/2, 1-2 1/4, 2-0 7/8, 2-1 3/4, 2-2 1/2
+   amount $0.02: lock at first card 75.0000% · lock when ahead 81.2500% · played out 100.0000%
+   amount $0.03: lock at first card 83.3333% · lock when ahead 95.8333% · played out 100.0000%
+   amount $0.10: lock at first card 95.0000% · lock when ahead 96.2500% · played out 100.0000%
+   amount $0.46: lock at first card 98.9130% · lock when ahead 99.7283% · played out 100.0000%
+   amount $0.93: lock at first card 99.4624% · lock when ahead 99.4624% · played out 100.0000%
+   amount $1.00: lock at first card 99.5000% · lock when ahead 99.7500% · played out 100.0000%
+   amount $9.30: lock at first card 99.9462% · lock when ahead 99.9597% · played out 100.0000%
+   amount $20.63: lock at first card 99.9758% · lock when ahead 99.9818% · played out 100.0000%
+   amount $93.00: lock at first card 99.9946% · lock when ahead 99.9973% · played out 100.0000%
+   amount $206.33: lock at first card 99.9976% · lock when ahead 99.9988% · played out 100.0000%
+   amount $2,063.30: lock at first card 99.9998% · lock when ahead 99.9998% · played out 100.0000%
+   lowest (lock at the first card, amounts $1.00–$30.00): 99.5000% at $1.00
+   SMALL AMOUNTS $0.02–$0.99: lock at the first card lowest 75.0000% at $0.02 (offers $0.02 at 1–0, $0.01 at 0–1)
+   single LOCK IN offer furthest below fair: $0.02 at 0-2: offer $0.00 vs fair $0.0050 (0.00% of fair); $1.00–$30.00: 97.09% of fair ($1.03 at 0-2: $0.25 vs $0.2575)
+   $0.00 offers (LOCK IN shown, pays nothing): 2c at 0-2, 3c at 0-2 (amounts $0.02-$30.00 with any $0.00 offer: $0.02, $0.03)
+   LOWEST LOCK IN OFFER at every small amount (the shipped floor(2 × amount × P(win from the score)); lowest offer is always at 0–2 [P = 1/8]); worst offer relative to its fair value; lock-at-first-card return:
+       amount  lowest offer    at  worst vs fair   (score: offer)  lock at card 1
+      $  0.02         $0.00   0-2          0.00%       0-2: $0.00         75.000%
+      $  0.03         $0.00   0-2          0.00%       0-2: $0.00         83.333%
+      $  0.04         $0.01   0-2         80.00%       0-1: $0.02         87.500%
+      $  0.05         $0.01   0-2         80.00%       0-2: $0.01         90.000%
+      $  0.06         $0.01   0-2         66.67%       0-2: $0.01         91.667%
+      $  0.07         $0.01   0-2         57.14%       0-2: $0.01         92.857%
+      $  0.08         $0.02   0-2        100.00%       0-1: $0.05        100.000%
+      $  0.09         $0.02   0-2         88.89%       0-1: $0.05         94.444%
+      $  0.10         $0.02   0-2         80.00%       0-2: $0.02         95.000%
+      $  0.11         $0.02   0-2         72.73%       0-2: $0.02         95.455%
+      $  0.12         $0.03   0-2         93.33%       0-1: $0.07         95.833%
+      $  0.13         $0.03   0-2         92.31%       0-2: $0.03         96.154%
+      $  0.14         $0.03   0-2         85.71%       0-2: $0.03         96.429%
+      $  0.15         $0.03   0-2         80.00%       0-2: $0.03         96.667%
+      $  0.16         $0.04   0-2        100.00%       0-1: $0.10        100.000%
+      $  0.17         $0.04   0-2         94.12%       0-1: $0.10         97.059%
+      $  0.18         $0.04   0-2         88.89%       0-2: $0.04         97.222%
+      $  0.19         $0.04   0-2         84.21%       0-2: $0.04         97.368%
+      $  0.20         $0.05   0-2         96.00%       0-1: $0.12         97.500%
+      $  0.21         $0.05   0-2         95.24%       0-2: $0.05         97.619%
+      $  0.22         $0.05   0-2         90.91%       0-2: $0.05         97.727%
+      $  0.23         $0.05   0-2         86.96%       0-2: $0.05         97.826%
+      $  0.24         $0.06   0-2        100.00%       0-1: $0.15        100.000%
+      $  0.25         $0.06   0-2         96.00%       0-1: $0.15         98.000%
+      $  0.26         $0.06   0-2         92.31%       0-2: $0.06         98.077%
+      $  0.27         $0.06   0-2         88.89%       0-2: $0.06         98.148%
+      $  0.28         $0.07   0-2         97.14%       0-1: $0.17         98.214%
+      $  0.29         $0.07   0-2         96.55%       0-2: $0.07         98.276%
+      $  0.30         $0.07   0-2         93.33%       0-2: $0.07         98.333%
+      $  0.31         $0.07   0-2         90.32%       0-2: $0.07         98.387%
+      $  0.32         $0.08   0-2        100.00%       0-1: $0.20        100.000%
+      $  0.33         $0.08   0-2         96.97%       0-1: $0.20         98.485%
+      $  0.34         $0.08   0-2         94.12%       0-2: $0.08         98.529%
+      $  0.35         $0.08   0-2         91.43%       0-2: $0.08         98.571%
+      $  0.36         $0.09   0-2         97.78%       0-1: $0.22         98.611%
+      $  0.37         $0.09   0-2         97.30%       0-2: $0.09         98.649%
+      $  0.38         $0.09   0-2         94.74%       0-2: $0.09         98.684%
+      $  0.39         $0.09   0-2         92.31%       0-2: $0.09         98.718%
+      $  0.40         $0.10   0-2        100.00%       0-1: $0.25        100.000%
+      $  0.41         $0.10   0-2         97.56%       0-1: $0.25         98.780%
+      $  0.42         $0.10   0-2         95.24%       0-2: $0.10         98.810%
+      $  0.43         $0.10   0-2         93.02%       0-2: $0.10         98.837%
+      $  0.44         $0.11   0-2         98.18%       0-1: $0.27         98.864%
+      $  0.45         $0.11   0-2         97.78%       0-2: $0.11         98.889%
+      $  0.46         $0.11   0-2         95.65%       0-2: $0.11         98.913%
+      $  0.47         $0.11   0-2         93.62%       0-2: $0.11         98.936%
+      $  0.48         $0.12   0-2        100.00%       0-1: $0.30        100.000%
+      $  0.49         $0.12   0-2         97.96%       0-1: $0.30         98.980%
+      $  0.50         $0.12   0-2         96.00%       0-2: $0.12         99.000%
+      $  0.51         $0.12   0-2         94.12%       0-2: $0.12         99.020%
+      $  0.52         $0.13   0-2         98.46%       0-1: $0.32         99.038%
+      $  0.53         $0.13   0-2         98.11%       0-2: $0.13         99.057%
+      $  0.54         $0.13   0-2         96.30%       0-2: $0.13         99.074%
+      $  0.55         $0.13   0-2         94.55%       0-2: $0.13         99.091%
+      $  0.56         $0.14   0-2        100.00%       0-1: $0.35        100.000%
+      $  0.57         $0.14   0-2         98.25%       0-1: $0.35         99.123%
+      $  0.58         $0.14   0-2         96.55%       0-2: $0.14         99.138%
+      $  0.59         $0.14   0-2         94.92%       0-2: $0.14         99.153%
+      $  0.60         $0.15   0-2         98.67%       0-1: $0.37         99.167%
+      $  0.61         $0.15   0-2         98.36%       0-2: $0.15         99.180%
+      $  0.62         $0.15   0-2         96.77%       0-2: $0.15         99.194%
+      $  0.63         $0.15   0-2         95.24%       0-2: $0.15         99.206%
+      $  0.64         $0.16   0-2        100.00%       0-1: $0.40        100.000%
+      $  0.65         $0.16   0-2         98.46%       0-1: $0.40         99.231%
+      $  0.66         $0.16   0-2         96.97%       0-2: $0.16         99.242%
+      $  0.67         $0.16   0-2         95.52%       0-2: $0.16         99.254%
+      $  0.68         $0.17   0-2         98.82%       0-1: $0.42         99.265%
+      $  0.69         $0.17   0-2         98.55%       0-2: $0.17         99.275%
+      $  0.70         $0.17   0-2         97.14%       0-2: $0.17         99.286%
+      $  0.71         $0.17   0-2         95.77%       0-2: $0.17         99.296%
+      $  0.72         $0.18   0-2        100.00%       0-1: $0.45        100.000%
+      $  0.73         $0.18   0-2         98.63%       0-1: $0.45         99.315%
+      $  0.74         $0.18   0-2         97.30%       0-2: $0.18         99.324%
+      $  0.75         $0.18   0-2         96.00%       0-2: $0.18         99.333%
+      $  0.76         $0.19   0-2         98.95%       0-1: $0.47         99.342%
+      $  0.77         $0.19   0-2         98.70%       0-2: $0.19         99.351%
+      $  0.78         $0.19   0-2         97.44%       0-2: $0.19         99.359%
+      $  0.79         $0.19   0-2         96.20%       0-2: $0.19         99.367%
+      $  0.80         $0.20   0-2        100.00%       0-1: $0.50        100.000%
+      $  0.81         $0.20   0-2         98.77%       0-1: $0.50         99.383%
+      $  0.82         $0.20   0-2         97.56%       0-2: $0.20         99.390%
+      $  0.83         $0.20   0-2         96.39%       0-2: $0.20         99.398%
+      $  0.84         $0.21   0-2         99.05%       0-1: $0.52         99.405%
+      $  0.85         $0.21   0-2         98.82%       0-2: $0.21         99.412%
+      $  0.86         $0.21   0-2         97.67%       0-2: $0.21         99.419%
+      $  0.87         $0.21   0-2         96.55%       0-2: $0.21         99.425%
+      $  0.88         $0.22   0-2        100.00%       0-1: $0.55        100.000%
+      $  0.89         $0.22   0-2         98.88%       0-1: $0.55         99.438%
+      $  0.90         $0.22   0-2         97.78%       0-2: $0.22         99.444%
+      $  0.91         $0.22   0-2         96.70%       0-2: $0.22         99.451%
+      $  0.92         $0.23   0-2         99.13%       0-1: $0.57         99.457%
+      $  0.93         $0.23   0-2         98.92%       0-2: $0.23         99.462%
+      $  0.94         $0.23   0-2         97.87%       0-2: $0.23         99.468%
+      $  0.95         $0.23   0-2         96.84%       0-2: $0.23         99.474%
+      $  0.96         $0.24   0-2        100.00%       0-1: $0.60        100.000%
+      $  0.97         $0.24   0-2         98.97%       0-1: $0.60         99.485%
+      $  0.98         $0.24   0-2         97.96%       0-2: $0.24         99.490%
+      $  0.99         $0.24   0-2         96.97%       0-2: $0.24         99.495%
+
+4. RUN-BAR POLICIES (whole round, RTP of the bet; exact model and simulation of the shipped code)
+----------------------------------------------------------------------------------------------------
+   build lock1: LOCK IN at red #1 (pays 0.93x bet, always reached)
+   build auto: never tap LOCK IN: AUTO DEAL runs to the top red (#18, 20.63x) or a bust
+   P0: CASH OUT at the first run bar
+   P1: RETIRED (was RUN IT AGAIN once; removed with the ride in v170)
+   P2: DOUBLE OR NOTHING once, played out (no LOCK IN), then CASH OUT
+   P3: DOUBLE OR NOTHING while it is shown (until the 1,000x run cap, MAX WIN, or a bust), then CASH OUT
+   P4: random: at every bar CASH OUT w.p. 1/3, else a uniformly random shown run button (DOUBLE OR NOTHING / DOUBLE HALF); LOCK IN w.p. 1/3 at each race card
+   P5: DOUBLE HALF once (half doubles, played out; the other half and any odd cent go to the RUN BANK; a lost double brings the RUN BANK back as the bar: CASH OUT), then CASH OUT. NEW definition (v169: RUN HALF once)
+   P5 closed form: at a held H of $0.04 or more the round pays H - half or H + half with probability 1/2 each (half = floor(H/2)): mean exactly H, so P5 = P0 for every build and bet; the SD is half / bet higher.
+  bet build  pol    exact RTP    sim RTP                  95% CI     rounds  SD exact   SD sim  hit exact   hit sim   max pay ×
+$   1 lock1  P0      93.0000%   93.0000% [  93.0000%,   93.0000%]    200,000     0.000    0.000   1.000000  1.000000       0.930
+$   1 lock1  P2      93.0000%   92.8745% [  92.4669%,   93.2820%]    200,000     0.930    0.930   0.500000  0.499325       1.860
+$   1 lock1  P3      93.0000%   84.2803% [  71.8696%,   96.6910%]    200,000    29.745   28.318   0.000977  0.000885     952.320
+$   1 lock1  P4      ≤ P0 (*)   92.3431% [  92.0609%,   92.6254%]    200,000         -    0.644          -  0.916790      27.730 (sim)
+$   1 lock1  P5      93.0000%   93.0557% [  92.8541%,   93.2573%]    200,000     0.460    0.460   1.000000  1.000000       1.390
+$  10 auto   P0      92.9996%   93.3746% [  92.5340%,   94.2152%]  1,000,000     4.281    4.289   0.045073  0.045255      20.633
+$  10 auto   P2      92.9996%   92.8072% [  91.6080%,   94.0064%]  1,000,000     6.125    6.119   0.022537  0.022490      41.266
+$  10 auto   P3      92.9996%   97.1897% [  77.3308%,  117.0485%]  1,000,000    99.115  101.323   0.000088  0.000092   10564.096
+$  10 auto   P4      ≤ P0 (*)   93.2867% [  92.2443%,   94.3291%]  1,000,000         -    5.318          -  0.041465     725.127 (sim)
+$  10 auto   P5      92.9996%   92.3358% [  91.3966%,   93.2749%]  1,000,000     4.808    4.792   0.045073  0.044753      30.949
+$  10 lock1  P0      93.0000%   93.0000% [  93.0000%,   93.0000%]  1,000,000     0.000    0.000   1.000000  1.000000       0.930
+$  10 lock1  P2      93.0000%   92.9704% [  92.7881%,   93.1527%]  1,000,000     0.930    0.930   0.500000  0.499841       1.860
+$  10 lock1  P3      93.0000%   90.0895% [  84.3513%,   95.8276%]  1,000,000    29.745   29.277   0.000977  0.000946     952.320
+$  10 lock1  P4      ≤ P0 (*)   93.0532% [  92.9237%,   93.1827%]  1,000,000         -    0.661          -  0.917788      63.278 (sim)
+$  10 lock1  P5      93.0000%   93.0056% [  92.9144%,   93.0967%]  1,000,000     0.465    0.465   1.000000  1.000000       1.395
+$ 100 auto   P0      92.9996%   93.1621% [  91.9746%,   94.3496%]    500,000     4.281    4.284   0.045073  0.045152      20.633
+$ 100 auto   P2      92.9996%   93.1704% [  91.4712%,   94.8696%]    500,000     6.125    6.130   0.022537  0.022578      41.266
+$ 100 auto   P3      92.9996%   92.9640% [  65.4966%,  120.4315%]    500,000    99.115   99.096   0.000088  0.000088   10564.096
+$ 100 auto   P4      ≤ P0 (*)   92.5471% [  91.0963%,   93.9979%]    500,000         -    5.234          -  0.041398     604.564 (sim)
+$ 100 auto   P5      92.9996%   92.9599% [  91.6286%,   94.2912%]    500,000     4.808    4.803   0.045073  0.045184      30.950
+$ 100 lock1  P0      93.0000%   93.0000% [  93.0000%,   93.0000%]    500,000     0.000    0.000   1.000000  1.000000       0.930
+$ 100 lock1  P2      93.0000%   93.0777% [  92.8200%,   93.3355%]    500,000     0.930    0.930   0.500000  0.500418       1.860
+$ 100 lock1  P3      93.0000%   91.8036% [  83.6119%,   99.9954%]    500,000    29.745   29.554   0.000977  0.000964     952.320
+$ 100 lock1  P4      ≤ P0 (*)   93.0609% [  92.8794%,   93.2425%]    500,000         -    0.655          -  0.917360      49.232 (sim)
+$ 100 lock1  P5      93.0000%   92.9438% [  92.8149%,   93.0727%]    500,000     0.465    0.465   1.000000  1.000000       1.395
+(*) P4 has no exact value (its state graph exceeds 10^6 states); P4 ≤ P0 because every run returns at most what it stakes on average. (P1 = RUN IT AGAIN once is retired.)
+$1 lock1 rows (small amounts): the build LOCKs IN at red #1 and holds $0.93, under $1.00; the run bar offers DOUBLE OR NOTHING ($1.86) and DOUBLE HALF ($0.46 runs, $0.47 to the RUN BANK) on it (minimum $0.02).
+   P5 (DOUBLE HALF once) at $1 lock1: pays $1.39 (double wins, $0.92 + $0.47 RUN BANK) or $0.47 (double loses, the RUN BANK comes back), 1/2 each: exactly 93.0000% like P0, SD 0.460 (×bet), hit 100%, 50% of rounds above the bet. Seeds 32001..32062 (2 x 100,000 rounds per policy).
+
+5. SIMULATION (shipped code of this build, seeded crypto)
+----------------------------------------------------------------------------------------------------
+base $1.00: 2,000,000 rounds (seeds 1101..1104): AUTO 92.5121% CI [91.9204, 93.1039] (exact 92.9861%), uniform stop 92.7833% CI [92.4650, 93.1016], P(step) 0.833282 (5/6 = 0.833333), max 20.630×
+base $10.00: 4,000,000 rounds (seeds 1001..1008): AUTO 93.2550% CI [92.8349, 93.6750] (exact 92.9996%), uniform stop 93.1769% CI [92.9511, 93.4028], P(step) 0.833414 (5/6 = 0.833333), max 20.633×
+base $100.00: 2,000,000 rounds (seeds 1201..1204): AUTO 93.0383% CI [92.4450, 93.6317] (exact 92.9996%), uniform stop 92.9659% CI [92.6471, 93.2846], P(step) 0.833365 (5/6 = 0.833333), max 20.633×
+95% CI checks: 105 values, 104 inside, 1 outside: base $100.00 LOCK IN at red #2 (z -1.96) — see out/ci_checks.txt
+
+6. SAME-SEED COMPARISON WITH THE PREVIOUS RUN (run-bar v169 with RUN IT AGAIN / RUN HALF; out/compare_prev.txt)
+----------------------------------------------------------------------------------------------------
+previous build 06fbbbcc68afc0cf… -> this build 123d6bced443c4c4…; runs: IDENTICAL 58, CHANGED 10, NEW 10, RETIRED 20, MISSING 0 (ignoring wall-clock secs and build hashes)
+   RETIRED pol_10000_auto_P1_s31111.json
+   RETIRED pol_10000_auto_P1_s31112.json
+   CHANGED pol_10000_auto_P4_s31141.json: RTP 91.1985% -> 91.0137%
+   CHANGED pol_10000_auto_P4_s31142.json: RTP 94.4495% -> 94.0806%
+   RETIRED pol_10000_auto_P5_s31151.json
+   RETIRED pol_10000_auto_P5_s31152.json
+   NEW     pol_10000_auto_P5_s31161.json
+   NEW     pol_10000_auto_P5_s31162.json
+   RETIRED pol_10000_lock1_P1_s31011.json
+   RETIRED pol_10000_lock1_P1_s31012.json
+   CHANGED pol_10000_lock1_P4_s31041.json: RTP 92.7936% -> 93.0446%
+   CHANGED pol_10000_lock1_P4_s31042.json: RTP 93.0637% -> 93.0773%
+   RETIRED pol_10000_lock1_P5_s31051.json
+   RETIRED pol_10000_lock1_P5_s31052.json
+   NEW     pol_10000_lock1_P5_s31061.json
+   NEW     pol_10000_lock1_P5_s31062.json
+   RETIRED pol_1000_auto_P1_s30111.json
+   RETIRED pol_1000_auto_P1_s30112.json
+   CHANGED pol_1000_auto_P4_s30141.json: RTP 93.3768% -> 94.2477%
+   CHANGED pol_1000_auto_P4_s30142.json: RTP 91.4865% -> 92.3257%
+   RETIRED pol_1000_auto_P5_s30151.json
+   RETIRED pol_1000_auto_P5_s30152.json
+   NEW     pol_1000_auto_P5_s30161.json
+   NEW     pol_1000_auto_P5_s30162.json
+   RETIRED pol_1000_lock1_P1_s30011.json
+   RETIRED pol_1000_lock1_P1_s30012.json
+   CHANGED pol_1000_lock1_P4_s30041.json: RTP 92.8874% -> 92.9581%
+   CHANGED pol_1000_lock1_P4_s30042.json: RTP 92.9860% -> 93.1484%
+   RETIRED pol_1000_lock1_P5_s30051.json
+   RETIRED pol_1000_lock1_P5_s30052.json
+   NEW     pol_1000_lock1_P5_s30061.json
+   NEW     pol_1000_lock1_P5_s30062.json
+   RETIRED pol_100_lock1_P1_s32011.json
+   RETIRED pol_100_lock1_P1_s32012.json
+   CHANGED pol_100_lock1_P4_s32041.json: RTP 92.3784% -> 92.3832%
+   CHANGED pol_100_lock1_P4_s32042.json: RTP 92.6251% -> 92.3031%
+   RETIRED pol_100_lock1_P5_s32051.json
+   RETIRED pol_100_lock1_P5_s32052.json
+   NEW     pol_100_lock1_P5_s32061.json
+   NEW     pol_100_lock1_P5_s32062.json
+   exact policy values changed: 100_auto_P5 92.9295% -> 92.9861% (SD 10.9341 -> 4.8072), 100_lock1_P5 92.0000% -> 93.0000% (SD 0.0000 -> 0.4600), 1000_auto_P5 92.9446% -> 92.9996% (SD 10.9401 -> 4.8084), 1000_lock1_P5 92.9000% -> 93.0000% (SD 0.0000 -> 0.4650), 10000_auto_P5 92.9447% -> 92.9996% (SD 10.9405 -> 4.8084), 10000_lock1_P5 92.9400% -> 93.0000% (SD 0.0000 -> 0.4650)
+   (P0, P2, P3 exact values and P4 bounds: see out/compare_prev.txt; P1 retired; P5 is a different policy now)

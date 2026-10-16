@@ -1,0 +1,9 @@
+   CHANGED pol_100_lock1_P4_s32041.json: RTP 92.3784% -> 92.3832%
+   CHANGED pol_100_lock1_P4_s32042.json: RTP 92.6251% -> 92.3031%
+   RETIRED pol_100_lock1_P5_s32051.json
+   RETIRED pol_100_lock1_P5_s32052.json
+   NEW     pol_100_lock1_P5_s32061.json
+   NEW     pol_100_lock1_P5_s32062.json
+   exact policy values changed: 100_auto_P5 92.9295% -> 92.9861% (SD 10.9341 -> 4.8072), 100_lock1_P5 92.0000% -> 93.0000% (SD 0.0000 -> 0.4600), 1000_auto_P5 92.9446% -> 92.9996% (SD 10.9401 -> 4.8084), 1000_lock1_P5 92.9000% -> 93.0000% (SD 0.0000 -> 0.4650), 10000_auto_P5 92.9447% -> 92.9996% (SD 10.9405 -> 4.8084), 10000_lock1_P5 92.9400% -> 93.0000% (SD 0.0000 -> 0.4650)
+   (P0, P2, P3 exact values and P4 bounds: see out/compare_prev.txt; P1 retired; P5 is a different policy now)
+checks 105 outside 1

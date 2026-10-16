@@ -1,0 +1,118 @@
+build sha256 123d6bced443c4c42038569cbc107af207b3dc49ed6bef05fcb621bf6adaa075
+95% CI checks: 105 (104 inside, 1 outside)
+With this many checks, about 5% are expected outside by chance; base stops share the same rounds (correlated).
+
+ok   base $1.00 LOCK IN at red #1                                   exact 0.930000  sim 0.930000  CI [0.930000, 0.930000]  z +0.00  n 2,000,000  
+ok   base $1.00 LOCK IN at red #2                                   exact 0.925000  sim 0.924931  CI [0.924358, 0.925505]  z -0.23  n 2,000,000  
+ok   base $1.00 LOCK IN at red #3                                   exact 0.923611  sim 0.923279  CI [0.922430, 0.924129]  z -0.77  n 2,000,000  
+ok   base $1.00 LOCK IN at red #4                                   exact 0.925926  sim 0.925317  CI [0.924222, 0.926412]  z -1.09  n 2,000,000  
+ok   base $1.00 LOCK IN at red #5                                   exact 0.925926  sim 0.925637  CI [0.924307, 0.926966]  z -0.43  n 2,000,000  
+ok   base $1.00 LOCK IN at red #6                                   exact 0.928337  sim 0.927937  CI [0.926368, 0.929507]  z -0.50  n 2,000,000  
+ok   base $1.00 LOCK IN at red #7                                   exact 0.927667  sim 0.927705  CI [0.925893, 0.929517]  z +0.04  n 2,000,000  
+ok   base $1.00 LOCK IN at red #8                                   exact 0.929342  sim 0.930667  CI [0.928596, 0.932738]  z +1.25  n 2,000,000  
+ok   base $1.00 LOCK IN at red #9                                   exact 0.927946  sim 0.929435  CI [0.927097, 0.931772]  z +1.25  n 2,000,000  
+ok   base $1.00 LOCK IN at red #10                                  exact 0.928334  sim 0.929363  CI [0.926738, 0.931988]  z +0.77  n 2,000,000  
+ok   base $1.00 LOCK IN at red #11                                  exact 0.928657  sim 0.928524  CI [0.925592, 0.931457]  z -0.09  n 2,000,000  
+ok   base $1.00 LOCK IN at red #12                                  exact 0.928657  sim 0.927522  CI [0.924260, 0.930784]  z -0.68  n 2,000,000  
+ok   base $1.00 LOCK IN at red #13                                  exact 0.929779  sim 0.929122  CI [0.925498, 0.932747]  z -0.35  n 2,000,000  
+ok   base $1.00 LOCK IN at red #14                                  exact 0.929966  sim 0.930250  CI [0.926236, 0.934265]  z +0.14  n 2,000,000  
+ok   base $1.00 LOCK IN at red #15                                  exact 0.929966  sim 0.930287  CI [0.925852, 0.934723]  z +0.14  n 2,000,000  
+ok   base $1.00 LOCK IN at red #16                                  exact 0.929446  sim 0.928688  CI [0.923800, 0.933575]  z -0.30  n 2,000,000  
+ok   base $1.00 LOCK IN at red #17                                  exact 0.929771  sim 0.928080  CI [0.922695, 0.933464]  z -0.62  n 2,000,000  
+ok   base $1.00 LOCK IN at red #18                                  exact 0.929861  sim 0.925121  CI [0.919204, 0.931039]  z -1.57  n 2,000,000  
+ok   base $1.00 uniform random stop                                 exact 0.928233  sim 0.927833  CI [0.924650, 0.931016]  z -0.25  n 2,000,000  
+ok   base $1.00 P(next red before a bust) pooled                    exact 0.833333  sim 0.833282  CI [0.833066, 0.833498]  z -0.46  n 2,000,000  binomial SE over red->red transitions
+ok   base $10.00 LOCK IN at red #1                                  exact 0.930000  sim 0.930000  CI [0.930000, 0.930000]  z +0.00  n 4,000,000  
+ok   base $10.00 LOCK IN at red #2                                  exact 0.930000  sim 0.929779  CI [0.929372, 0.930187]  z -1.06  n 4,000,000  
+ok   base $10.00 LOCK IN at red #3                                  exact 0.929861  sim 0.929325  CI [0.928720, 0.929929]  z -1.74  n 4,000,000  
+ok   base $10.00 LOCK IN at red #4                                  exact 0.929977  sim 0.929697  CI [0.928919, 0.930475]  z -0.71  n 4,000,000  
+ok   base $10.00 LOCK IN at red #5                                  exact 0.929784  sim 0.930097  CI [0.929152, 0.931041]  z +0.65  n 4,000,000  
+ok   base $10.00 LOCK IN at red #6                                  exact 0.929945  sim 0.930293  CI [0.929182, 0.931405]  z +0.61  n 4,000,000  
+ok   base $10.00 LOCK IN at red #7                                  exact 0.929677  sim 0.930321  CI [0.929037, 0.931605]  z +0.98  n 4,000,000  
+ok   base $10.00 LOCK IN at red #8                                  exact 0.929900  sim 0.930909  CI [0.929444, 0.932374]  z +1.35  n 4,000,000  
+ok   base $10.00 LOCK IN at red #9                                  exact 0.929807  sim 0.931106  CI [0.929450, 0.932762]  z +1.54  n 4,000,000  
+ok   base $10.00 LOCK IN at red #10                                 exact 0.929885  sim 0.931319  CI [0.929460, 0.933179]  z +1.51  n 4,000,000  
+ok   base $10.00 LOCK IN at red #11                                 exact 0.929949  sim 0.931521  CI [0.929443, 0.933599]  z +1.48  n 4,000,000  
+ok   base $10.00 LOCK IN at red #12                                 exact 0.929868  sim 0.931307  CI [0.928995, 0.933620]  z +1.22  n 4,000,000  
+ok   base $10.00 LOCK IN at red #13                                 exact 0.929891  sim 0.931678  CI [0.929112, 0.934244]  z +1.37  n 4,000,000  
+ok   base $10.00 LOCK IN at red #14                                 exact 0.929966  sim 0.931313  CI [0.928472, 0.934153]  z +0.93  n 4,000,000  
+ok   base $10.00 LOCK IN at red #15                                 exact 0.929966  sim 0.932123  CI [0.928984, 0.935262]  z +1.35  n 4,000,000  
+ok   base $10.00 LOCK IN at red #16                                 exact 0.929966  sim 0.932158  CI [0.928695, 0.935621]  z +1.24  n 4,000,000  
+ok   base $10.00 LOCK IN at red #17                                 exact 0.929987  sim 0.932805  CI [0.928988, 0.936621]  z +1.45  n 4,000,000  
+ok   base $10.00 LOCK IN at red #18                                 exact 0.929996  sim 0.932550  CI [0.928349, 0.936750]  z +1.19  n 4,000,000  
+ok   base $10.00 uniform random stop                                exact 0.929912  sim 0.931769  CI [0.929511, 0.934028]  z +1.61  n 4,000,000  
+ok   base $10.00 P(next red before a bust) pooled                   exact 0.833333  sim 0.833414  CI [0.833261, 0.833566]  z +1.04  n 4,000,000  binomial SE over red->red transitions
+ok   base $100.00 LOCK IN at red #1                                 exact 0.930000  sim 0.930000  CI [0.930000, 0.930000]  z +0.00  n 2,000,000  
+OUT  base $100.00 LOCK IN at red #2                                 exact 0.930000  sim 0.929422  CI [0.928845, 0.929999]  z -1.96  n 2,000,000  
+ok   base $100.00 LOCK IN at red #3                                 exact 0.930000  sim 0.929418  CI [0.928563, 0.930273]  z -1.33  n 2,000,000  
+ok   base $100.00 LOCK IN at red #4                                 exact 0.929977  sim 0.929714  CI [0.928614, 0.930814]  z -0.47  n 2,000,000  
+ok   base $100.00 LOCK IN at red #5                                 exact 0.929977  sim 0.929939  CI [0.928604, 0.931275]  z -0.06  n 2,000,000  
+ok   base $100.00 LOCK IN at red #6                                 exact 0.929985  sim 0.931095  CI [0.929523, 0.932668]  z +1.38  n 2,000,000  
+ok   base $100.00 LOCK IN at red #7                                 exact 0.929978  sim 0.931492  CI [0.929675, 0.933309]  z +1.63  n 2,000,000  
+ok   base $100.00 LOCK IN at red #8                                 exact 0.929984  sim 0.931949  CI [0.929876, 0.934022]  z +1.86  n 2,000,000  
+ok   base $100.00 LOCK IN at red #9                                 exact 0.929993  sim 0.931179  CI [0.928836, 0.933521]  z +0.99  n 2,000,000  
+ok   base $100.00 LOCK IN at red #10                                exact 0.929981  sim 0.931670  CI [0.929039, 0.934300]  z +1.26  n 2,000,000  
+ok   base $100.00 LOCK IN at red #11                                exact 0.929998  sim 0.930092  CI [0.927155, 0.933029]  z +0.06  n 2,000,000  
+ok   base $100.00 LOCK IN at red #12                                exact 0.929990  sim 0.930142  CI [0.926873, 0.933410]  z +0.09  n 2,000,000  
+ok   base $100.00 LOCK IN at red #13                                exact 0.929992  sim 0.930140  CI [0.926513, 0.933766]  z +0.08  n 2,000,000  
+ok   base $100.00 LOCK IN at red #14                                exact 0.929994  sim 0.929701  CI [0.925688, 0.933715]  z -0.14  n 2,000,000  
+ok   base $100.00 LOCK IN at red #15                                exact 0.929997  sim 0.929315  CI [0.924882, 0.933749]  z -0.30  n 2,000,000  
+ok   base $100.00 LOCK IN at red #16                                exact 0.929998  sim 0.929210  CI [0.924320, 0.934101]  z -0.32  n 2,000,000  
+ok   base $100.00 LOCK IN at red #17                                exact 0.929998  sim 0.928676  CI [0.923290, 0.934062]  z -0.48  n 2,000,000  
+ok   base $100.00 LOCK IN at red #18                                exact 0.929996  sim 0.930383  CI [0.924450, 0.936317]  z +0.13  n 2,000,000  
+ok   base $100.00 uniform random stop                               exact 0.929991  sim 0.929659  CI [0.926471, 0.932846]  z -0.20  n 2,000,000  
+ok   base $100.00 P(next red before a bust) pooled                  exact 0.833333  sim 0.833365  CI [0.833149, 0.833580]  z +0.28  n 2,000,000  binomial SE over red->red transitions
+ok   policy $1.00 lock1 P0                                          exact 0.930000  sim 0.930000  CI [0.930000, 0.930000]  z -0.00  n 200,000  
+ok   policy $1.00 lock1 P0 hit rate                                 exact 1.000000  sim 1.000000  CI [1.000000, 1.000000]  z +0.00  n 200,000  binomial SE
+ok   policy $1.00 lock1 P2                                          exact 0.930000  sim 0.928745  CI [0.924669, 0.932820]  z -0.60  n 200,000  
+ok   policy $1.00 lock1 P2 hit rate                                 exact 0.500000  sim 0.499325  CI [0.497134, 0.501516]  z -0.60  n 200,000  binomial SE
+ok   policy $1.00 lock1 P3                                          exact 0.930000  sim 0.842803  CI [0.718696, 0.966910]  z -1.38  n 200,000  
+ok   policy $1.00 lock1 P3 hit rate                                 exact 0.000977  sim 0.000885  CI [0.000755, 0.001015]  z -1.38  n 200,000  binomial SE
+ok   policy $1.00 lock1 P4 (no exact value; bound P4 <= P0 = 0.930000) exact    -      sim 0.923431  CI [0.920609, 0.926254]  z -4.56  n 200,000  consistent with the bound when CI low <= P0
+ok   policy $1.00 lock1 P5                                          exact 0.930000  sim 0.930557  CI [0.928541, 0.932573]  z +0.54  n 200,000  
+ok   policy $1.00 lock1 P5 hit rate                                 exact 1.000000  sim 1.000000  CI [1.000000, 1.000000]  z +0.00  n 200,000  binomial SE
+ok   policy $10.00 auto P0                                          exact 0.929996  sim 0.933746  CI [0.925340, 0.942152]  z +0.87  n 1,000,000  
+ok   policy $10.00 auto P0 hit rate                                 exact 0.045073  sim 0.045255  CI [0.044848, 0.045662]  z +0.87  n 1,000,000  binomial SE
+ok   policy $10.00 auto P2                                          exact 0.929996  sim 0.928072  CI [0.916080, 0.940064]  z -0.31  n 1,000,000  
+ok   policy $10.00 auto P2 hit rate                                 exact 0.022537  sim 0.022490  CI [0.022199, 0.022781]  z -0.31  n 1,000,000  binomial SE
+ok   policy $10.00 auto P3                                          exact 0.929996  sim 0.971897  CI [0.773308, 1.170485]  z +0.41  n 1,000,000  
+ok   policy $10.00 auto P3 hit rate                                 exact 0.000088  sim 0.000092  CI [0.000073, 0.000111]  z +0.41  n 1,000,000  binomial SE
+ok   policy $10.00 auto P4 (no exact value; bound P4 <= P0 = 0.929996) exact    -      sim 0.932867  CI [0.922443, 0.943291]  z +0.54  n 1,000,000  consistent with the bound when CI low <= P0
+ok   policy $10.00 auto P5                                          exact 0.929996  sim 0.923358  CI [0.913966, 0.932749]  z -1.39  n 1,000,000  
+ok   policy $10.00 auto P5 hit rate                                 exact 0.045073  sim 0.044753  CI [0.044348, 0.045158]  z -1.55  n 1,000,000  binomial SE
+ok   policy $10.00 lock1 P0                                         exact 0.930000  sim 0.930000  CI [0.930000, 0.930000]  z -0.00  n 1,000,000  
+ok   policy $10.00 lock1 P0 hit rate                                exact 1.000000  sim 1.000000  CI [1.000000, 1.000000]  z +0.00  n 1,000,000  binomial SE
+ok   policy $10.00 lock1 P2                                         exact 0.930000  sim 0.929704  CI [0.927881, 0.931527]  z -0.32  n 1,000,000  
+ok   policy $10.00 lock1 P2 hit rate                                exact 0.500000  sim 0.499841  CI [0.498861, 0.500821]  z -0.32  n 1,000,000  binomial SE
+ok   policy $10.00 lock1 P3                                         exact 0.930000  sim 0.900895  CI [0.843513, 0.958276]  z -0.99  n 1,000,000  
+ok   policy $10.00 lock1 P3 hit rate                                exact 0.000977  sim 0.000946  CI [0.000886, 0.001006]  z -0.99  n 1,000,000  binomial SE
+ok   policy $10.00 lock1 P4 (no exact value; bound P4 <= P0 = 0.930000) exact    -      sim 0.930532  CI [0.929237, 0.931827]  z +0.81  n 1,000,000  consistent with the bound when CI low <= P0
+ok   policy $10.00 lock1 P5                                         exact 0.930000  sim 0.930056  CI [0.929144, 0.930967]  z +0.12  n 1,000,000  
+ok   policy $10.00 lock1 P5 hit rate                                exact 1.000000  sim 1.000000  CI [1.000000, 1.000000]  z +0.00  n 1,000,000  binomial SE
+ok   policy $100.00 auto P0                                         exact 0.929996  sim 0.931621  CI [0.919746, 0.943496]  z +0.27  n 500,000  
+ok   policy $100.00 auto P0 hit rate                                exact 0.045073  sim 0.045152  CI [0.044576, 0.045728]  z +0.27  n 500,000  binomial SE
+ok   policy $100.00 auto P2                                         exact 0.929996  sim 0.931704  CI [0.914712, 0.948696]  z +0.20  n 500,000  
+ok   policy $100.00 auto P2 hit rate                                exact 0.022537  sim 0.022578  CI [0.022166, 0.022990]  z +0.20  n 500,000  binomial SE
+ok   policy $100.00 auto P3                                         exact 0.929996  sim 0.929640  CI [0.654966, 1.204315]  z -0.00  n 500,000  
+ok   policy $100.00 auto P3 hit rate                                exact 0.000088  sim 0.000088  CI [0.000062, 0.000114]  z -0.00  n 500,000  binomial SE
+ok   policy $100.00 auto P4 (no exact value; bound P4 <= P0 = 0.929996) exact    -      sim 0.925471  CI [0.910963, 0.939979]  z -0.61  n 500,000  consistent with the bound when CI low <= P0
+ok   policy $100.00 auto P5                                         exact 0.929996  sim 0.929599  CI [0.916286, 0.942912]  z -0.06  n 500,000  
+ok   policy $100.00 auto P5 hit rate                                exact 0.045073  sim 0.045184  CI [0.044608, 0.045760]  z +0.38  n 500,000  binomial SE
+ok   policy $100.00 lock1 P0                                        exact 0.930000  sim 0.930000  CI [0.930000, 0.930000]  z -0.00  n 500,000  
+ok   policy $100.00 lock1 P0 hit rate                               exact 1.000000  sim 1.000000  CI [1.000000, 1.000000]  z +0.00  n 500,000  binomial SE
+ok   policy $100.00 lock1 P2                                        exact 0.930000  sim 0.930777  CI [0.928200, 0.933355]  z +0.59  n 500,000  
+ok   policy $100.00 lock1 P2 hit rate                               exact 0.500000  sim 0.500418  CI [0.499032, 0.501804]  z +0.59  n 500,000  binomial SE
+ok   policy $100.00 lock1 P3                                        exact 0.930000  sim 0.918036  CI [0.836119, 0.999954]  z -0.29  n 500,000  
+ok   policy $100.00 lock1 P3 hit rate                               exact 0.000977  sim 0.000964  CI [0.000878, 0.001050]  z -0.29  n 500,000  binomial SE
+ok   policy $100.00 lock1 P4 (no exact value; bound P4 <= P0 = 0.930000) exact    -      sim 0.930609  CI [0.928794, 0.932425]  z +0.66  n 500,000  consistent with the bound when CI low <= P0
+ok   policy $100.00 lock1 P5                                        exact 0.930000  sim 0.929438  CI [0.928149, 0.930727]  z -0.85  n 500,000  
+ok   policy $100.00 lock1 P5 hit rate                               exact 1.000000  sim 1.000000  CI [1.000000, 1.000000]  z +0.00  n 500,000  binomial SE
+
+INVESTIGATION of the values outside their CI (per-seed results of the same statistic):
+   seed 1201: 0.929470  CI [0.928315, 0.930624]
+   seed 1202: 0.929309  CI [0.928154, 0.930463]
+   seed 1203: 0.929856  CI [0.928702, 0.931009]
+   seed 1204: 0.929054  CI [0.927899, 0.930210]
+   follow-up only: 2,000,000 rounds (seeds 1501, 1502, 1503, 1504): 0.930115 CI [0.929539, 0.930691] z +0.39 -> exact inside
+   main + follow-up: 4,000,000 rounds (seeds 1201, 1202, 1203, 1204, 1501, 1502, 1503, 1504): 0.929769 CI [0.929361, 0.930176] z -1.11 -> exact inside
+   base $100.00 LOCK IN at red #2: |z| = 1.96; P(|z| >= that) = 0.0497

@@ -7,9 +7,18 @@ Math specifications, exact solvers, simulation evidence and PAR sheets for the *
 | **Blackjack 20×** | **Delivered** (16 Oct 2026, run-bar v170) | [`blackjack/`](blackjack/) |
 | **Mines 20×** | **Delivered** (16 Oct 2026, run-bar v170) | [`mines/`](mines/) |
 | **Kicks 20×** | **Delivered** (16 Oct 2026, run-bar v170) | [`kicks/`](kicks/) |
-| Crash 20× | Pending | — |
+| **Crash 20×** | **Delivered** (16 Oct 2026, run-bar v170) | [`crash/`](crash/) |
 
-Crash will be added to this repository when its math pack is completed. The platform rules shared by all four games (bets, rounding, MAX WIN, the run bar, RNG) are already described in [`VERIFICATION.md`](VERIFICATION.md).
+All four packs are complete. The platform rules shared by all four games (bets, rounding, MAX WIN, the run bar, RNG), the cross-game checklist and the open items are in [`VERIFICATION.md`](VERIFICATION.md); every file hash it lists in §2 is reproduced by the files in `builds-final/` and `shared/`.
+
+### The four games at a glance
+
+| Game | Base RTP | Skill | Double | Whole round, any bar play |
+|---|---|---|---|---|
+| Blackjack | 94.368% best play (81.950% worst) | Yes — hit/stand | 100.0910% best play (+edge) | ≤ 97.49% (exact optimum) |
+| Mines | 93.0000% every stop (92.3636% grid low after rounding) | No — volatility only | 100.0000% exactly | = base RTP |
+| Kicks | 92.9666% best play (84.8069% worst) | Yes — GOAL/WIDE calls, shoe count | 100.0000% exactly | = base RTP |
+| Crash | 93.0000% every stop (92.3077% grid low after rounding) | No — volatility only | 100.0000% played out; LOCK IN offers ≤ fair | ≤ base RTP |
 
 ---
 
@@ -170,6 +179,55 @@ python3 -I merge.py                              # CI checks, results.json, par.
 
 ---
 
+## Crash 20× — start here
+
+| File | What it is |
+|---|---|
+| [`crash/CRASH-MATH.pdf`](crash/CRASH-MATH.pdf) | The math document, formatted (14 pages) |
+| [`crash/CRASH-MATH.md`](crash/CRASH-MATH.md) | The same document in Markdown (`.docx` also provided) |
+| [`crash/par.txt`](crash/par.txt) | Plain-text PAR sheet (every table, including the LOCK IN offer at every small amount) |
+| [`crash/results.json`](crash/results.json) | Every headline number and CI check as data |
+| [`crash/README.txt`](crash/README.txt) | Every script, command and seed |
+| [`crash/PACK-README.txt`](crash/PACK-README.txt) | The math pack's cover note |
+| [`crash/out/`](crash/out/) | Raw solver and simulation outputs |
+
+### Headline figures (exact)
+
+| Item | Value |
+|---|---|
+| Base game RTP, every stop | **93.0000%** before rounding (0.93 × 1.2^(j−1) × (5/6)^(j−1)) |
+| Lowest stop after cent rounding: $1 / $10 / $100 | 92.3611% / 92.9677% / 92.9977% |
+| Lowest anywhere on the $0.10 bet grid | **92.3077%** ($1.30, lock in at red #1) |
+| Top pay, paid in full | Red #18 = 20.6331×, 1 in 22.186 builds |
+| DOUBLE OR NOTHING, played out | First to three reds v three blacks, exactly 1/2, **100.0000%** |
+| DOUBLE OR NOTHING with LOCK IN | Offer = floor(fair value), so ≤ fair: lowest 99.50% at $1.00 and up; 75.00% at a $0.02 hold |
+| Whole round, any bar policy | Never above the base RTP (equal unless a LOCK IN offer is taken) |
+| MAX WIN | 20,000× the bet |
+| Bets | $1.00 – $100.00 in $0.10 steps |
+
+Crash has one decision (when to lock in) and it changes the volatility only. **Server note:** every card must be an independent draw from the 8-deck shoe (with replacement); dealing without replacement changes the math (`VERIFICATION.md` §3, open item #24). **Open item for a decision:** at a held $0.02 or $0.03 the race's LOCK IN offer at a 0–2 score is $0.00 (`CRASH-MATH.md`, open item 1).
+
+### Build under test
+
+| File | sha256 |
+|---|---|
+| `builds-final/card-run-crash-classic-launch.html` | `123d6bced443c4c42038569cbc107af207b3dc49ed6bef05fcb621bf6adaa075` |
+
+`run-bar.js` v170 is embedded byte for byte in the Crash build (hashes under Blackjack above).
+
+### Reproducing the results
+
+Requirements: Python 3 (standard library only) and Node ≥ 18, no network. `exact.py` parses every money constant from the build text with patterns that must match exactly once and stops if one differs.
+
+```sh
+cd crash
+./run_all.sh     # build hash, exact math, every simulation chunk, results.json and par.txt (~6 min)
+```
+
+The same-seed comparison with the previous run (`compare_prev.py`) needs that run's outputs, which are not in this repository; `run_all.sh` skips it when they are absent.
+
+---
+
 ## Repository layout
 
 ```
@@ -178,11 +236,12 @@ VERIFICATION.md      verification guide: scope, platform rules, RNG, run bar, ch
 blackjack/           Blackjack 20× math pack: document, PAR sheet, solvers, simulators, raw outputs
 mines/               Mines 20× math pack: document, PAR sheet, solver, simulators, raw outputs
 kicks/               Kicks 20× math pack: document, PAR sheet, solver, simulators, raw outputs
-builds-final/        the client build(s) under test, by hash
+crash/               Crash 20× math pack: document, PAR sheet, solver, simulators, raw outputs
+builds-final/        the four client builds under test, by hash
 shared/              run-bar.js, run-bar.test.js, rules-sheet.js (embedded in every build)
 ```
 
 ## Out of scope
 
-- The production RNG and server-side outcome determination. The builds draw outcomes in the client with `crypto.getRandomValues` (rejection sampling, no `Math.random` fallback); production replaces `rngU32` (Blackjack and Mines) and `rnd` (Kicks) with the platform RNG, certified separately.
+- The production RNG and server-side outcome determination. The builds draw outcomes in the client with `crypto.getRandomValues` (rejection sampling, no `Math.random` fallback); production replaces `rngU32` (Blackjack and Mines), `rnd` (Kicks) and `rand32` (Crash) with the platform RNG, certified separately.
 - See `VERIFICATION.md` §9 for the open items and their owners.

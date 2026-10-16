@@ -1,0 +1,1173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Card Run Crash 20×</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:wght@400&display=swap">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&family=Barlow+Condensed:wght@700;800&family=Chakra+Petch:wght@600;700&family=Anton&family=Montserrat:wght@500;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a phone-sized game column with a live math panel beside it on wide screens, below it on phones. Single dark look, matching the existing Card Run build. */
+:root{
+  color-scheme: dark;
+  --bg:#071328; --bg2:#0c2246; --panel:#0b1c39; --panel2:#10264a; --line:#1d3a66; --line2:#2a4f86;
+  --fg:#e9f0ff; --muted:#7e93b9; --dim:#4f6589;
+  --gold:#ffcf3d; --gold2:#f0a400; --red:#ef3b46; --red-soft:#ff6b74; --blue:#2f6bff; --blue2:#1d4fd6;
+  --green:#3fc46a; --cardface:#ffffff; --cardink:#121826; --orange:#f28c28;
+  --f-ui:"Rubik",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-display:"Chakra Petch","Rubik",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--bg);color:var(--fg)}
+body{font-family:var(--f-ui);padding-inline:16px;padding-block:18px 40px;
+  background:radial-gradient(1200px 600px at 30% -10%,#123060 0%,transparent 60%),var(--bg);min-height:100%}
+button{font-family:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+button:disabled{cursor:default}
+.wrap{display:flex;gap:28px;justify-content:center;align-items:flex-start;flex-wrap:wrap;max-width:1180px;margin:0 auto}
+.gamecol{width:100%;max-width:420px;flex:0 1 420px;min-width:0}
+
+
+/* phone */
+.phone{position:relative;background:linear-gradient(180deg,#0d2448 0%,#0a1c3a 60%,#091833 100%);border:1px solid var(--line);border-radius:22px;overflow:hidden;min-height:clamp(560px,calc(100vh - 110px),680px);min-height:clamp(560px,calc(100dvh - 110px),680px);display:flex;flex-direction:column}
+.phone::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.06;
+  background-image:radial-gradient(circle at 20% 30%,#fff 0 2px,transparent 3px),radial-gradient(circle at 70% 60%,#fff 0 2px,transparent 3px);background-size:90px 90px}
+.topbar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid #0f2b55;font-size:12px}
+.topbar .brand{font-weight:800;letter-spacing:.06em}
+.topbar .sp{flex:1}
+.pill{display:inline-flex;align-items:center;gap:6px;background:#0a1a35;border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-weight:600;font-variant-numeric:tabular-nums}
+.pill .k{color:var(--gold)}
+.pill.net.pos{color:var(--green)} .pill.net.neg{color:var(--red-soft)}
+.screen{position:relative;flex:1;display:flex;flex-direction:column;padding:12px 14px 16px;gap:12px}
+
+/* rules panel */
+.rules{background:rgba(6,16,34,.75);border:1px solid var(--line);border-radius:12px;padding:4px 12px}
+.rules .r{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:13px;color:#b9c7e4}
+.rules .r+.r{border-top:1px solid #15305a}
+.rules .r b{color:var(--fg);font-weight:600}
+.rules .r .end{white-space:nowrap;margin-left:auto;font-weight:700;color:var(--fg)}
+.rules .r .end em{font-style:normal;font-family:var(--f-display);font-size:18px;color:var(--gold);margin-right:4px}
+.ico{width:16px;height:16px;flex:none}
+
+/* deck row */
+.deckrow{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;margin-top:4px}
+.stat{background:rgba(9,22,46,.85);border:1px solid #16345f;border-radius:10px;padding:7px 8px;text-align:center}
+.stat .l{font-size:10px;letter-spacing:.12em;color:var(--muted);font-weight:600}
+.stat .v{font-weight:800;font-size:17px;font-variant-numeric:tabular-nums}
+.stat.ammo .v{color:var(--gold)} .stat.mult .v{color:#9cc0ff}
+.deck{position:relative;width:62px;height:88px;cursor:pointer}
+.deck .cb{position:absolute;inset:0}
+.deck .cb:nth-child(1){transform:translate(3px,6px)} .deck .cb:nth-child(2){transform:translate(1.5px,3px)}
+.deck.shuffling .cb:nth-child(1){animation:rifL .52s ease-in-out}
+.deck.shuffling .cb:nth-child(2){animation:rifM .52s ease-in-out}
+.deck.shuffling .cb:nth-child(3){animation:rifR .52s ease-in-out}
+@keyframes rifL{0%,100%{transform:translate(3px,6px)}35%{transform:translate(-30px,6px) rotate(-14deg)}60%{transform:translate(-24px,4px) rotate(-9deg)}}
+@keyframes rifM{0%,100%{transform:translate(1.5px,3px)}45%{transform:translate(1.5px,-10px)}}
+@keyframes rifR{0%,100%{transform:none}35%{transform:translate(30px,0) rotate(14deg)}60%{transform:translate(24px,-2px) rotate(9deg)}}
+.bigbtn{position:relative;overflow:hidden}
+.autotog{align-self:center;display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.12em;font-weight:700;color:var(--muted);padding:4px 10px;border-radius:999px;border:1px solid #1d3a66}
+.autotog .sw{width:28px;height:16px;border-radius:999px;background:#1d3a66;position:relative}
+.autotog .sw::after{content:"";position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#7e93b9;transition:left .15s}
+.autotog[aria-pressed="true"]{color:var(--gold);border-color:#6b5200}
+.autotog[aria-pressed="true"] .sw{background:#6b5200}
+.autotog[aria-pressed="true"] .sw::after{left:14px;background:var(--gold)}
+.bigbtn.info{cursor:default}
+.deckcap{text-align:center;font-size:11px;color:var(--muted);margin-top:4px}
+.deckcap b{color:var(--fg);font-size:14px}
+
+/* cards */
+.card{position:relative;width:62px;height:88px;border-radius:7px;background:var(--cardface);color:var(--cardink);box-shadow:0 4px 10px rgba(0,0,0,.35);flex:none;user-select:none}
+.card.red{color:#d81f2a}
+.card .tl{position:absolute;left:5px;top:3px;font-weight:800;font-size:15px;line-height:1}
+.card .br{position:absolute;right:5px;bottom:3px;font-weight:800;font-size:15px;line-height:1;transform:rotate(180deg)}
+.card .pip{position:absolute;left:50%;top:50%;width:30px;height:30px;transform:translate(-50%,-50%)}
+.card .pip svg{width:100%;height:100%;fill:currentColor}
+.cb{width:62px;height:88px;border-radius:7px;background:linear-gradient(160deg,#2a5aa8,#183b78 55%,#132f62);border:2px solid #8fb3ee;box-shadow:inset 0 0 0 3px #173a73,0 4px 10px rgba(0,0,0,.35);display:grid;place-items:center}
+.cb svg{width:34px;height:34px}
+.slots{display:flex;gap:8px;justify-content:center;min-height:92px;align-items:center;margin-block:4px 8px}
+.slot{width:62px;height:88px;border-radius:7px;border:1px dashed #1d3a66;background:rgba(8,20,42,.5);flex:none}
+.card.hl{box-shadow:0 0 0 2px #ff4b57,0 0 18px rgba(255,60,70,.7)}
+.card.dim{filter:grayscale(.6) brightness(.55)}
+.dealin{animation:dealin .32s cubic-bezier(.2,.8,.3,1)}
+@keyframes dealin{from{transform:translateY(-120px) rotateY(80deg) scale(.8);opacity:.2}to{transform:none;opacity:1}}
+
+/* badges & messages */
+.badge{align-self:center;display:inline-flex;align-items:center;gap:8px;padding:5px 12px;border-radius:999px;border:1px solid #2a5592;background:#0a1d3d;font-size:10.5px;font-weight:700;letter-spacing:.1em;color:#9cc0ff}
+.msg{text-align:center;min-height:38px}
+.msg h3{margin:0;font-family:var(--f-display);font-size:17px;letter-spacing:.05em;color:#6fd3ff;text-wrap:balance}
+.msg p{margin:2px 0 0;font-size:12px;color:#b9c7e4}
+.msg.good h3{color:var(--green)}
+
+/* bottom controls */
+.controls{margin-top:auto;display:flex;flex-direction:column;gap:8px;align-items:stretch}
+.bigbtn{border-radius:14px;padding:9px 12px;text-align:center;background:#0b1b38;border:1px solid #1d3a66;display:flex;align-items:center;justify-content:center;gap:16px;min-height:58px}
+.bigbtn .lab{font-size:10.5px;letter-spacing:.14em;font-weight:700;color:var(--muted)}
+.bigbtn .amt{font-weight:800;font-size:22px;font-variant-numeric:tabular-nums;line-height:1.1}
+.bigbtn.next .amt{color:#c9d6ef}
+.bigbtn.cash{border:2px solid var(--gold);background:#0c1a33;box-shadow:0 0 18px rgba(255,200,60,.25)}
+.bigbtn.cash .lab{color:var(--gold)} .bigbtn.cash .amt{color:var(--gold)}
+.bigbtn.bust{border-color:#6b2232;background:#1d0d1a}
+.bigbtn.bust .lab,.bigbtn.bust .amt{color:var(--red-soft)}
+.bigbtn .s{width:14px;height:14px;fill:var(--red)}
+.btn{border-radius:12px;padding:8px 10px;background:#0b1b38;border:1px solid #1d3a66;font-weight:700;font-size:12px;letter-spacing:.08em;line-height:1.2;text-align:center}
+.btn small{display:block;font-size:10px;color:var(--muted);letter-spacing:.1em;font-weight:600}
+.btn .a{font-size:16px;font-variant-numeric:tabular-nums}
+.btn.gold{border-color:var(--gold);color:var(--gold)}
+.btn.gold small{color:#d9b54a}
+.btn.yellow{background:linear-gradient(180deg,#ffd84d,#f2a900);border-color:#ffe17a;color:#1b1400}
+.btn.yellow small{color:#4a3800}
+.btn:disabled{opacity:.35}
+
+
+/* result overlay */
+.result{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.won{font-family:var(--f-display);font-size:34px;color:var(--gold);letter-spacing:.02em;text-shadow:0 2px 0 #6b4a00}
+.sub{font-size:13px;color:#b9c7e4}
+.chip{white-space:nowrap;display:inline-block;padding:2px 8px;border-radius:6px;background:#12305c;color:#9cc0ff;font-size:11px;font-weight:700;letter-spacing:.08em}
+
+/* lobby */
+.lobby{display:flex;flex-direction:column;align-items:center;gap:12px;padding-top:4px;text-align:center}
+.logo{display:flex;flex-direction:column;align-items:center;gap:4px}
+.logo .w{font-family:var(--f-display);font-size:34px;letter-spacing:.04em;line-height:1}
+.lobby .logo .w{font-family:"Chakra Petch",Montserrat,system-ui,sans-serif;font-weight:700;font-size:clamp(34px,11vw,46px);letter-spacing:.03em}   /* 14 Oct: heading weight matches the other three lobbies */
+.logo .w span{color:var(--gold)}
+.logo{margin-bottom:6px}   /* CRASH 20× heading: no variant line under it */
+.lobby h4{margin:6px 0 0;font-size:11px;letter-spacing:.2em;color:var(--gold)}
+.betinput{display:flex;align-items:center;gap:8px;width:100%;border:1px solid #2a3f66;background:#0c1730;border-radius:999px;padding:6px 6px 6px 18px}
+.betinput .cur{color:var(--gold);font-weight:800;font-size:19px}
+.betinput input{flex:1;min-width:0;background:transparent;border:0;color:var(--fg);font:800 19px var(--f-ui);outline:none;-moz-appearance:textfield}
+.betinput input::-webkit-outer-spin-button,.betinput input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.betinput button{border:1px solid #2a3f66;border-radius:999px;padding:8px 16px;font-weight:800;font-size:12px;letter-spacing:.1em;color:#b9c7e4;background:#111f3d}
+.betinput:focus-within{border-color:var(--gold)}
+.pitch{display:flex;flex-direction:column;align-items:center;gap:3px}
+.pitch{gap:8px!important}
+.pitch .phlogo{display:block;width:min(88%,330px);height:auto;margin:2px auto 0}
+.pitch .ps{font-size:13.5px;color:#c3cde4;letter-spacing:.01em;text-align:center;white-space:nowrap;margin:0 -20px;display:flex;align-items:center;justify-content:center}
+.pitch .ps .dot{display:inline-block;width:.38em;height:.38em;border-radius:50%;background:#aeb9d6;margin:0 .6em;flex:none}
+
+.eqn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%}
+.eq{flex:1;min-width:0;border:1px solid #2a4f86;border-radius:10px;padding:6px 4px;background:#0a1a35;display:flex;flex-direction:column;align-items:center}
+.eq .el{font-size:9px;letter-spacing:.1em;white-space:nowrap;color:var(--muted);font-weight:700}
+.eq .ev{font-family:"Barlow Condensed","Rubik",system-ui,sans-serif;font-weight:800;font-size:clamp(16px,5.2vw,22px);line-height:1.05;font-variant-numeric:tabular-nums;white-space:nowrap}
+.eq.max{border-color:var(--gold);background:#2a2100;flex:1.45}
+.eq .ev.long{font-size:clamp(14px,4.3vw,18px)}
+.eq.max .ev{color:var(--gold)}
+.eqn .op{font-family:"Barlow Condensed","Rubik",system-ui,sans-serif;font-weight:800;font-size:22px;color:var(--muted)}
+.lobbyfacts{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.lobbyfacts .stat .v{font-size:15px}
+.lobbydesc{font-size:13px;color:#b9c7e4;max-width:34ch;line-height:1.45;margin:0}
+.startbtn{width:100%;min-height:54px;font-size:15px}
+
+/* run game */
+.race{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.track{background:rgba(9,22,46,.85);border:1px solid #16345f;border-radius:12px;padding:10px;text-align:center}
+.track .l{font-size:10px;letter-spacing:.14em;color:var(--muted);font-weight:700;margin-bottom:6px}
+.dots{display:flex;gap:8px;justify-content:center}
+.dot{width:20px;height:20px;border-radius:50%;border:2px solid #2a4f86;background:#0a1a35}
+.dot.r{background:var(--red);border-color:#ff8088;box-shadow:0 0 10px rgba(239,59,70,.6)}
+.dot.b{background:#d9e2f5;border-color:#fff}
+
+
+@media (max-width:440px){
+  .card,.cb,.slot,.deck{width:56px;height:80px}
+  .bigbtn{gap:8px;padding-inline:8px}
+  .bigbtn .lab{font-size:9.5px;letter-spacing:.1em;white-space:nowrap}
+  .topbar{gap:6px;padding-inline:10px}
+}
+
+/* ===== Button rules (GRP 1.2) ===== */
+.door{display:flex;align-items:center;gap:5px;padding:4px 10px 4px 7px;border-radius:999px;border:1px solid #23406e;background:#0a1a35;color:#c6d0e8;font-size:11px;font-weight:700;letter-spacing:.04em}
+.door svg{width:16px;height:16px}
+.board{position:relative;display:flex;flex-direction:column;align-items:stretch;gap:10px}
+.won.plain{color:#fff;text-shadow:none}
+.rgpanel{display:flex;flex-direction:column;align-items:center;gap:2px;margin-top:2px}
+.rgpanel b{font-family:var(--f-display);font-size:18px;letter-spacing:.14em}
+.rgpanel small{font-size:9.5px;letter-spacing:.22em;color:var(--muted);font-weight:700}
+.startbtn{display:flex;flex-direction:column;align-items:center;gap:1px}
+.startbtn small{font-size:11.5px;letter-spacing:.14em;font-weight:800}
+.startbtn .a{font-size:20px;font-weight:800}
+.screen.tight{gap:8px;padding-bottom:8px}
+.screen.tight .rules .r{padding:5px 0}
+.screen.tight .deckrow{margin-top:0}
+.lockwrap.off{visibility:hidden;pointer-events:none}
+.compact .bigbtn,.compact .btn{min-height:48px!important;padding-block:4px}
+.compact .bigbtn .amt{font-size:19px}
+.racerow{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:stretch}
+.racerow .rbslot,.racerow .crk-one,.racerow .crk-lc{height:100%}
+.racerow .crk-gold{height:100%;min-height:76px}
+.racerow .bigbtn{min-height:76px;height:100%}
+
+/* ===== Run phase v152 hosts ===== */
+.rbslot[data-rb="bar"]{background:#0a1838;border-radius:18px;padding:16px 10px 10px;border:1px solid #142d58}
+.rbslot[data-rb="lock"],.rbslot[data-rb="end"]{display:block}
+.crk-gold{width:100%}
+.toasthost{position:relative;min-height:190px;width:100%}
+.crk-toast .eh,.crk-toast .et,.crk-toast .es,.crk-toast .crk-chip{white-space:nowrap}
+.crk-toast.crk-plain .et{color:#fff;font-size:21px;font-weight:800}   /* at or below the stake: plain white, smaller, never celebrated */
+/* run-bar v170 is embedded verbatim; these host rules keep the launch look the v167 hand port had (no visual change) */
+html body .crk-toast.crk-plain .et{color:#fff;font-size:21px;font-weight:800}   /* beats the module's .crk-toast .et.plain */
+html body .crk-dbl{height:auto;min-height:66px;overflow:visible}
+html body .crk-dbl .t,html body .crk-dbl .a,html body .crk-dbl .s{line-height:inherit}
+html body .crk-hl{font-family:"Chakra Petch",Montserrat,system-ui,sans-serif}
+html body .crk-toast{background:rgba(8,12,30,.5);border:1px solid rgba(255,255,255,.16);box-shadow:0 10px 30px rgba(0,0,0,.3);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);animation:crkToastIn .3s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes crkToastIn{from{transform:translate(-50%,-50%) scale(.85);opacity:0}}
+.boardlabel{letter-spacing:.16em;font-size:11px;font-weight:700;color:#c3cde4}
+.board .crk-bust{top:28%}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ===== LAUNCH BUILD (Classic only) ===== */
+/* full-bleed phone column, like the Blackjack launch build (max 460px, no page gutter) */
+html,html body{height:100%}
+html body{padding:0;margin:0}
+html .wrap{gap:0;max-width:none;height:100%}
+html .gamecol{max-width:460px;flex:1 1 auto;height:100%}
+html .phone{border:0;border-radius:0;min-height:100%;height:100%;overflow-y:auto}
+/* lobby: the BUILD x RUN = WIN strip, bet, facts and start button are pinned to the bottom of the screen (as in the Blackjack launch lobby) */
+.lobby{flex:1}
+.lobbyfoot{margin-top:auto;width:100%;display:flex;flex-direction:column;align-items:center;gap:12px;padding-top:12px}
+/* v163-v164 run deck: ONE whole-screen dim at 65%, fading in with the run bar (0.35 s, no 1.2 s beat); only the run bar sits above it */
+#scrim{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none;z-index:900;transition:opacity .2s ease}
+.phone.dimscreen #scrim{opacity:var(--dimA,.65);transition:opacity .35s cubic-bezier(.2,.8,.3,1) 0s}
+.phone.dimscreen [data-rb="bar"]{position:relative;z-index:901}
+@media (prefers-reduced-motion:reduce){#scrim{transition:none!important}}
+
+/* ===== lobby brand: same logo, size and tagline as Kicks (63% of the lobby, max 357px; Saira tagline) ===== */
+.pitch .phlogo{display:block;width:min(calc(.63 * (100vw - 32px)),357px,100%);max-width:none;height:auto;margin:0 auto}
+.pitch div.ps{display:block;margin:8px 0 0;padding:0;font-family:Saira,system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:400;font-size:clamp(10px,2.7vw,12.5px);line-height:1.3;letter-spacing:normal;color:#b9c3e3;white-space:nowrap;text-align:center}
+.pitch div.ps .tg-nw{white-space:nowrap}
+.pitch div.ps .tg-dot{display:inline-block;width:4px;height:4px;border-radius:50%;background:#8491b8;margin:0 .6em;vertical-align:middle;flex:none}
+.pitch{gap:0!important}   /* the tagline sits 8px under the logo, as in Kicks */
+/* EBG shell: the Parlay window bar carries the game name and close, so the game's own lobby door and title are removed (hidden, not clickable) */
+.topbar .door,.topbar .brand,#net{display:none!important}   /* #net: the session P&L pill is removed too */
+.lobbydesc{max-width:40ch;text-wrap:balance;margin-inline:auto}   /* balanced: the description lines come out the same width (as in Kicks) */
+/* EBG shell: while PLAY AGAIN (or CHANGE BET) is up, the whole game screen dims to 70%; the end bar and the end toast / BUSTED stamp sit above it */
+.phone.enddim #scrim{opacity:.7;transition:opacity .35s cubic-bezier(.2,.8,.3,1) 0s}
+.phone.enddim .controls{position:relative;z-index:901}
+.phone.enddim .crk-toast,.phone.enddim .crk-bust{z-index:902}
+
+/* ===== PLAY AGAIN (and CHANGE BET): the shared end-of-round button ===== */
+html body .crk-one .crk-gold:is([data-act="again"],[data-act="change"]){all:unset;box-sizing:border-box;cursor:pointer;width:100%;min-height:78px;border-radius:999px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 18px;text-align:center;
+  background:linear-gradient(180deg,#f9da80 0%,#efc356 50%,#e2aa3c 100%);border:1.5px solid #f7de90;color:#141a29;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -2px 0 rgba(150,95,10,.25),0 6px 16px rgba(0,0,0,.35);font-family:Montserrat,Rubik,system-ui,sans-serif;transition:transform .08s,filter .15s}
+html body .crk-one .crk-gold:is([data-act="again"],[data-act="change"]):hover{filter:brightness(1.05)}html body .crk-one .crk-gold:is([data-act="again"],[data-act="change"]):active{transform:scale(.98)}html body .crk-one .crk-gold:is([data-act="again"],[data-act="change"]):focus-visible{outline:2px solid #fff;outline-offset:3px}
+html body .crk-one .crk-gold:is([data-act="again"],[data-act="change"]) .t{font-family:Montserrat,Rubik,system-ui,sans-serif;font-size:15px;font-weight:800;letter-spacing:.16em;line-height:1.1;color:#1d2230;opacity:1;text-transform:uppercase;white-space:nowrap}
+html body .crk-one .crk-gold:is([data-act="again"],[data-act="change"]) .a{font-family:Montserrat,Rubik,system-ui,sans-serif;font-size:28px;font-weight:800;letter-spacing:.01em;line-height:1.05;color:#141a29;opacity:1;margin:0;font-variant-numeric:tabular-nums;white-space:nowrap}
+/* ===== RULES (rules-sheet.js): the ⓘ sits at the left of the top bar, 44×44 tap target without making the bar taller,
+   and above the 65% / 70% screen dim so the rules open at any time ===== */
+.topbar .rulesbtn{margin:-10px -6px -10px -10px;position:relative;z-index:903}
+</style>
+<script>
+/* EBG shell: RUN BANK shows on the run bar only. Removes it from the end toast, the BUSTED stamp and LOCK IN as they are drawn. */
+(function () {
+  function strip(root) {
+    if (!root || !root.querySelectorAll) return;
+    root.querySelectorAll('.crk-chip, .eb').forEach(function (e) { if (/RUN BANK/.test(e.textContent)) e.remove(); });
+    root.querySelectorAll('.crk-lc .crk-rb').forEach(function (e) { e.remove(); });
+  }
+  function start() {
+    strip(document.body);
+    new MutationObserver(function (ms) { ms.forEach(function (m) { m.addedNodes.forEach(function (n) { if (n.nodeType === 1) { strip(n.parentNode || n); } }); }); })
+      .observe(document.body, { childList: true, subtree: true });
+  }
+  if (document.body) start(); else document.addEventListener('DOMContentLoaded', start);
+})();
+</script>
+</head>
+<body>
+<div class="wrap">
+  <div class="gamecol">
+    <div class="phone" id="phone">
+      <div class="topbar">
+        <button class="door" data-act="door" aria-label="Lobby"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h8"/><path d="M14 3l5 2v14l-5 2z"/><circle cx="16.3" cy="12" r=".9" fill="currentColor"/></svg><span>Lobby</span></button>
+        <button id="rulesBtn" class="rulesbtn"></button>
+        <span class="brand">CRASH 20×</span>
+        <span class="sp"></span>
+        <span class="pill"><span class="k">$</span><span id="wallet">1,000.00</span></span>
+        <span class="pill net" id="net" title="Session net">±0.00</span>
+      </div>
+      <div class="screen" id="screen"></div>
+      <div id="scrim" aria-hidden="true"></div>
+    </div>
+  </div>
+</div>
+
+<script>/*!
+ * Card Run · RUN BAR reference module · v170 (v170: RUN IT AGAIN and RUN HALF removed for certification — the bar is CASH OUT, DOUBLE OR NOTHING and DOUBLE HALF (+ the RUN BANK); minimum $0.02 as v169; run deck style: calm amounts, half-bet links, whole-screen dim; CASHED OUT toast; GRP 1.2 with the LOCK IN, PLAY AGAIN, RUN BANK and run-bar-copy amendments)
+ * One file, no dependencies. The same mechanic, numbers, copy and design as Card Run Blackjack prototype v152.
+ *
+ *   RunBar.compute(state)                → the numbers and which controls show (pure; unit-tested in run-bar.test.js)
+ *   RunBar.render(el, state, on)         → draws the run bar into el (the action ribbon)
+ *   RunBar.renderEnd(el, {bet,balance}, on)        → PLAY AGAIN $bet  /  CHANGE BET · BALANCE $n
+ *   RunBar.renderHandoff(el, {label,amount,badge}, on)  → one gold label-over-amount button
+ *   RunBar.renderLockIn(el, {amount,maxWin,banked,half}, on) → LOCK IN $N (+ LOCK IN HALF $keep); returns {set(amount)} for a live board (crash)
+ *   RunBar.toast(host, {variant,title,paid,runBank,plain})  → end toast: CASHED OUT / MAX WIN / 1,000× RUN · PAID $total · INCLUDES RUN BANK $B
+ *       v165: CASH OUT shows it too (title 'CASHED OUT'); plain:true when the total is at or below the stake (shown, not celebrated)
+ *   RunBar.bustStamp(host, {runBank})               → BUSTED stamp (+ RUN BANK $B chip)
+ *   RunBar.setScreenDim(rootEl, barEl, on, opacity) → v167 whole-screen dim, default 65%, fades in with the bar
+ *   RunBar.setDim([boardEl, ribbonEl], on, opacity) → the old per-element dim (pre-v167 hosts only)
+ *
+ * state = { held, banked, ammo, maxWin, variant }   all money in dollars (handled internally as integer cents)
+ *   held    S: what the round holds and can run now
+ *   banked  B: the RUN BANK (round escrow; never in the wallet until the round ends)
+ *   ammo    A: what the build produced (the base round's win, the LOCK IN amount, or the P2 prize). Run cap = 1,000 × A
+ *   maxWin  MW: the operator MAX WIN in dollars (multiple × bet)
+ *   variant the variant name, e.g. 'CLASSIC' (accepted, not used since v170)
+ * on = { cashOut(total), double(stake), doubleHalf(stake, bank), paidOut(kind,total) }
+ *   The module never moves money. The host credits RUN BANK + held in ONE payment when the round ends.
+ */
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) module.exports = factory();
+  else root.RunBar = factory();
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+  var MIN_RUN = 2, CAP_X = 1000;                       // $0.02, in cents: the smallest amount DOUBLE OR NOTHING / DOUBLE HALF will take
+  var c = function (x) { return Math.round(Number(x) * 100); };        // dollars -> cents
+  var d = function (n) { return n / 100; };                             // cents -> dollars
+  var money = function (n) {                                            // cents -> "1,234.56"
+    var s = (Math.abs(n) / 100).toFixed(2).split('.');
+    return (n < 0 ? '-' : '') + s[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '.' + s[1];
+  };
+
+  /* ------------------------------------------------------------------ the numbers ------------------------------------------------------------------ */
+  function compute(st) {
+    var S = c(st.held), B = c(st.banked || 0), A = c(st.ammo), MW = c(st.maxWin), cap = CAP_X * A;
+    if (B + S > MW) S = MW - B;                                     // MAX WIN clips every payout
+    var total = B + S;
+    if (total >= MW) return { mode: 'max_win', held: S, banked: B, total: total };
+    if (total >= cap) return { mode: 'run_cap', held: S, banked: B, total: total };
+    var half = Math.floor(S / 2), keep = S - half;                  // integer cents: an odd cent is kept (banked)
+    var show = {
+      double: S >= MIN_RUN && B + 2 * S <= MW,
+      doubleHalf: half >= MIN_RUN && B + keep + 2 * half <= MW
+    };
+    show.halfPill = show.doubleHalf;
+    show.cashOutOnly = !show.double && !show.doubleHalf;
+    var nCap = Math.max(1, Math.ceil(Math.log2(Math.max(1, (cap - B) / S)) - 1e-9));
+    var nMW = Math.max(1, Math.floor(Math.log2((MW - B) / S) + 1e-9));
+    return {
+      mode: 'bar', held: S, banked: B, total: total, half: half, keep: keep, show: show,
+      nMax: Math.min(nCap, nMW), cap: cap, maxWin: MW,
+      copy: {
+        cashOut: '$' + money(total),
+        runBank: B > 0 ? '$' + money(B) : null,
+        double: '$' + money(2 * S),
+        doubleLine: Math.min(nCap, nMW) + (Math.min(nCap, nMW) === 1 ? ' DOUBLE MAX' : ' DOUBLES MAX'),
+        half: '$' + money(keep),
+        halfStake: '$' + money(half)      // the half link shows the stake (what doubles); the odd cent is banked
+      }
+    };
+  }
+
+  /* ------------------------------------------------------------------ styles ------------------------------------------------------------------ */
+  var CSS = [
+    '.crk-bar{position:relative;display:grid;grid-template-columns:minmax(0,1fr);gap:8px 10px;font-family:"Chakra Petch",Montserrat,system-ui,sans-serif;animation:crkIn .35s cubic-bezier(.2,1.5,.4,1) both}',
+    '@keyframes crkIn{from{transform:translateY(14px) scale(.96);opacity:.3}}',
+    '.crk-btn{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:999px;font-family:"Chakra Petch",Montserrat,system-ui,sans-serif;font-weight:700;-webkit-tap-highlight-color:transparent;transition:transform .08s,filter .15s}',
+    '.crk-btn:active{transform:scale(.97)}.crk-btn:hover{filter:brightness(1.07)}.crk-btn:focus-visible{outline:2px solid #e9bc57;outline-offset:3px}',
+    '.crk-c{justify-self:center;position:relative;display:flex;align-items:center;transform-origin:center;white-space:nowrap}',
+    '.crk-cash{flex:none;height:44px;padding:0 22px;gap:12px;background:rgba(9,16,38,.94);border:1.5px solid #4f5d8c;color:#c9d1ea;box-shadow:0 4px 14px rgba(0,0,0,.35)}',
+    '.crk-cash .t{font-size:14px;letter-spacing:.16em}.crk-cash .a{font-size:21px;color:#fff}',
+    '.crk-rb{position:absolute;left:50%;bottom:calc(100% - 9px);transform:translateX(-50%);z-index:2;display:flex;align-items:baseline;gap:7px;line-height:1;padding:4px 12px;border-radius:999px;background:#163a2a;border:1px solid #2f6b4b;box-shadow:0 2px 8px rgba(0,0,0,.35);font-family:Montserrat,system-ui,sans-serif;white-space:nowrap;pointer-events:none}',
+    '.crk-rb i{font-style:normal;font-size:10.5px;letter-spacing:.14em;font-weight:800;color:#7fd8a4}.crk-rb b{font-family:"Chakra Petch",Montserrat,sans-serif;font-weight:700;font-size:14px;color:#9ff0bf}',
+    '.crk-dbl{height:66px;padding:4px 10px;flex-direction:column;line-height:1.05;text-align:center;min-width:0;overflow:hidden}',
+    '.crk-dbl .t{line-height:16px}.crk-dbl .a{line-height:26px}.crk-dbl .s{line-height:13px}',   /* fixed line boxes: shrinking a big amount never changes the bar height (v152.2) */
+    '.crk-dbl{background:#e9bc57;color:#1c1a12;box-shadow:0 0 0 3px rgba(233,188,87,.18),0 0 18px rgba(233,188,87,.35)}',
+    '.crk-dbl .t{font-size:clamp(12px,3.6vw,15px);letter-spacing:.05em;white-space:nowrap}',
+    '.crk-dbl .a{font-size:clamp(19px,6vw,26px);letter-spacing:.01em;white-space:nowrap}',
+    '.crk-dbl .s{font-family:Montserrat,system-ui,sans-serif;font-weight:800;white-space:nowrap;margin:2px 0 1px;font-size:11px;letter-spacing:.12em;opacity:.95}',
+    /* v167 run deck: the half bet is a text link under DOUBLE OR NOTHING: the stake (half-tone) over DOUBLE HALF + /BANK HALF, underlined; one 44px tap target */
+    '.crk-hl{all:unset;box-sizing:border-box;cursor:pointer;justify-self:center;align-self:start;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:44px;padding:2px 8px;font-family:"Chakra Petch",Montserrat,sans-serif;font-weight:700;white-space:nowrap;-webkit-tap-highlight-color:transparent;transition:transform .08s;animation:crkIn .35s cubic-bezier(.2,1.5,.4,1) both}',
+    '.crk-hl:active{transform:scale(.96)}.crk-hl:focus-visible{outline:2px solid #e9bc57;outline-offset:2px;border-radius:8px}',
+    '.crk-hl .ha{font-size:15px;line-height:1;color:#fff;opacity:.5;letter-spacing:.02em}',
+    '.crk-hl .hlt{font-size:12px;line-height:1;letter-spacing:.08em;color:#8a94b8;padding-bottom:4px;border-bottom:1.5px solid rgba(138,148,184,.75)}',
+    '.crk-hl .hlt b{font-weight:700;color:#e9bc57}',
+    /* v167 run deck: calm amounts. CASH OUT and RUN BANK amounts half-tone; the big buttons' amounts smaller at full strength; DOUBLE OR NOTHING in pure black */
+    '.crk-cash .a,.crk-rb b{opacity:.5}',
+    '.crk-dbl .a{font-size:clamp(16px,4.8vw,20px);line-height:24px;margin-top:2px}',
+    '.crk-dbl,.crk-dbl .t,.crk-dbl .a{color:#000}',
+    /* v167 run deck: ONE whole-screen dim (a scrim over the screen root), fading in with the bar; only the bar sits above it */
+    '.crk-scrim{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none;z-index:900;transition:opacity .2s ease}',
+    '.crk-scrim.on{opacity:var(--crk-dim,.65);transition:opacity .35s cubic-bezier(.2,.8,.3,1)}',
+    '.crk-lift>*{position:relative;z-index:901}',   /* only the bar\'s buttons sit above the scrim; its ribbon dims with the screen */
+    /* gold full-width buttons: the end bar (PLAY AGAIN), the phase hand-off and LOCK IN. Anton, label over amount */
+    '.crk-one{display:grid;grid-template-columns:1fr}',
+    '.crk-gold{all:unset;box-sizing:border-box;cursor:pointer;min-height:76px;border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:8px 4px;background:#e9bc57;color:#1c1a12;box-shadow:0 0 0 3px rgba(233,188,87,.18);font-family:Anton,Impact,"Arial Narrow",sans-serif;line-height:1.05;text-align:center;transition:transform .08s,filter .15s;animation:crkIn .35s cubic-bezier(.2,1.5,.4,1) both}',
+    '.crk-gold:active{transform:scale(.97)}.crk-gold:hover{filter:brightness(1.07)}.crk-gold:focus-visible{outline:2px solid #fff;outline-offset:3px}',
+    '.crk-gold .t{font-size:clamp(15px,4.9vw,21px);letter-spacing:.03em;white-space:nowrap}.crk-gold .a{font-size:clamp(18px,6vw,26px);letter-spacing:.03em;white-space:nowrap}',
+    '.crk-lock{gap:10px}.crk-lc{grid-area:auto;justify-self:stretch}.crk-lc .crk-gold{width:100%}.crk-lc .crk-rb{bottom:calc(100% - 9px)}',
+    '.crk-lh{justify-self:center;min-height:44px;padding:0 22px;gap:10px;background:#0f1a34;border:1.5px solid #8a7440;color:#e9e3d0}.crk-lh .t{font-size:11px;letter-spacing:.08em}.crk-lh .a{font-size:17px;color:#fff}.crk-lh[hidden]{display:none}',
+    '.crk-badge{margin-left:16px;font-family:Montserrat,system-ui,sans-serif;font-size:.5em;font-weight:900;letter-spacing:.08em;vertical-align:.22em;padding:3px 8px;border-radius:6px}',
+    '.crk-badge.on{background:#1f6b3f;color:#fff}.crk-badge.off{background:rgba(28,26,18,.18);color:rgba(28,26,18,.6)}',
+    /* toast and bust stamp (place host on the board, position:relative) */
+    '.crk-toast{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);z-index:46;min-width:62%;max-width:88%;padding:12px 22px 15px;border-radius:14px;text-align:center;pointer-events:none;background:rgba(6,12,32,.86);border:1px solid rgba(255,255,255,.12);font-family:Montserrat,system-ui,sans-serif}',
+    '.crk-toast .eh{font-size:10.5px;font-weight:800;letter-spacing:.24em;color:#c3c9de;opacity:.85}.crk-toast .et{margin-top:6px;font-size:28px;font-weight:900;letter-spacing:.04em;color:#f5c84b;line-height:1.05}',
+    '.crk-toast{width:max-content}.crk-toast .et,.crk-toast .es,.crk-toast .crk-chip{white-space:nowrap}.crk-toast .et.plain{color:#e6ebfa;font-size:24px}',   /* v165: one line each; plain = at or below the stake, never celebrated */
+    '.crk-toast .es{margin-top:6px;font-size:11px;font-weight:800;letter-spacing:.1em;color:#d5dcf2}',
+    '.crk-chip{margin-top:9px;display:inline-block;padding:4px 12px;border-radius:9px;background:rgba(53,107,65,.55);border:1px solid rgba(157,245,207,.5);font-size:14px;font-weight:900;letter-spacing:.08em;color:#fff;font-style:normal}',
+    '.crk-bust{position:absolute;left:0;right:0;top:38%;z-index:45;display:flex;flex-direction:column;align-items:center;gap:16px;pointer-events:none;font-family:Montserrat,system-ui,sans-serif}',
+    '.crk-bust span{font-family:Anton,Impact,sans-serif;font-size:clamp(54px,17vw,76px);letter-spacing:.04em;color:#ff4d5e;padding:0 18px;border:4px solid #ff4d5e;border-radius:10px;transform:rotate(-8deg);background:rgba(20,4,8,.55)}',
+    /* the board dim, "double cover": board and ribbon take the same black overlay at the same opacity and timing */
+    '.crk-dimmable{position:relative}.crk-dimmable::after{content:"";position:absolute;inset:0;border-radius:inherit;background:#000;opacity:0;pointer-events:none;z-index:40;transition:opacity .2s ease}',
+    '.crk-dimmable.crk-dim::after{opacity:var(--crk-dim,.36);transition:opacity .45s ease 1.2s}',
+    '.crk-ribbon.crk-dimmable::after{z-index:0}.crk-ribbon.crk-dimmable>*{position:relative;z-index:1}',   /* the bar sits above its ribbon's overlay; the buttons are never dimmed */
+    '@media (prefers-reduced-motion: reduce){.crk-bar,.crk-gold,.crk-hl{animation:none}.crk-dimmable::after,.crk-scrim{transition:none!important}}'
+  ].join('\n');
+  var injected = false;
+  function injectCSS() {
+    if (injected || typeof document === 'undefined') return; injected = true;
+    var s = document.createElement('style'); s.id = 'crk-run-bar-css'; s.textContent = CSS; document.head.appendChild(s);
+  }
+
+  /* ------------------------------------------------------------------ helpers ------------------------------------------------------------------ */
+  var lockUntil = 0;
+  if (typeof document !== 'undefined') {
+    ['keydown', 'keyup'].forEach(function (t) {
+      document.addEventListener(t, function (e) {
+        if ((e.key === 'Enter' || e.key === ' ') && performance.now() < lockUntil && e.target.closest && e.target.closest('.crk-bar,.crk-one')) { e.preventDefault(); e.stopPropagation(); }
+      }, true);
+    });
+  }
+  function mount(el, html, cls) {                       // swaps the ribbon's content; 350 ms input lock so a double tap can't land on the new buttons
+    injectCSS(); el.innerHTML = ''; var box = document.createElement('div'); box.className = cls; box.innerHTML = html; el.appendChild(box);
+    box.style.pointerEvents = 'none'; setTimeout(function () { box.style.pointerEvents = ''; }, 350); lockUntil = performance.now() + 350;
+    return box;
+  }
+  function fit(box) {
+    var cw = box.querySelector('.crk-c');               // CASH OUT (+ RUN BANK pill) never wraps: the row scales if it must
+    if (cw) { var avail = box.clientWidth - 8, w = cw.scrollWidth; if (w > avail) cw.style.transform = 'scale(' + (avail / w).toFixed(3) + ')'; }
+    box.querySelectorAll('.crk-dbl').forEach(function (b) {   // big amounts shrink a line rather than wrap or clip
+      var avail = b.clientWidth - 22;
+      b.querySelectorAll('.t,.a,.s').forEach(function (e) { e.style.fontSize = ''; var w = e.scrollWidth; if (w > avail) { var f = parseFloat(getComputedStyle(e).fontSize); e.style.fontSize = (f * avail / w).toFixed(2) + 'px'; } });
+    });
+    box.querySelectorAll('.crk-hl').forEach(function (h) { var cell = box.clientWidth - 12; h.querySelectorAll('.hlt,.ha').forEach(function (e) { e.style.fontSize = ''; var w = e.scrollWidth; if (w > cell) { var f = parseFloat(getComputedStyle(e).fontSize); e.style.fontSize = (f * cell / w).toFixed(2) + 'px'; } }); });   // a half link shrinks rather than wrap or clip
+  }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (ch) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]; }); }
+
+  /* ------------------------------------------------------------------ the run bar ------------------------------------------------------------------ */
+  function render(el, st, on) {
+    on = on || {}; var r = compute(st);
+    if (r.mode !== 'bar') { if (on.paidOut) on.paidOut(r.mode, d(r.total)); return r; }   // MAX WIN or the 1,000× run cap: pay at once, no bar
+    var s = r.show, k = r.copy, nD = r.nMax;
+    var html =
+      '<div class="crk-c">' + (k.runBank ? '<div class="crk-rb" aria-hidden="true"><i>RUN BANK</i><b>' + k.runBank + '</b></div>' : '') +
+        '<button class="crk-btn crk-cash" data-act="cashOut" aria-label="Cash out ' + k.cashOut + (k.runBank ? ', including run bank ' + k.runBank : '') + '"><span class="t">CASH OUT</span><span class="a">' + k.cashOut + '</span></button></div>' +
+      (s.double ? '<button class="crk-btn crk-dbl" data-act="double" aria-label="Double or nothing, ' + k.double + '"><span class="t">DOUBLE OR NOTHING</span><span class="a">' + k.double + '</span></button>' : '') +
+      (s.doubleHalf ? '<button class="crk-hl dh" data-act="doubleHalf" aria-label="Double half: ' + k.halfStake + ' doubles, ' + k.half + ' to the run bank"><span class="ha">' + k.halfStake + '</span><span class="hlt"><b>DOUBLE HALF</b>/BANK HALF</span></button>' : '');
+    var box = mount(el, html, 'crk-bar');
+    fit(box);
+    var S = d(r.held), half = d(r.half), keep = d(r.keep);
+    box.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-act]'); if (!b) return; var a = b.getAttribute('data-act');
+      if (a === 'cashOut' && on.cashOut) on.cashOut(d(r.total));
+      if (a === 'double' && on.double) on.double(S);
+      if (a === 'doubleHalf' && on.doubleHalf) on.doubleHalf(half, keep);
+    });
+    var f = box.querySelector('[data-act="cashOut"]'); if (f) f.focus({ preventScroll: true });   // focus on the safe default
+    return r;
+  }
+
+  function renderEnd(el, st, on) {
+    on = on || {}; var bet = c(st.bet), bal = c(st.balance), can = bal >= bet;
+    var html = can ? '<button class="crk-gold" data-act="again" aria-label="Play again, bet $' + money(bet) + '"><span class="t">PLAY AGAIN</span><span class="a">$' + money(bet) + '</span></button>'
+                   : '<button class="crk-gold" data-act="change" aria-label="Change bet"><span class="t">CHANGE BET</span><span class="a">BALANCE $' + money(bal) + '</span></button>';
+    var box = mount(el, html, 'crk-one'); var b = box.querySelector('button');
+    b.addEventListener('click', function () { if (can) { if (on.playAgain) on.playAgain(d(bet)); } else if (on.changeBet) on.changeBet(); });
+    b.focus({ preventScroll: true }); return can;
+  }
+
+  function renderHandoff(el, st, on) {
+    on = on || {}; var badge = st.badge ? ' <span class="crk-badge ' + (st.badge.on ? 'on' : 'off') + '">' + esc(st.badge.label) + ' ' + (st.badge.on ? 'ON' : 'OFF') + '</span>' : '';
+    var html = '<button class="crk-gold" data-act="go"><span class="t">' + esc(st.label) + '</span><span class="a">' + (st.amount != null ? '$' + money(c(st.amount)) : esc(st.sub || '')) + badge + '</span></button>';
+    var box = mount(el, html, 'crk-one'); var b = box.querySelector('button');
+    b.addEventListener('click', function () { if (on.go) on.go(); }); b.focus({ preventScroll: true });
+  }
+
+  function renderLockIn(el, st, on) {                 // LOCK IN $N: the stop that leads to the run bar (a build that can be stopped early, or a crash board's own stop)
+    // st = { amount, maxWin, banked, half }   on = { lockIn(amount), lockInHalf(keep, flying), paidOut('max_win', total) }
+    // Returns { set(amount), amount() }: a live board (crash) calls set() every tick; the button updates in place (no remount, no new input lock).
+    on = on || {}; var B = c(st.banked || 0), MW = st.maxWin != null ? c(st.maxWin) : Infinity, amt = 0, done = false;
+    var html = '<div class="crk-c crk-lc">' + (B > 0 ? '<div class="crk-rb" aria-hidden="true"><i>RUN BANK</i><b>$' + money(B) + '</b></div>' : '') +
+      '<button class="crk-gold" data-act="lock"><span class="t">LOCK IN</span><span class="a"></span></button></div>' +
+      (st.half ? '<button class="crk-btn crk-lh" data-act="lockHalf"><span class="t">LOCK IN HALF</span><span class="a"></span></button>' : '');
+    var box = mount(el, html, 'crk-one crk-lock'), b = box.querySelector('[data-act="lock"]'), h = box.querySelector('[data-act="lockHalf"]');
+    function set(x) {
+      if (done) return; amt = c(x); if (B + amt > MW) amt = MW - B;             // clipped to MAX WIN
+      b.querySelector('.a').textContent = '$' + money(amt); b.setAttribute('aria-label', 'Lock in $' + money(amt));
+      if (h) { var keep = amt - Math.floor(amt / 2); h.hidden = Math.floor(amt / 2) < MIN_RUN; h.querySelector('.a').textContent = '$' + money(keep); h.setAttribute('aria-label', 'Lock in half: $' + money(keep) + ' to the run bank'); }
+      if (B + amt >= MW) { done = true; if (on.paidOut) on.paidOut('max_win', d(B + amt)); }   // reaching MAX WIN pays at once
+    }
+    b.addEventListener('click', function () { if (done) return; done = true; if (on.lockIn) on.lockIn(d(amt)); });
+    if (h) h.addEventListener('click', function () { if (done) return; var fly = Math.floor(amt / 2), keep = amt - fly; if (fly < MIN_RUN) return; done = true; if (on.lockInHalf) on.lockInHalf(d(keep), d(fly)); });
+    set(st.amount || 0);
+    return { set: set, amount: function () { return d(amt); } };
+  }
+
+  function toast(host, st) {
+    injectCSS(); var t = document.createElement('div'); t.className = 'crk-toast'; t.setAttribute('role', 'status'); t.setAttribute('aria-live', 'polite');
+    t.innerHTML = '<div class="eh">' + esc(st.variant || '') + '</div><div class="et' + (st.plain ? ' plain' : '') + '">' + esc(st.title) + '</div>' + (st.paid != null ? '<div class="es">PAID $' + money(c(st.paid)) + '</div>' : '') +
+      (st.runBank > 0 ? '<i class="crk-chip">INCLUDES RUN BANK $' + money(c(st.runBank)) + '</i>' : '');
+    host.appendChild(t); return t;
+  }
+  function bustStamp(host, st) {
+    injectCSS(); var t = document.createElement('div'); t.className = 'crk-bust'; t.setAttribute('role', 'status');
+    t.innerHTML = '<span>BUSTED</span>' + (st && st.runBank > 0 ? '<i class="crk-chip">RUN BANK $' + money(c(st.runBank)) + '</i>' : '');
+    host.appendChild(t); return t;
+  }
+  // v167: the run deck dims the WHOLE screen: one scrim inside the screen root (must be position:relative/absolute), fading in with the bar (0.35 s).
+  // The bar (barEl: the element holding the run bar, e.g. the ribbon) is lifted above the scrim. Default 65%.
+  // barEl must not sit inside an ancestor that makes its own stacking context below the scrim (z-index/transform/filter/opacity on an ancestor).
+  function setScreenDim(root, barEl, on, opacity) {
+    injectCSS(); if (!root) return; var sc = root.querySelector(':scope > .crk-scrim');
+    if (!sc) { sc = document.createElement('div'); sc.className = 'crk-scrim'; sc.setAttribute('aria-hidden', 'true'); root.appendChild(sc); }
+    if (opacity != null) sc.style.setProperty('--crk-dim', opacity);
+    if (barEl) barEl.classList.toggle('crk-lift', !!on);
+    sc.classList.toggle('on', !!on);
+  }
+  function setDim(els, on, opacity) {   // v129-v165 per-element dim (kept for old hosts; v167 uses setScreenDim)
+    injectCSS(); (Array.isArray(els) ? els : [els]).forEach(function (e) { if (!e) return; e.classList.add('crk-dimmable'); if (opacity != null) e.style.setProperty('--crk-dim', opacity); e.classList.toggle('crk-dim', !!on); });
+  }
+
+  return { compute: compute, render: render, renderEnd: renderEnd, renderHandoff: renderHandoff, renderLockIn: renderLockIn, toast: toast, bustStamp: bustStamp, setDim: setDim, setScreenDim: setScreenDim, CSS: CSS, money: function (x) { return money(c(x)); }, version: '170' };
+});
+</script>
+<script>/*!
+ * Card Run · RULES SHEET (shared by all four 20× games) · v1 · 14 Oct 2026
+ * One ⓘ button that opens a full-height rules & pays sheet over the game. No dependencies, no globals except CardRunRules.
+ *
+ *   CardRunRules.mount({ button: el, title: 'BLACKJACK 20×', content: () => html, onOpen(), onClose() })
+ *     button   an element to turn into the ⓘ (the game places it; 44×44 tap target, aria-label "Rules and pays")
+ *     content  a FUNCTION returning the sheet's HTML each time it opens (so tables show pays at the current bet)
+ *     onOpen / onClose  optional: a game that deals on its own (Crash auto-deal) pauses while the sheet is open
+ *   CardRunRules.open() / close() / isOpen()
+ * Building blocks for content (classes styled here): <h3>, <p>, <table class="crr-t"> (first column left, others right),
+ *   <p class="crr-note"> small print, <div class="crr-key"> a highlighted line (e.g. the 20× / 1,000× rule).
+ */
+(function (root) {
+  'use strict';
+  var CSS = [
+    '.crr-btn{all:unset;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;flex:none;border-radius:50%;cursor:pointer;color:#c9d1ea;-webkit-tap-highlight-color:transparent}',
+    '.crr-btn svg{width:24px;height:24px}.crr-btn:hover{color:#fff}.crr-btn:focus-visible{outline:2px solid #e9bc57;outline-offset:2px}',
+    '.crr-wrap{position:fixed;inset:0;z-index:2000;display:flex;align-items:stretch;justify-content:center;background:rgba(0,0,0,.6);animation:crrIn .2s ease both}',
+    '@keyframes crrIn{from{opacity:0}}',
+    '.crr-sheet{position:relative;box-sizing:border-box;width:100%;max-width:460px;height:100%;display:flex;flex-direction:column;background:#0b1430;color:#dfe5f6;font:400 14px/1.5 Montserrat,system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 0 40px rgba(0,0,0,.5)}',
+    '.crr-head{flex:none;display:flex;align-items:center;gap:8px;padding:6px 6px 6px 18px;border-bottom:1px solid #24305a}',
+    '.crr-head h2{flex:1;margin:0;font:800 15px/1.2 Montserrat,system-ui,sans-serif;letter-spacing:.12em;color:#fff}',
+    '.crr-x{all:unset;box-sizing:border-box;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;cursor:pointer;color:#c9d1ea}',
+    '.crr-x:focus-visible{outline:2px solid #e9bc57;outline-offset:2px}.crr-x svg{width:22px;height:22px}',
+    '.crr-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:6px 18px 28px}',
+    '.crr-body h3{margin:18px 0 6px;font:800 12px/1.3 Montserrat,system-ui,sans-serif;letter-spacing:.16em;color:#e9bc57;text-transform:uppercase}',
+    '.crr-body p{margin:6px 0}.crr-body b{color:#fff}',
+    '.crr-t{width:100%;border-collapse:collapse;margin:6px 0 4px;font-variant-numeric:tabular-nums;font-size:13px}',
+    '.crr-t th,.crr-t td{padding:5px 6px;border-bottom:1px solid #1e2a50;text-align:right;vertical-align:top}',
+    '.crr-t th:first-child,.crr-t td:first-child{text-align:left}',
+    '.crr-t th{font-weight:700;font-size:11px;letter-spacing:.06em;color:#9aa6c9;text-transform:uppercase}',
+    '.crr-key{margin:10px 0;padding:10px 12px;border-radius:10px;background:#121e44;border:1px solid #2c3a6b;color:#fff}',
+    '.crr-note{font-size:12px;color:#9aa6c9}',
+    '@media (prefers-reduced-motion: reduce){.crr-wrap{animation:none}}'
+  ].join('\n');
+  var ICON_I = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 11v6" stroke-linecap="round"/><circle cx="12" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></svg>';
+  var ICON_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  var cfg = null, wrap = null, lastFocus = null, injected = false;
+  function inject() { if (injected) return; injected = true; var s = document.createElement('style'); s.id = 'crr-css'; s.textContent = CSS; document.head.appendChild(s); }
+  function onKey(e) {
+    if (!wrap) return;
+    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(); return; }
+    if (e.key === 'Tab') {                                     // keep focus inside the sheet
+      var f = wrap.querySelectorAll('button,[href],[tabindex]:not([tabindex="-1"])'); if (!f.length) return;
+      var a = f[0], z = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); }
+      else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+    }
+    e.stopPropagation();                                       // game shortcuts (e.g. H / S) don't fire behind the sheet
+  }
+  function open() {
+    if (!cfg || wrap) return; inject(); lastFocus = document.activeElement;
+    wrap = document.createElement('div'); wrap.className = 'crr-wrap'; wrap.setAttribute('role', 'dialog'); wrap.setAttribute('aria-modal', 'true'); wrap.setAttribute('aria-label', cfg.title + ' rules and pays');
+    wrap.innerHTML = '<div class="crr-sheet"><div class="crr-head"><h2></h2><button type="button" class="crr-x" aria-label="Close rules">' + ICON_X + '</button></div><div class="crr-body" tabindex="0"></div></div>';
+    wrap.querySelector('h2').textContent = cfg.title;
+    wrap.querySelector('.crr-body').innerHTML = cfg.content();
+    wrap.querySelector('.crr-x').addEventListener('click', close);
+    wrap.addEventListener('click', function (e) { if (e.target === wrap) close(); });
+    document.addEventListener('keydown', onKey, true);
+    document.body.appendChild(wrap);
+    if (cfg.onOpen) try { cfg.onOpen(); } catch (e) {}
+    wrap.querySelector('.crr-x').focus({ preventScroll: true });
+  }
+  function close() {
+    if (!wrap) return; document.removeEventListener('keydown', onKey, true); wrap.remove(); wrap = null;
+    if (cfg && cfg.onClose) try { cfg.onClose(); } catch (e) {}
+    if (lastFocus && lastFocus.focus) try { lastFocus.focus({ preventScroll: true }); } catch (e) {}
+  }
+  function mount(c) {
+    inject(); cfg = c; var b = c.button;
+    b.classList.add('crr-btn'); b.setAttribute('type', 'button'); b.setAttribute('aria-label', 'Rules and pays'); b.setAttribute('title', 'Rules and pays'); b.innerHTML = ICON_I;
+    b.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); open(); });
+    return { open: open, close: close };
+  }
+  root.CardRunRules = { mount: mount, open: open, close: close, isOpen: function () { return !!wrap; }, version: '1' };
+})(typeof self !== 'undefined' ? self : this);
+</script>
+<script>
+"use strict";
+/* ================= constants & helpers ================= */
+const SUIT_PATHS={
+  H:'<path d="M50 90C22 68 5 50 5 31 5 16 16 6 29 6c10 0 17 6 21 14 4-8 11-14 21-14 13 0 24 10 24 25 0 19-17 37-45 59z"/>',
+  D:'<path d="M50 3l40 47-40 47-40-47z"/>',
+  S:'<path d="M50 3c21 26 46 40 46 60 0 14-11 24-24 24-9 0-15-4-18-10 1 10 5 16 13 19H33c8-3 12-9 13-19-3 6-9 10-18 10-13 0-24-10-24-24C4 43 29 29 50 3z"/>',
+  C:'<circle cx="50" cy="27" r="21"/><circle cx="27" cy="60" r="21"/><circle cx="73" cy="60" r="21"/><path d="M46 55c0 22-5 32-13 41h34c-8-9-13-19-13-41z"/>'
+};
+const suitSvg=(k,cls="")=>`<svg viewBox="0 0 100 100" class="${cls}" aria-hidden="true">${SUIT_PATHS[k]}</svg>`;
+const SUITS=['C','S','H','D']; // 0 clubs,1 spades,2 hearts,3 diamonds (spec 9.2)
+const RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+const LOGO=`<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 12c15 19 34 30 34 45 0 10-8 18-18 18-7 0-11-3-13-7 1 7 3 12 9 14H38c6-2 8-7 9-14-2 4-6 7-13 7-10 0-18-8-18-18 0-15 19-26 34-45z" fill="none" stroke="#f3c64a" stroke-width="5" stroke-linejoin="round"/><path d="M30 70L80 20M80 20H64M80 20v16" fill="none" stroke="#f3c64a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const SYM={
+  warn:`<svg viewBox="0 0 100 100" class="ico" aria-hidden="true"><path d="M50 8l44 80H6z" fill="none" stroke="#ef3b46" stroke-width="8" stroke-linejoin="round"/><path d="M50 38v22" stroke="#ef3b46" stroke-width="8" stroke-linecap="round"/><circle cx="50" cy="74" r="5" fill="#ef3b46"/></svg>`
+};
+const heartIco=`<svg viewBox="0 0 100 100" class="ico" style="fill:#ef3b46" aria-hidden="true">${SUIT_PATHS.H}</svg>`;
+
+const fmt=c=>'$'+(c/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtX=x=>x.toLocaleString('en-US',{minimumFractionDigits:x>=100?1:2,maximumFractionDigits:3})+'×';
+
+/* RNG: certified-RNG stand-in. Every card is a fresh uniform draw from a full 8-deck shoe (spec 9.2 rejection sampling). */
+const D=8, SHOE=52*D, LIM=Math.floor(2**32/SHOE)*SHOE;
+function rand32(){const a=new Uint32Array(1);crypto.getRandomValues(a);return a[0]}
+let CID=0;
+function drawCard(){let x;do x=rand32();while(x>=LIM);const s=(x%SHOE)%52;return {id:++CID,suit:Math.floor(s/13),rank:s%13}}
+const cat=c=>c.suit===0?'C':c.suit===1?'S':'R';
+const isRed=c=>c.suit>=2;
+
+function cardHTML(c,cls=""){
+  const k=SUITS[c.suit];
+  return `<div class="card ${isRed(c)?'red':''} ${cls}" data-cid="${c.id}"><span class="tl">${RANKS[c.rank]}</span><span class="pip">${suitSvg(k)}</span><span class="br">${RANKS[c.rank]}</span></div>`;
+}
+const backHTML=(cls="",attrs="")=>`<div class="cb ${cls}" ${attrs}>${LOGO}</div>`;
+
+/* ================= ladder math (exact integer arithmetic) ================= */
+// cfg: {rBp, opening}. Rung j pays floor(R*S/p_j) cents.
+const ladderCache=new Map();
+function ladder(cfg,S,j){
+  const key=cfg.id+'|'+S+'|'+j;
+  if(ladderCache.has(key))return ladderCache.get(key);
+  let num=BigInt(cfg.rBp)*BigInt(S), den=10000n;
+  for(let k=1;k<j;k++){ num*=6n;den*=5n; }
+  const v=Number(num/den); ladderCache.set(key,v); return v;
+}
+function reach(cfg,j){
+  let p=1;
+  for(let k=1;k<j;k++) p*=5/6;
+  return p;
+}
+function capRung(cfg,S,capC,banked=0,h=0){let j=1;while(banked+Math.floor(ladder(cfg,S,j)/2**h)<capC&&j<400)j++;return j}
+
+const CFG={
+  classic:{id:'classic',rBp:9300,opening:true}
+};
+
+/* ================= app state ================= */
+const TABDEFS=[
+  {id:'classic',name:'CRASH 20×',x:20,cap:20,defStake:1000}
+];
+const MAX_WIN_X = 20000;               // platform ceiling (x bet)
+const OPERATOR_MAX_WIN_X = MAX_WIN_X;  // server/operator config point: may be lowered, never raised
+const maxWinC=S=>Math.min(MAX_WIN_X,OPERATOR_MAX_WIN_X)*S;   // MAX WIN in integer cents for a round started with bet S cents
+const app={tab:'classic',wallet:100000,net:0,S:{}};
+for(const t of TABDEFS) app.S[t.id]={id:t.id,paused:null,bar:null,screen:'lobby',stake:t.defStake,buy:null,leg:null,run:null,result:null};
+app.tab='classic';   // Classic-only build: no other games, no nav tabs
+
+function tdef(id){return TABDEFS.find(t=>t.id===id)}
+function pay(st,c){ if(c<=0)return; st.buy.paid+=c; app.wallet+=c; app.net+=c; }
+/* Round escrow (GRP 1.2, RUN BANK): nothing is credited to the wallet while the round is open.
+   runBanked = the RUN BANK, the only escrow: the kept half of DOUBLE HALF.
+   It returns as held after a bust. (kept is unused since v152.1 and always 0.)
+   The round settles once: one debit (the bet) and one credit (escrow + held). */
+const roundT=st=>st.buy.paid+st.buy.kept+st.buy.runBanked;   // everything this round has won so far, excluding held
+function settle(st,held=0){ if(st.buy.settled) return 0; const bank=st.buy.runBanked, c=held+st.buy.kept+bank; st.buy.kept=0; st.buy.runBanked=0; st.buy.settled=true; pay(st,c);
+  track('round_settle',{amount:c/100,run_bank:bank/100,held:held/100}); return c; }
+let ROUND_ID=0;
+function newBuy(st,tid){ const S=st.stake; app.wallet-=S; app.net-=S; st.buy={id:++ROUND_ID,settled:false,orig:S,mw:maxWinC(S),cap:Math.min(tdef(tid).cap*S,maxWinC(S)),paid:0,kept:0,runBanked:0,continues:0}; st.bankedBust=null; st.bar=null; st.paused=null; }
+
+/* ================= crash leg engine ================= */
+let LEG_ID=0;
+function newLeg(cfg,S,buy){return {uid:++LEG_ID,cfg,S,buy,cards:[],prev:null,seenRed:false,j:0,h:0,live:false,state:'play',auto:false,shuffling:false,timer:null,winMs:0,winStart:0}}
+const riding=(leg,j=leg.j)=>{
+  return Math.floor(ladder(leg.cfg,leg.S,j)/2**leg.h);
+};
+function isBust(leg,c){
+  if(cat(c)==='R'||!leg.prev)return false;
+  if(leg.cfg.opening&&!leg.seenRed)return false;
+  return cat(c)===cat(leg.prev);
+}
+function legDeal(leg){
+  if(leg.state!=='play')return;
+  let c=drawCard(); leg.live=false;
+  if(isBust(leg,c)){
+    leg.cards.push(c);
+    leg.state='busted'; leg.bustPair=[leg.prev.id,c.id];
+    return;
+  }
+  leg.prev=c; leg.cards.push(c);
+  if(isRed(c)){
+    leg.seenRed=true; leg.j++; leg.live=true;
+    if(leg.buy.paid+(leg.buy.kept||0)+(leg.buy.runBanked||0)+riding(leg)>=leg.buy.cap){ leg.state='capped'; }
+  }
+}
+
+/* ================= run phase (RUN-PHASE-SPEC v152) ================= */
+/* Run cap: no optional run once RUN BANK + held reaches 1,000 x the ammo (the first held amount); the run that crosses it pays in full.
+   runStart = the ammo (the first held amount). */
+const RUN_CAP_X=1000;
+const DIM=0.65;                       // run deck v164: one whole-screen dim at 65% (Blackjack v164), fades in with the run bar; only the bar sits above it
+function track(ev,f){ try{console.info('[card-run]',ev,f||{})}catch(e){} }
+
+/* ---------- DOUBLE OR NOTHING: this game's own double game, THE RUN GAME (first to three, v0.3) ----------
+   The tap deals the first card. After every card the player either LOCKS IN the offer or deals the NEXT CARD.
+   Three reds before three blacks doubles the stake (exactly 2x); three blacks first loses it.
+   Offer = 2 x stake x P(three reds first from this score), rounded down to the cent: the fair value, never above 2x.
+   Every card is red or black with probability 1/2, so playing on returns exactly 100% and an offer returns at most 100%. */
+const raceP=(r,b)=> r>=3?1 : b>=3?0 : (raceP(r+1,b)+raceP(r,b+1))/2;
+let RACE_ID=0;
+function startRun(st,amount,mode){
+  const run= mode==='half'?Math.floor(amount/2):amount, bank=amount-run;
+  if(bank>0) st.buy.runBanked+=bank;   // RUN BANK (escrow): the wallet doesn't move; it comes back into play after a lost run
+  st.bankedBust=null; st.bar=null; st.pending=null;
+  const R=st.run={id:++RACE_ID,amount:run,reds:0,blacks:0,cards:[],state:'play',offer:0,holding:0};
+  st.screen='run'; st.leg=null;
+  R.t=setTimeout(()=>{ raceDeal(st,R); },450);
+}
+const raceAlive=(st,R)=>st.run===R&&st.screen==='run';
+function raceDeal(st,R){
+  if(!raceAlive(st,R)||R.state!=='play')return;
+  const c=drawCard(); R.cards.push(c);
+  if(isRed(c))R.reds++; else R.blacks++;
+  if(R.reds===3){ R.state='won'; R.holding=2*R.amount; track('run_result',{kind:'double',result:'won',pay:R.holding/100,deal_count:R.cards.length}); render();
+    R.t=setTimeout(()=>{ if(!raceAlive(st,R))return; barEnter(st,R.holding); render(); },1300); return; }
+  if(R.blacks===3){ R.state='crash'; track('run_result',{kind:'double',result:'lost',pay:0,deal_count:R.cards.length}); render();
+    const ck=()=>raceAlive(st,R); if(st.buy.runBanked>0) bankedBust(st,ck); else endCrash(st,ck,550); return; }
+  R.offer=Math.floor(2*R.amount*raceP(R.reds,R.blacks));   // fair value from the score, rounded down to the cent
+  render();
+}
+function raceLock(st){
+  const R=st.run; if(!R||R.state!=='play'||!R.cards.length)return;
+  R.state='taken'; R.holding=R.offer;
+  track('run_result',{kind:'double',result:'locked',pay:R.offer/100,deal_count:R.cards.length});
+  track('lock_in',{amount:R.offer/100,build_step:R.cards.length,pay_x:+(R.offer/R.amount).toFixed(4),phase:'double',half:false});
+  barEnter(st,R.offer);
+}
+
+/* ---------- the run bar: RunBar v152.1 (drop-in module) ---------- */
+const barState=st=>({held:st.bar.held/100, banked:st.buy.runBanked/100, ammo:st.buy.runStart/100, maxWin:(st.buy.mw-st.buy.paid-st.buy.kept)/100});
+/* every win under the caps opens the bar; RunBar.compute applies the spec's order of checks (clip to MAX WIN, MAX WIN, 1,000x run cap) */
+function barEnter(st,held){
+  if(st.buy.runStart==null){ st.buy.runStart=held+st.buy.runBanked; }   // ammo = what's locked in + the kept half
+  st.bar={held}; const r=RunBar.compute(barState(st));
+  if(r.mode!=='bar'){ st.bar=null; endPaid(st,r.held,r.mode==='max_win'?'mw':'run'); return false; }
+  track('run_offer',{held:held/100,banked:st.buy.runBanked/100,ammo:st.buy.runStart/100,options_shown:Object.keys(r.show).filter(k=>r.show[k]&&k!=='halfPill'&&k!=='cashOutOnly'),n_max:r.nMax});
+  return true;
+}
+/* the board as the player last saw it, for the end toast to sit on (cards stay; deal-in animations, stamps and toasts are dropped) */
+function boardSnap(){ const b=screenEl.querySelector('#board'); if(!b) return null; const c=b.cloneNode(true);
+  c.querySelectorAll('.dealin').forEach(e=>e.classList.remove('dealin')); c.querySelectorAll('.crk-toast,.crk-bust').forEach(e=>e.remove());
+  c.classList.remove('crk-dimmable','crk-dim'); c.removeAttribute('data-toast'); return c.outerHTML; }
+const toastBoard=(r,cfg)=> r.boardHTML ? r.boardHTML.replace('id="board"', `id="board" data-toast='${cfg}'`) : `<div class="board toasthost" id="board" data-toast='${cfg}'></div>`;
+function endPaid(st,held,kind){
+  const bank=st.buy.runBanked, total=settle(st,held);   // one credit: RUN BANK + held
+  track('cap_reached',{total:total/100,source:kind==='mw'?'max_win':'run_cap'});
+  st.bar=null; st.bankedBust=null; st.pending=null;
+  st.result={kind,last:total,runBank:bank,boardHTML:boardSnap()}; st.screen='result';
+}
+const celebrate=(st,amt)=>amt>st.buy.orig;   // a return at or below the stake is never celebrated
+function renderChoice(id,st){
+  const P=st.pending||{cards:[],leg:{j:0}}; let h='';
+  const shown=(P.cards||[]).slice(-4);
+  const head= (P.top?'TOP RED REACHED · RED #':'LOCKED IN AT RED #')+P.leg.j;
+  const amt=st.bar?st.bar.held:P.amount;
+  h+=`<div class="board" id="board"><div class="result" style="margin-top:18px;gap:10px"><div class="sub boardlabel">${head}</div><div class="${celebrate(st,amt)?'won':'won plain'}">${fmt(amt)}</div>${st.buy.kept?`<div class="sub boardlabel">BANKED ${fmt(st.buy.kept)}</div>`:''}</div>
+    <div class="slots">${shown.map(c=>cardHTML(c,'dim')).join('')}</div></div>`;
+  h+=`<div class="controls">${st.bar?ribbon('bar'):''}</div>`;
+  return h;
+}
+/* LOCK IN: one module instance per leg and RUN BANK; live only while a red is the latest card */
+function lockSlot(st,leg,cur){
+  const bank=st.buy.runBanked, mw=st.buy.mw-st.buy.paid;
+  return `<div class="lockwrap ${leg.live&&leg.state==='play'?'':'off'}">`+ribbon('lock',{leg:leg.uid,banked:bank/100,maxWin:mw/100,half:false,h:leg.h})+`</div>`;
+}
+/* a slot the RunBar module draws into after each render (memoised so unrelated re-renders never remount it) */
+const ribbon=(mode,cfg)=>`<div class="crk-ribbon rbslot" data-rb="${mode}" ${cfg?`data-cfg='${JSON.stringify(cfg).replace(/'/g,'&#39;')}'`:''}></div>`;
+
+/* ================= rendering ================= */
+const screenEl=document.getElementById('screen');
+let seen=new Set();
+function animClass(id){ if(seen.has(id))return ''; seen.add(id); return 'dealin'; }
+
+/* end of a crash: one toast, then LOBBY / PLAY AGAIN slide up in place */
+function endCrash(st,check,delay=650,title,sub){ setTimeout(()=>{ if(!check())return; settle(st); st.ended={kind:'crash',shown:false,title,sub}; render(); },delay); }
+/* bust: the BUSTED stamp sits on the board (RunBar.bustStamp, drawn after render); the ribbon becomes the end bar */
+function endControls(st){ st.ended.shown=true; return ribbon('end'); }
+/* the end bar (RunBar.renderEnd): PLAY AGAIN / $bet, or CHANGE BET / BALANCE $N -> lobby */
+const buildUpTo=(id,S)=>Math.min(tdef(id).x*S,maxWinC(S));
+const startLabel=(id,S)=>`BUILD ${tdef(id).x.toLocaleString('en-US')}× · ${fmt(buildUpTo(id,S))}`;   // the start button: BUILD 20× · $N (N = 20 x the bet)
+function renderTop(){
+  document.getElementById('wallet').textContent=(app.wallet/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const n=document.getElementById('net'); n.textContent=(app.net>=0?'+':'−')+(Math.abs(app.net)/100).toFixed(2);
+  n.className='pill net '+(app.net>0?'pos':app.net<0?'neg':'');
+}
+/* keep the lobby tagline on one line: shrink it to the width of the phone */
+function fitTag(){ const ps=screenEl.querySelector('.pitch .ps'); if(!ps)return; ps.style.fontSize='';
+  const box=screenEl.clientWidth-20, w=ps.scrollWidth; if(w>box){ const f=parseFloat(getComputedStyle(ps).fontSize); ps.style.fontSize=Math.max(9,f*box/w*0.98).toFixed(2)+'px'; } }
+addEventListener('resize',()=>fitTag());
+/* big amounts shrink to fit on one line; they never wrap or clip */
+function fitAll(){ screenEl.querySelectorAll('[data-fit]').forEach(el=>{ el.style.fontSize=''; const w=el.scrollWidth, box=el.parentElement.clientWidth-8;
+  if(w>box&&box>0){ const f=parseFloat(getComputedStyle(el).fontSize); el.style.fontSize=Math.max(10,f*box/w*0.97).toFixed(1)+'px'; } }); }
+/* input lock: for 350 ms after a button set swaps in, taps / clicks / Enter / Space are ignored; focus moves to the primary action */
+let ctlSig='', lockUntil=0;
+function inputLock(){
+  const c=screenEl.querySelector('.controls'), sig=(app.tab+'|')+(c?[...c.querySelectorAll('[data-act]')].map(b=>b.dataset.act).join(','):'');
+  if(sig===ctlSig)return; ctlSig=sig;
+  if(c&&c.querySelector('[data-act]')){ lockUntil=performance.now()+350; const p=c.querySelector('[data-primary]'); if(p&&!CardRunRules.isOpen()){ try{p.focus({preventScroll:true})}catch(e){} } }
+}
+/* RunBar v152 slots: the module draws the bar, end bar, hand-offs and LOCK IN into [data-rb] after each render.
+   Memoised by state, so an unrelated re-render re-attaches the same buttons (no new animation, focus or input lock). */
+let RB_MEMO=new Map(), RB_HANDLE=new Map();
+function mountRibbons(st){
+  const keep=new Map(), keepH=new Map();
+  const liveAmt=()=>{ if(st.screen==='run'&&st.run) return st.run.offer/100; const L=st.leg; return L&&L.j?riding(L)/100:0; };
+  screenEl.querySelectorAll('[data-rb]').forEach(el=>{
+    const mode=el.dataset.rb, cfg=el.dataset.cfg?JSON.parse(el.dataset.cfg):null;
+    const key=[st.id,st.buy&&st.buy.id,mode, mode==='bar'?JSON.stringify(barState(st)) : mode==='end'?st.stake+'|'+app.wallet : el.dataset.cfg].join('|');
+    const old=RB_MEMO.get(key);
+    if(old){ el.appendChild(old); keep.set(key,old); const hd=RB_HANDLE.get(key); if(hd){ hd.set(liveAmt()); keepH.set(key,hd); } return; }
+    if(mode==='bar') RunBar.render(el,barState(st),{cashOut:()=>act('bar-cash'),double:()=>act('bar-double'),doubleHalf:()=>act('bar-doublehalf'),
+      paidOut:k=>setTimeout(()=>{ if(!st.bar)return; const r=RunBar.compute(barState(st)); endPaid(st,r.held,k==='max_win'?'mw':'run'); render(); },0)});
+    else if(mode==='end') RunBar.renderEnd(el,{bet:st.stake/100,balance:app.wallet/100},{playAgain:()=>act('again'),changeBet:()=>act('lobby')});
+    else if(mode==='lock'){ const L=st.leg;
+      const hd=RunBar.renderLockIn(el,{...cfg,amount:liveAmt()},{lockIn:()=>act(cfg.act||'cashout'),
+        paidOut:()=>setTimeout(()=>{ if(cfg.act==='racelock'){ if(st.run&&st.run.state==='play') raceLock(st), render(); return; } if(st.leg!==L||L.state!=='play')return; clearTimeout(L.timer); L.state='ended'; endPaid(st,Math.max(0,st.buy.mw-st.buy.paid-st.buy.runBanked),'mw'); render(); },0)});
+      keepH.set(key,hd); }
+    if(el.firstElementChild) keep.set(key,el.firstElementChild);
+  });
+  RB_MEMO=keep; RB_HANDLE=keepH;
+}
+/* board decorations drawn by the module: the BUSTED stamp, the MAX WIN / 1,000x RUN toast, and the board dim ("double cover") */
+/* toast lines never wrap: a line that is too long shrinks to fit */
+function fitToast(t){ t.querySelectorAll('.eh,.et,.es,.crk-chip').forEach(el=>{ el.style.fontSize=''; const box=t.clientWidth-30, w=el.scrollWidth; if(w>box&&box>0){ const f=parseFloat(getComputedStyle(el).fontSize); el.style.fontSize=(f*box/w).toFixed(2)+'px'; } }); }
+let dimKey='';
+function decorate(st){
+  const board=screenEl.querySelector('#board');
+  if(board&&(st.bankedBust||(st.ended&&!st.ended.title))) RunBar.bustStamp(board,{runBank:st.bankedBust?st.bankedBust.B/100:0});
+  screenEl.querySelectorAll('[data-toast]').forEach(h=>{ const cfg=JSON.parse(h.dataset.toast), t=RunBar.toast(h,cfg); if(cfg.plain) t.classList.add('crk-plain'); fitToast(t); });
+  const rib=screenEl.querySelector('[data-rb="bar"]'), phone=document.getElementById('phone');
+  phone.style.setProperty('--dimA',DIM);
+  phone.classList.toggle('dimscreen',!!(st.bar&&rib));
+  phone.classList.toggle('enddim',!!screenEl.querySelector('[data-rb="end"]'));   // end of round: 70% screen dim under PLAY AGAIN   // v163-164: the whole screen dims while the run bar is up; it fades in with the bar
+}
+function render(){
+  renderTop();
+  const st=app.S[app.tab]; const id=app.tab;
+  let h='';
+  if(st.screen==='lobby') h=renderLobby(id,st);
+  else if(st.screen==='crash') h=renderCrash(id,st);
+  else if(st.screen==='run') h=renderRun(id,st);
+  else if(st.screen==='result') h=renderResult(id,st);
+  else if(st.screen==='choice') h=renderChoice(id,st);
+  screenEl.classList.toggle('tight',st.screen==='crash');
+  screenEl.innerHTML=h;
+  fitTag(); fitAll(); inputLock();
+  mountRibbons(st); decorate(st);
+}
+
+function rulesPanel(){
+  const rows=[`<div class="r">${heartIco}<b>Lock wins on red cards</b></div>`,
+    `<div class="r">${SYM.warn}<span>Repeating Clubs or Spades = CRASH <b style="color:var(--gold);font-weight:600">after 1st red</b></span></div>`];
+  return `<div class="rules">${rows.join('')}</div>`;
+}
+function maxPayout(id,S){
+  const cfg=CFG[id]; const j=capRung(cfg,S,tdef(id).cap*S); return {j,v:ladder(cfg,S,j),p:reach(cfg,j)};
+}
+/* Bet entry matches the Blackjack lobby: an amount field with MAX */
+const TABLE_MIN=100, TABLE_MAX=10000, BET_STEP=10;   // bets: $1.00 to $100.00 in $0.10 steps (integer cents)
+const snapBet=c=>Math.max(TABLE_MIN,Math.min(TABLE_MAX,Math.floor(c/BET_STEP)*BET_STEP));   // off the grid snaps DOWN to $0.10, then clamps to [$1, $100]: never $0.00
+function setStake(st,c){ if(typeof c!=='number'||Number.isNaN(c))return; st.stake=snapBet(c); }
+/* the bet field: a plain decimal only (digits with one optional point). Empty, NaN, exponents (1e2), signs (-5) and text are
+   rejected (null: the bet stays as it was). Parsed exactly from the digits: whole dollars and the first decimal (tenths). */
+function parseBetCents(v){ const s=String(v==null?'':v).trim(); if(!/^(\d+(\.\d*)?|\.\d+)$/.test(s))return null;
+  const p=s.split('.'), tenths=(p[1]||'')+'0'; return (Number(p[0]||'0')*10+Number(tenths[0]))*BET_STEP; }
+const BRLOGO_K='data:image/webp;base64,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';   // the Kicks BUILD IT. RUN IT. logo, shared by every launch lobby
+function renderLobby(id,st){
+  const t=tdef(id), S=st.stake;
+  const desc={
+    classic:'Flip cards one by one: every red pays a higher multiplier, and a repeated black suit crashes the build after the first red'
+  }[id];
+  const mp=maxPayout(id,S);
+  const facts=
+     `<div class="stat"><div class="l">FIRST RED</div><div class="v" style="color:var(--gold)">${fmt(ladder(CFG[id],S,1))}</div></div><div class="stat"><div class="l">TOP RUNG (RED #${mp.j})</div><div class="v">${fmt(mp.v)}</div></div>`;
+  const runMax=Math.min(t.x*RUN_CAP_X,MAX_WIN_X,OPERATOR_MAX_WIN_X);   // WIN UP TO never promises more than MAX WIN
+  return `<div class="lobby">
+    <div class="pitch"><img class="phlogo" src="${BRLOGO_K}" alt="BUILD IT. RUN IT." width="1100" height="167"><div class="ps"><span class="tg-nw">Build a 20× win</span><span class="tg-dot" aria-hidden="true"></span><span class="tg-nw">then take it on a 1,000× run</span></div></div>
+    <div class="logo">${LOGO.replace('<svg','<svg width="56" height="56"')}
+      <div class="w">CRASH 20×</div></div>
+    <p class="lobbydesc">${desc}</p>
+    <div class="lobbyfoot">
+    <div class="eqn"><div class="eq"><span class="el">BUILD</span><span class="ev">${t.x.toLocaleString('en-US')}×</span></div><span class="op">×</span><div class="eq"><span class="el">RUN</span><span class="ev">1,000×</span></div><span class="op">=</span><div class="eq max"><span class="el">WIN UP TO</span><span class="ev ${runMax>=1e6?'long':''}" data-fit>${runMax.toLocaleString('en-US')}×</span></div></div>
+    ${st.paused?'':`<div class="betinput"><span class="cur">$</span><input id="bet-${id}" type="number" inputmode="decimal" min="${TABLE_MIN/100}" max="${TABLE_MAX/100}" step="${BET_STEP/100}" value="${(S/100).toString()}" aria-label="Bet amount in dollars" data-bet="${id}"><button data-act="betmax">MAX</button></div>`}
+    <div class="lobbyfacts">${facts}</div>
+    ${st.paused?`<button class="btn yellow startbtn" data-act="resume" data-primary><span class="a">RESUME ROUND</span></button>`
+      : app.wallet>=S?`<button class="btn yellow startbtn" data-act="start" data-primary><span class="a">${startLabel(id,S)}</span></button>`
+      : `<div class="sub" style="color:var(--red-soft)">BALANCE ${fmt(app.wallet)} · LOWER THE BET</div>`}
+    </div>
+  </div>`;
+}
+
+function renderCrash(id,st){
+  const leg=st.leg, cfg=leg.cfg, S=leg.S;
+  const cur=leg.j?riding(leg):0, next=riding(leg,leg.j+1);
+  const mult=leg.j?ladder(cfg,S,leg.j)/S:(cfg.opening?1:1);
+  let h='';
+  h+=rulesPanel();
+  h+=`<div class="board" id="board">`;
+  h+=`<div class="deckrow"><div class="stat ammo"><div class="l">AMMO</div><div class="v">${fmt(S)}</div></div>
+     <div><div class="deck ${leg.shuffling?'shuffling':''}" ${leg.auto?'':'data-act="deal" role="button" aria-label="Deal next card"'}>${backHTML()}${backHTML()}${backHTML()}</div><div class="deckcap">Card # <b>${leg.cards.length}</b></div></div>
+     <div class="stat mult"><div class="l">MULTIPLIER</div><div class="v">${(leg.j?ladder(cfg,S,leg.j)/S:1).toFixed(2)}x</div></div></div>`;
+  const redsHud=`<span class="badge" style="margin-top:-4px">REDS <b style="color:var(--gold);font-size:14px;letter-spacing:0">${leg.j}</b> OF ${capRung(cfg,S,st.buy.cap,roundT(st),leg.h)}</span>`;
+
+  // message
+  let msg='<div class="msg"></div>';
+  if(st.ended){ msg='<div class="msg"></div>'; }
+  else if(cfg.opening&&!leg.seenRed&&leg.cards.length===0){ msg=`<div class="msg"><p>Nothing can bust before your first red card.</p></div>`; }
+  // card row
+  let row='';
+  const shown=leg.cards.slice(-4);
+  shown.forEach(c=>{ const hl=leg.state==='busted'&&leg.bustPair&&leg.bustPair.includes(c.id); row+=cardHTML(c,(hl?'hl ':'')+animClass(c.id)); });
+  for(let i=shown.length;i<4;i++) row+='<div class="slot"></div>';
+  h+=msg+`<div class="slots">${row}</div></div>`+redsHud;
+  // controls
+  let ctl='';
+  if(st.bankedBust){
+    ctl='';
+  }else if(st.bar){
+    ctl=ribbon('bar');
+  }else if(leg.state==='busted'&&st.ended){
+    ctl=endControls(st);
+  }else if(leg.state==='busted'){
+    ctl='';
+  }else if(leg.live){
+    ctl=lockSlot(st,leg,cur)+`<div class="compact">
+      <${leg.auto?'div class="bigbtn next info"':'button class="bigbtn next" data-act="deal"'}>${suitSvg('D','s')}<div><div class="lab">NEXT RED CARD</div><div class="amt">${fmt(next)}</div></div></${leg.auto?'div':'button'}></div>`;
+  }else{
+    ctl= lockSlot(st,leg,leg.j?riding(leg):0) + (leg.auto
+      ? `<div class="bigbtn next info">${suitSvg('D','s')}<div><div class="lab">${leg.shuffling?'SHUFFLING · NEXT RED CARD':'NEXT RED CARD'}</div><div class="amt">${fmt(next)}</div></div>${suitSvg('H','s')}</div>`
+      : `<button class="bigbtn next" data-act="deal">${suitSvg('D','s')}<div><div class="lab">NEXT RED CARD</div><div class="amt">${fmt(next)}</div></div>${suitSvg('H','s')}</button>`);
+  }
+  if(AUTO_TABS.has(id)&&(leg.state==='play')) ctl+=`<button class="autotog" data-act="autotoggle" aria-pressed="${leg.auto}"><span class="sw"></span>AUTO DEAL</button>`;
+  h+=`<div class="controls">${ctl}</div>`;
+  return h;
+}
+
+/* Global rule: a lost run with DOUBLE HALF money banked brings that money back as the held amount */
+function bankedBust(st,check){
+  const B=st.buy.runBanked;
+  setTimeout(()=>{ if(!check())return;
+    st.bankedBust={B,phase:'stamp',shown:false}; render();
+    setTimeout(()=>{ if(!check()||!st.bankedBust)return;
+      st.buy.runBanked=0; st.buy.continues++;   // the RUN BANK becomes held; the wallet doesn't move
+      st.bankedBust=null;
+      track('banked_continue',{banked_amount:B/100,continue_count:st.buy.continues});
+      barEnter(st,B); render();
+    },1300);
+  },550);
+}
+function renderRun(id,st){
+  const R=st.run; let h='';
+  h+=`<div class="board" id="board"><div class="rgpanel"><b>DOUBLE OR NOTHING</b><small>50/50 · FIRST TO THREE</small></div>`;
+  h+=`<div class="deckrow"><div class="stat ammo"><div class="l">RUNNING</div><div class="v">${fmt(R.amount)}</div></div>
+      <div><div class="deck ${R.state==='play'?'shuffling':''}">${backHTML()}${backHTML()}${backHTML()}</div><div class="deckcap">Card # <b>${R.cards.length}</b></div></div>
+      <div class="stat"><div class="l">TO WIN</div><div class="v" style="color:var(--gold)">${fmt(2*R.amount)}</div></div></div>`;
+  h+=`<div class="race"><div class="track"><div class="l">RED · DOUBLES</div><div class="dots">${[0,1,2].map(i=>`<span class="dot ${i<R.reds?'r':''}"></span>`).join('')}</div></div>
+      <div class="track"><div class="l">BLACK · BUST</div><div class="dots">${[0,1,2].map(i=>`<span class="dot ${i<R.blacks?'b':''}"></span>`).join('')}</div></div></div>`;
+  const shown=R.cards.slice(-5); let row=shown.map(c=>cardHTML(c,animClass(c.id))).join('');
+  for(let i=shown.length;i<4;i++) row+='<div class="slot"></div>';
+  let msg='<div class="msg"></div>';
+  if(R.state==='won'&&!st.bar) msg=`<div class="msg good"><h3>DOUBLED</h3><p style="font-size:18px;font-weight:800">${fmt(2*R.amount)}</p></div>`;
+  else if(R.state==='taken'&&!st.bar) msg=`<div class="msg good"><h3>LOCKED IN ${fmt(R.holding)}</h3><p>${R.reds}–${R.blacks}</p></div>`;
+  else if(R.state==='play') msg=`<div class="msg"><p>${R.cards.length?'Lock in the offer, or deal the next card. Both are worth the same on average.':'First to three: three reds doubles it, three blacks busts.'}</p></div>`;
+  h+=msg+`<div class="slots" style="gap:6px">${row}</div></div>`;
+  let ctl='';
+  if(st.bankedBust) ctl='';
+  else if(st.bar) ctl=ribbon('bar');
+  else if(st.ended) ctl=endControls(st);
+  else if(R.state==='play'&&R.cards.length) ctl=`<div class="racerow">`+ribbon('lock',{race:R.id,n:R.cards.length,banked:st.buy.runBanked/100,maxWin:(st.buy.mw-st.buy.paid)/100,half:false,act:'racelock'})
+    +`<button class="bigbtn next" data-act="racenext" data-primary><div><div class="lab">NEXT CARD</div><div class="amt">CARD ${R.cards.length+1}</div></div></button></div>`;
+  h+=`<div class="controls">${ctl}</div>`;
+  return h;
+}
+
+function renderResult(id,st){
+  const r=st.result; let h='', head='', pre='';
+  if(r.kind==='mw'||r.kind==='run'){
+    pre+=toastBoard(r, JSON.stringify({variant:tdef(id).name,title:r.kind==='mw'?'MAX WIN':'1,000× RUN',paid:r.last/100,runBank:(r.runBank||0)/100}));
+  }else if(r.cash){   // CASH OUT: <VARIANT> / CASHED OUT / PAID total (+ INCLUDES RUN BANK); plain at or below the stake
+    pre+=toastBoard(r, JSON.stringify({variant:tdef(id).name,title:'CASHED OUT',paid:r.cash.total/100,runBank:r.cash.runBank/100,plain:r.cash.total<=st.buy.orig}));
+  }
+  h+=pre;
+  h+=`<div class="controls"><div class="result" style="gap:6px">${head}</div>${ribbon('end')}</div>`;
+  return h;
+}
+
+/* ================= actions ================= */
+function startTab(id){
+  const st=app.S[id]; if(app.wallet<st.stake)return;
+  newBuy(st,id); st.result=null; st.run=null; st.ended=null; st.pending=null; if(st.leg) clearTimeout(st.leg.timer); st.leg=null;
+  st.leg=newLeg(CFG[id],st.stake,st.buy); st.screen='crash';
+  if(AUTO_TABS.has(id)){ st.leg.auto=true; const leg=st.leg; leg.timer=setTimeout(()=>autoLoop(st,id,leg),450); }
+  render();
+}
+/* Continuous deal: shuffle, deal, hold the cash-out window on a red, repeat until bust or cash-out.
+   The next card is drawn only when it is dealt, after the window closes (spec 3.7). */
+const AUTO_TABS=new Set(['classic']);
+const AUTO={shuffle:520,red:1600,black:700};
+function autoAlive(st,leg){return st.leg===leg&&st.screen==='crash'&&leg.state==='play'&&leg.auto}
+function autoLoop(st,id,leg){
+  if(!autoAlive(st,leg))return;
+  leg.shuffling=true; leg.winMs=0; render();
+  leg.timer=setTimeout(()=>{
+    if(!autoAlive(st,leg))return;
+    leg.shuffling=false;
+    doDeal(st,leg);
+    if(leg.state!=='play')return;
+    const wait=leg.live?AUTO.red:AUTO.black;
+    leg.winMs=leg.live?wait:0; leg.winStart=performance.now();
+    render();
+    leg.timer=setTimeout(()=>autoLoop(st,id,leg),wait);
+  },AUTO.shuffle);
+}
+function doDeal(st,leg){
+  legDeal(leg);
+  if(leg.state==='busted'){ legBusted(st,leg); return; }
+  if(leg.state==='capped'){ render(); setTimeout(()=>{ if(st.leg===leg&&leg.state==='capped'&&st.screen==='crash'){ toChoice(st,leg,true); render(); } },900); return; }   // once, and never from the lobby (resume re-arms it)
+}
+function toChoice(st,leg,top){
+  const amt=riding(leg); leg.state='ended'; clearTimeout(leg.timer);
+  st.pending={amount:amt,top,cards:leg.cards.slice(),leg:{cfg:leg.cfg,S:leg.S,j:leg.j,h:leg.h,prev:leg.prev,seenRed:leg.seenRed}};
+  st.screen='choice';
+  barEnter(st,amt);
+}
+/* a busted board: banked half-play money comes back into play, otherwise BUSTED -> end bar */
+function legBusted(st,leg,delay=650){
+  render();
+  const check=()=>st.leg===leg&&st.screen==='crash';
+  if(st.buy.runBanked>0) bankedBust(st,check); else endCrash(st,check,delay);
+}
+/* the door: a pending run bar is cashed out; an unfinished build is kept for RESUME ROUND */
+function doorOut(st){
+  if(st.screen==='lobby')return;
+  if(st.leg) clearTimeout(st.leg.timer);
+  if(st.bar){ settle(st,st.bar.held); endRound(st); }
+  else if(st.screen==='crash'&&st.leg&&st.leg.live&&st.leg.state==='play'&&!st.bankedBust){ settle(st,riding(st.leg)); endRound(st); }   // abandoned at LOCK IN: lock in and cash out, never run
+  else if(st.bankedBust&&st.bankedBust.phase==='stamp'){ settle(st); endRound(st); }   // an abandoned round cashes out and never runs
+  else if(st.screen==='result'||st.ended){ endRound(st); }
+  else { st.paused={screen:st.screen}; if(st.leg){ st.leg.shuffling=false; } }
+  st.screen='lobby';
+}
+function endRound(st){ st.bar=null; st.bankedBust=null; st.pending=null; st.paused=null; st.ended=null; st.result=null; st.leg=null; st.run=null; }
+function resumeRound(st){
+  const ps=st.paused; if(!ps)return; st.paused=null; st.screen=ps.screen; const id=st.id;
+  if(ps.screen==='crash'){ const leg=st.leg;
+    if(leg.state==='play'&&leg.auto) leg.timer=setTimeout(()=>autoLoop(st,id,leg),400);
+    else if(leg.state==='busted'&&!st.ended&&!st.bankedBust) legBusted(st,leg,300);
+    else if(leg.state==='capped') setTimeout(()=>{ if(st.leg===leg&&leg.state==='capped'&&st.screen==='crash'){ toChoice(st,leg,true); render(); } },400);
+  }
+  else if(ps.screen==='run'){ const R=st.run; if(R.state==='crash'&&!st.ended&&!st.bankedBust&&!st.bar){ const ck=()=>st.run===R&&st.screen==='run'; if(st.buy.runBanked>0) bankedBust(st,ck); else endCrash(st,ck,300); }
+    else if(R.state==='won'&&!st.ended&&!st.bankedBust&&!st.bar){ clearTimeout(R.t); R.t=setTimeout(()=>{ if(!raceAlive(st,R)||st.bar)return; barEnter(st,R.holding); render(); },400); }   // DOUBLED, left at the door: the bar opens on the win
+    else if(R.state==='play'&&!R.cards.length){ clearTimeout(R.t); R.t=setTimeout(()=>{ raceDeal(st,R); },450); } }   // left before the first card: deal it
+}
+function act(a,el){
+  const st=app.S[app.tab], id=app.tab;
+  switch(a){
+    case 'betmax': setStake(st,Math.min(Math.floor(app.wallet/BET_STEP)*BET_STEP,TABLE_MAX)); break;   // MAX = min(balance floored to $0.10, $100); under $1 the lobby shows the too-low state
+    case 'start': case 'again': startTab(id); return;
+    case 'lobby': endRound(st); st.screen='lobby'; break;
+    case 'racenext': { const R=st.run; if(!R||R.state!=='play')return; raceDeal(st,R); return; }
+    case 'racelock': raceLock(st); break;
+    case 'door': doorOut(st); if(CardRunRules.isOpen()) CardRunRules.close(); break;
+    case 'resume': resumeRound(st); break;
+    case 'bar-cash': { if(!st.bar)return; track('run_choice',{choice:'cash_out',stake:st.bar.held/100,banked_amount:st.buy.runBanked/100}); const bank=st.buy.runBanked, total=settle(st,st.bar.held); st.result={kind:'won',boardHTML:boardSnap(),cash:{total,runBank:bank}}; st.bar=null; st.pending=null; st.screen='result'; break; }
+    case 'bar-double': case 'bar-doublehalf': { if(!st.bar)return; const S=st.bar.held, h=a==='bar-doublehalf'; track('run_choice',{choice:h?'double_half':'double_it',stake:(h?Math.floor(S/2):S)/100,banked_amount:(st.buy.runBanked+(h?S-Math.floor(S/2):0))/100}); startRun(st,S,h?'half':'it'); break; }
+    case 'deal': {
+      const leg=st.leg; if(!leg||leg.state!=='play'||leg.auto)return;
+      doDeal(st,leg); if(leg.state!=='play')return;
+      break; }
+    case 'autotoggle': { const leg=st.leg; if(!leg||leg.state!=='play')return; clearTimeout(leg.timer); leg.shuffling=false; leg.winMs=0; leg.auto=!leg.auto; if(leg.auto){ leg.timer=setTimeout(()=>autoLoop(st,id,leg),250); } break; }
+    case 'cashout': { const leg=st.leg; if(!leg||!leg.live)return; clearTimeout(leg.timer); track('lock_in',{amount:riding(leg)/100,build_step:leg.j,pay_x:+(riding(leg)/leg.S).toFixed(4),phase:'build',half:false});
+      toChoice(st,leg,false); break; }
+  }
+  render();
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-act]'); if(!b||b.disabled||b.closest('.crk-bar,.crk-one'))return; if(performance.now()<lockUntil&&b.closest('.controls'))return; act(b.dataset.act,b);
+});
+document.addEventListener('input',e=>{
+  const id=e.target.dataset&&e.target.dataset.bet; if(!id)return;
+  const c=parseBetCents(e.target.value), b=document.querySelector('[data-act=start]');
+  const a=b&&b.querySelector('.a'); if(a&&c!=null) a.textContent=startLabel(id,snapBet(c));
+});
+document.addEventListener('change',e=>{
+  const id=e.target.dataset&&e.target.dataset.bet; if(!id)return;
+  const c=parseBetCents(e.target.value); if(c!=null) setStake(app.S[id],c); render();   // rejected input: the field shows the bet unchanged
+});
+document.addEventListener('keydown',e=>{
+  if((e.key==='Enter'||e.key===' ')&&e.target.matches('[data-act][role="button"]')){e.preventDefault();if(performance.now()<lockUntil&&e.target.closest('.controls'))return;act(e.target.dataset.act,e.target)}
+});
+
+
+/* ================= rules & pays sheet (rules-sheet.js v1, RULES-CONTENT.txt · CRASH 20×) =================
+   Every number in the PAYS table is computed when the sheet opens, at the current bet, from the game's own
+   CFG / ladder / reach / capRung and the bet and MAX WIN constants: exactly what the game pays. */
+const rulesX=v=>v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+'×';
+const rulesHTML=()=>{
+  const st=app.S[app.tab], S=st.stake, cfg=CFG.classic, t=tdef('classic'), M=1e6;   // M: a notional bet of $10,000 shows each multiplier to 4 decimals
+  const top=capRung(cfg,S,Math.min(t.cap*S,maxWinC(S))), xOf=j=>ladder(cfg,M,j)/M;
+  const rows=[]; for(let j=1;j<=top;j++) rows.push(`<tr><td>#${j}</td><td>${rulesX(xOf(j))}</td><td>${fmt(ladder(cfg,S,j))}</td><td>1 in ${(1/reach(cfg,j)).toFixed(1)}</td></tr>`);
+  const mwX=Math.min(MAX_WIN_X,OPERATOR_MAX_WIN_X).toLocaleString('en-US');
+  return `<h3>How to play</h3>
+<p>Cards are dealt one at a time, each drawn from a full deck, so every card is independent. Every red card climbs the ladder: the first red pays ${rulesX(xOf(1))} your bet and each red after it pays 1.2× the one before. Nothing can crash before the first red. After it, a club straight after a club, or a spade straight after a spade, crashes the build and it pays nothing.</p>
+<p>Tap <b>LOCK IN</b> to take the current red's pay. Cards deal by themselves; switch <b>AUTO DEAL</b> off to deal each card yourself. Red #${top} is the top of the build: it pays its full ${rulesX(xOf(top))} and ends the build.</p>
+<h3>Pays</h3>
+<table class="crr-t"><thead><tr><th>Red</th><th>× bet</th><th>Pays at ${fmt(S)}</th><th>Chance</th></tr></thead><tbody>${rows.join('')}</tbody></table>
+<p class="crr-note">Locking in at red #1 pays ${rulesX(xOf(1))}, less than your bet. Chance = how often a build reaches that red.</p>
+<h3>Run it</h3>
+<div class="crr-key">20× is the build target: the step that reaches it pays its full multiplier, which can be a little over 20× (red #18 pays 20.63×). A 1,000× run works the same way: you can keep running until your total reaches 1,000× your first win, and the run that crosses 1,000× pays in full. No round pays more than the max win of ${mwX}× your bet.</div>
+<p>After any win, including a return of your bet or less, the run bar opens:</p>
+<p><b>CASH OUT</b> takes everything you hold.</p>
+<p><b>DOUBLE OR NOTHING</b> is first to three: three reds before three blacks doubles the amount. After every card you can <b>LOCK IN</b> the offer shown — the fair value of your position, rounded down — or deal the next card.</p>
+<p><b>DOUBLE HALF</b> doubles half of what you hold and puts the other half (plus any odd cent) in your <b>RUN BANK</b>. The RUN BANK is paid with everything else when the round ends; if a double loses, the RUN BANK comes back to cash out or double.</p>
+<p>The minimum run is $0.02. A run that pays nothing ends the round.</p>
+<h3>Return to player</h3>
+<table class="crr-t"><thead><tr><th>Play</th><th>Return</th></tr></thead><tbody>
+<tr><td>Build, any stop</td><td>93.0%</td></tr>
+<tr><td>Lowest at small bets (rounding to the cent)</td><td>92.3%</td></tr>
+<tr><td>DOUBLE OR NOTHING</td><td>100.0%</td></tr></tbody></table>
+<p class="crr-note">When you lock in doesn't change the return.</p>
+<h3>Limits</h3>
+<p>Bets: ${fmt(TABLE_MIN)} to ${fmt(TABLE_MAX)} in ${fmt(BET_STEP)} steps.</p>
+<p>Max win: ${mwX}× your bet per round. Your operator may set a lower max win; every payout stops at the max win.</p>
+<p>Pays are rounded down to the cent.</p>
+<p class="crr-note">Results are decided by the game's random number generator. A malfunction voids all pays and plays.</p>
+<p class="crr-note">Return-to-player figures are long-run averages for the play described; any single round can return more or less.</p>`;
+};
+/* Crash deals on its own: while the sheet is open no card is dealt (auto deal and the DOUBLE OR NOTHING first card wait) */
+let RULES_HOLD=null;
+const rulesPause=()=>{ const st=app.S[app.tab]; RULES_HOLD=null;
+  if(st.screen==='crash'&&st.leg&&st.leg.state==='play'&&st.leg.auto){ const leg=st.leg; clearTimeout(leg.timer); leg.shuffling=false; leg.winMs=0; RULES_HOLD={leg}; render(); }
+  else if(st.screen==='run'&&st.run&&st.run.state==='play'&&!st.run.cards.length){ clearTimeout(st.run.t); RULES_HOLD={run:st.run}; } };
+const rulesResume=()=>{ const h=RULES_HOLD, st=app.S[app.tab]; RULES_HOLD=null; if(!h)return;
+  if(h.leg&&st.leg===h.leg&&st.screen==='crash'&&h.leg.state==='play'&&h.leg.auto){ const leg=h.leg; leg.timer=setTimeout(()=>autoLoop(st,st.id,leg),400); }
+  else if(h.run&&st.run===h.run&&st.screen==='run'&&h.run.state==='play'&&!h.run.cards.length){ h.run.t=setTimeout(()=>{ raceDeal(st,h.run); },450); } };
+CardRunRules.mount({button:document.getElementById('rulesBtn'),title:tdef('classic').name,content:rulesHTML,onOpen:rulesPause,onClose:rulesResume});
+
+render();
+</script>
+</body>
+</html>

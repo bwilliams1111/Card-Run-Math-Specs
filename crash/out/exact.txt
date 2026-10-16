@@ -1,0 +1,237 @@
+build ../builds-final/card-run-crash-classic-launch.html sha256 123d6bced443c4c42038569cbc107af207b3dc49ed6bef05fcb621bf6adaa075
+constants parsed and asserted: {"rBp": 9300, "opening": true, "ladder_base_den": 10000, "step_num": 6, "step_den": 5, "ladder_floor": true, "cap_x": 20, "build_x": 20, "MAX_WIN_X": 20000, "OPERATOR_MAX_WIN_X": "MAX_WIN_X", "RUN_CAP_X": 1000, "race_to": 3, "race_offer": true, "race_win": "2", "decks": 8, "draw": "Math.floor(s/13)", "red": ">=2", "cat": "c.suit===0?'C':c.suit===1?'S':'R'", "bust": "cat(c)===cat(leg.prev)", "TABLE_MIN": 100, "TABLE_MAX": 10000, "BET_STEP": 10, "MIN_RUN": 2, "bar_cap_x": 1000, "run_bar_version": "170", "capped_rule": true, "bar_double_only": true, "bar_acts": ["bar-cash", "bar-double", "bar-doublehalf"], "runbar_show_keys": ["S >= MIN_RUN && B + 2 * S <= MW", "half >= MIN_RUN && B + keep + 2 * half <= MW"], "runbar_cash_only": "show.cashOutOnly = !show.double && !show.doubleHalf;", "ride_gone": [], "run_it_hits_outside_logo_alt": ["Run it"], "buy_cap": true}
+
+BASE $1.00: top red #18 20.6300x 1 in 22.186 | best stop #1 93.0000% | worst #3 92.3611% | uniform random 92.8233% sd 2.2987
+   red # 1 pays      93c   0.9300x reach 1.000000 (1 in   1.000)  RTP  93.0000%  SD  0.0000  hit 1.000000  win 0.000000
+   red # 2 pays     111c   1.1100x reach 0.833333 (1 in   1.200)  RTP  92.5000%  SD  0.4137  hit 0.833333  win 0.833333
+   red # 3 pays     133c   1.3300x reach 0.694444 (1 in   1.440)  RTP  92.3611%  SD  0.6127  hit 0.694444  win 0.694444
+   red # 4 pays     160c   1.6000x reach 0.578704 (1 in   1.728)  RTP  92.5926%  SD  0.7900  hit 0.578704  win 0.578704
+   red # 5 pays     192c   1.9200x reach 0.482253 (1 in   2.074)  RTP  92.5926%  SD  0.9594  hit 0.482253  win 0.482253
+   red # 6 pays     231c   2.3100x reach 0.401878 (1 in   2.488)  RTP  92.8337%  SD  1.1325  hit 0.401878  win 0.401878
+   red # 7 pays     277c   2.7700x reach 0.334898 (1 in   2.986)  RTP  92.7667%  SD  1.3073  hit 0.334898  win 0.334898
+   red # 8 pays     333c   3.3300x reach 0.279082 (1 in   3.583)  RTP  92.9342%  SD  1.4937  hit 0.279082  win 0.279082
+   red # 9 pays     399c   3.9900x reach 0.232568 (1 in   4.300)  RTP  92.7946%  SD  1.6857  hit 0.232568  win 0.232568
+   red #10 pays     479c   4.7900x reach 0.193807 (1 in   5.160)  RTP  92.8334%  SD  1.8934  hit 0.193807  win 0.193807
+   red #11 pays     575c   5.7500x reach 0.161506 (1 in   6.192)  RTP  92.8657%  SD  2.1160  hit 0.161506  win 0.161506
+   red #12 pays     690c   6.9000x reach 0.134588 (1 in   7.430)  RTP  92.8657%  SD  2.3549  hit 0.134588  win 0.134588
+   red #13 pays     829c   8.2900x reach 0.112157 (1 in   8.916)  RTP  92.9779%  SD  2.6160  hit 0.112157  win 0.112157
+   red #14 pays     995c   9.9500x reach 0.093464 (1 in  10.699)  RTP  92.9966%  SD  2.8963  hit 0.093464  win 0.093464
+   red #15 pays    1194c  11.9400x reach 0.077887 (1 in  12.839)  RTP  92.9966%  SD  3.1998  hit 0.077887  win 0.077887
+   red #16 pays    1432c  14.3200x reach 0.064905 (1 in  15.407)  RTP  92.9446%  SD  3.5279  hit 0.064905  win 0.064905
+   red #17 pays    1719c  17.1900x reach 0.054088 (1 in  18.488)  RTP  92.9771%  SD  3.8882  hit 0.054088  win 0.054088
+   red #18 pays    2063c  20.6300x reach 0.045073 (1 in  22.186)  RTP  92.9861%  SD  4.2800  hit 0.045073  win 0.045073
+
+BASE $10.00: top red #18 20.6330x 1 in 22.186 | best stop #1 93.0000% | worst #7 92.9677% | uniform random 92.9912% sd 2.3001
+   red # 1 pays     930c   0.9300x reach 1.000000 (1 in   1.000)  RTP  93.0000%  SD  0.0000  hit 1.000000  win 0.000000
+   red # 2 pays    1116c   1.1160x reach 0.833333 (1 in   1.200)  RTP  93.0000%  SD  0.4159  hit 0.833333  win 0.833333
+   red # 3 pays    1339c   1.3390x reach 0.694444 (1 in   1.440)  RTP  92.9861%  SD  0.6168  hit 0.694444  win 0.694444
+   red # 4 pays    1607c   1.6070x reach 0.578704 (1 in   1.728)  RTP  92.9977%  SD  0.7935  hit 0.578704  win 0.578704
+   red # 5 pays    1928c   1.9280x reach 0.482253 (1 in   2.074)  RTP  92.9784%  SD  0.9634  hit 0.482253  win 0.482253
+   red # 6 pays    2314c   2.3140x reach 0.401878 (1 in   2.488)  RTP  92.9945%  SD  1.1345  hit 0.401878  win 0.401878
+   red # 7 pays    2776c   2.7760x reach 0.334898 (1 in   2.986)  RTP  92.9677%  SD  1.3101  hit 0.334898  win 0.334898
+   red # 8 pays    3332c   3.3320x reach 0.279082 (1 in   3.583)  RTP  92.9900%  SD  1.4946  hit 0.279082  win 0.279082
+   red # 9 pays    3998c   3.9980x reach 0.232568 (1 in   4.300)  RTP  92.9807%  SD  1.6890  hit 0.232568  win 0.232568
+   red #10 pays    4798c   4.7980x reach 0.193807 (1 in   5.160)  RTP  92.9885%  SD  1.8965  hit 0.193807  win 0.193807
+   red #11 pays    5758c   5.7580x reach 0.161506 (1 in   6.192)  RTP  92.9949%  SD  2.1189  hit 0.161506  win 0.161506
+   red #12 pays    6909c   6.9090x reach 0.134588 (1 in   7.430)  RTP  92.9868%  SD  2.3579  hit 0.134588  win 0.134588
+   red #13 pays    8291c   8.2910x reach 0.112157 (1 in   8.916)  RTP  92.9891%  SD  2.6163  hit 0.112157  win 0.112157
+   red #14 pays    9950c   9.9500x reach 0.093464 (1 in  10.699)  RTP  92.9966%  SD  2.8963  hit 0.093464  win 0.093464
+   red #15 pays   11940c  11.9400x reach 0.077887 (1 in  12.839)  RTP  92.9966%  SD  3.1998  hit 0.077887  win 0.077887
+   red #16 pays   14328c  14.3280x reach 0.064905 (1 in  15.407)  RTP  92.9966%  SD  3.5298  hit 0.064905  win 0.064905
+   red #17 pays   17194c  17.1940x reach 0.054088 (1 in  18.488)  RTP  92.9987%  SD  3.8891  hit 0.054088  win 0.054088
+   red #18 pays   20633c  20.6330x reach 0.045073 (1 in  22.186)  RTP  92.9996%  SD  4.2806  hit 0.045073  win 0.045073
+
+BASE $100.00: top red #18 20.6330x 1 in 22.186 | best stop #1 93.0000% | worst #4 92.9977% | uniform random 92.9991% sd 2.3002
+   red # 1 pays    9300c   0.9300x reach 1.000000 (1 in   1.000)  RTP  93.0000%  SD  0.0000  hit 1.000000  win 0.000000
+   red # 2 pays   11160c   1.1160x reach 0.833333 (1 in   1.200)  RTP  93.0000%  SD  0.4159  hit 0.833333  win 0.833333
+   red # 3 pays   13392c   1.3392x reach 0.694444 (1 in   1.440)  RTP  93.0000%  SD  0.6169  hit 0.694444  win 0.694444
+   red # 4 pays   16070c   1.6070x reach 0.578704 (1 in   1.728)  RTP  92.9977%  SD  0.7935  hit 0.578704  win 0.578704
+   red # 5 pays   19284c   1.9284x reach 0.482253 (1 in   2.074)  RTP  92.9977%  SD  0.9636  hit 0.482253  win 0.482253
+   red # 6 pays   23141c   2.3141x reach 0.401878 (1 in   2.488)  RTP  92.9985%  SD  1.1346  hit 0.401878  win 0.401878
+   red # 7 pays   27769c   2.7769x reach 0.334898 (1 in   2.986)  RTP  92.9978%  SD  1.3106  hit 0.334898  win 0.334898
+   red # 8 pays   33323c   3.3323x reach 0.279082 (1 in   3.583)  RTP  92.9984%  SD  1.4947  hit 0.279082  win 0.279082
+   red # 9 pays   39988c   3.9988x reach 0.232568 (1 in   4.300)  RTP  92.9993%  SD  1.6894  hit 0.232568  win 0.232568
+   red #10 pays   47985c   4.7985x reach 0.193807 (1 in   5.160)  RTP  92.9981%  SD  1.8967  hit 0.193807  win 0.193807
+   red #11 pays   57583c   5.7583x reach 0.161506 (1 in   6.192)  RTP  92.9998%  SD  2.1190  hit 0.161506  win 0.161506
+   red #12 pays   69099c   6.9099x reach 0.134588 (1 in   7.430)  RTP  92.9990%  SD  2.3582  hit 0.134588  win 0.134588
+   red #13 pays   82919c   8.2919x reach 0.112157 (1 in   8.916)  RTP  92.9992%  SD  2.6166  hit 0.112157  win 0.112157
+   red #14 pays   99503c   9.9503x reach 0.093464 (1 in  10.699)  RTP  92.9994%  SD  2.8963  hit 0.093464  win 0.093464
+   red #15 pays  119404c  11.9404x reach 0.077887 (1 in  12.839)  RTP  92.9997%  SD  3.1999  hit 0.077887  win 0.077887
+   red #16 pays  143285c  14.3285x reach 0.064905 (1 in  15.407)  RTP  92.9998%  SD  3.5300  hit 0.064905  win 0.064905
+   red #17 pays  171942c  17.1942x reach 0.054088 (1 in  18.488)  RTP  92.9998%  SD  3.8892  hit 0.054088  win 0.054088
+   red #18 pays  206330c  20.6330x reach 0.045073 (1 in  22.186)  RTP  92.9996%  SD  4.2806  hit 0.045073  win 0.045073
+
+BET GRID {"bets": "100..10000 cents step 10 (991 bets)", "top_red_values": [18], "worst": {"rtp": 0.9230769230769231, "bet_cents": 130, "red": 1}, "best": {"rtp": 0.93, "bet_cents": 100, "red": 1}, "auto_min": 0.9296356597755457, "auto_max": 0.9299999735907233, "auto_mean_over_grid": 0.9299888096073846, "mean_over_grid_and_stops": 0.9299253398255458}
+
+DOUBLE {"0-0": "1/2", "0-1": "5/16", "0-2": "1/8", "1-0": "11/16", "1-1": "1/2", "1-2": "1/4", "2-0": "7/8", "2-1": "3/4", "2-2": "1/2"} played out 1.0
+   2 {"lock_first_card": 0.75, "lock_when_ahead": 0.8125, "played_out": 1.0}
+   3 {"lock_first_card": 0.8333333333333334, "lock_when_ahead": 0.9583333333333334, "played_out": 1.0}
+   10 {"lock_first_card": 0.95, "lock_when_ahead": 0.9625, "played_out": 1.0}
+   46 {"lock_first_card": 0.9891304347826086, "lock_when_ahead": 0.9972826086956522, "played_out": 1.0}
+   93 {"lock_first_card": 0.9946236559139785, "lock_when_ahead": 0.9946236559139785, "played_out": 1.0}
+   100 {"lock_first_card": 0.995, "lock_when_ahead": 0.9975, "played_out": 1.0}
+   930 {"lock_first_card": 0.9994623655913979, "lock_when_ahead": 0.9995967741935484, "played_out": 1.0}
+   2063 {"lock_first_card": 0.9997576345128454, "lock_when_ahead": 0.999818225884634, "played_out": 1.0}
+   9300 {"lock_first_card": 0.9999462365591398, "lock_when_ahead": 0.9999731182795699, "played_out": 1.0}
+   20633 {"lock_first_card": 0.9999757669752338, "lock_when_ahead": 0.9999878834876169, "played_out": 1.0}
+   206330 {"lock_first_card": 0.9999975766975234, "lock_when_ahead": 0.9999981825231425, "played_out": 1.0}
+  worst lock-first $0.02-$0.99 {"rtp": 0.75, "rtp_exact": "3/4", "amount_cents": 2, "offers_cents": {"1-0": 2, "0-1": 1}} | $1.00-$30.00 {"rtp": 0.995, "rtp_exact": "199/200", "amount_cents": 100, "offers_cents": {"1-0": 137, "0-1": 62}}
+  worst single offer $0.02-$0.99 {"offer_over_fair": 0.0, "amount_cents": 2, "score_r_b": "0-2", "offer_cents": 0, "fair_cents": 0.5} | $1.00-$30.00 {"offer_over_fair": 0.970873786407767, "amount_cents": 103, "score_r_b": "0-2", "offer_cents": 25, "fair_cents": 25.75}
+  zero offers ["2c at 0-2", "3c at 0-2"] | amounts $0.02-$30.00 with a $0.00 offer (cents): [2, 3]
+  per amount, $0.02-$0.99: lowest offer / worst offer relative to fair / DOUBLE OR NOTHING LOCK IN at the first card
+     2c  lowest offer   0c at 0-2  worst vs fair    0.00% (0-2: 0c)  lock-first RTP  75.000%
+     3c  lowest offer   0c at 0-2  worst vs fair    0.00% (0-2: 0c)  lock-first RTP  83.333%
+     4c  lowest offer   1c at 0-2  worst vs fair   80.00% (0-1: 2c)  lock-first RTP  87.500%
+     5c  lowest offer   1c at 0-2  worst vs fair   80.00% (0-2: 1c)  lock-first RTP  90.000%
+     6c  lowest offer   1c at 0-2  worst vs fair   66.67% (0-2: 1c)  lock-first RTP  91.667%
+     7c  lowest offer   1c at 0-2  worst vs fair   57.14% (0-2: 1c)  lock-first RTP  92.857%
+     8c  lowest offer   2c at 0-2  worst vs fair  100.00% (0-1: 5c)  lock-first RTP 100.000%
+     9c  lowest offer   2c at 0-2  worst vs fair   88.89% (0-1: 5c)  lock-first RTP  94.444%
+    10c  lowest offer   2c at 0-2  worst vs fair   80.00% (0-2: 2c)  lock-first RTP  95.000%
+    11c  lowest offer   2c at 0-2  worst vs fair   72.73% (0-2: 2c)  lock-first RTP  95.455%
+    12c  lowest offer   3c at 0-2  worst vs fair   93.33% (0-1: 7c)  lock-first RTP  95.833%
+    13c  lowest offer   3c at 0-2  worst vs fair   92.31% (0-2: 3c)  lock-first RTP  96.154%
+    14c  lowest offer   3c at 0-2  worst vs fair   85.71% (0-2: 3c)  lock-first RTP  96.429%
+    15c  lowest offer   3c at 0-2  worst vs fair   80.00% (0-2: 3c)  lock-first RTP  96.667%
+    16c  lowest offer   4c at 0-2  worst vs fair  100.00% (0-1: 10c)  lock-first RTP 100.000%
+    17c  lowest offer   4c at 0-2  worst vs fair   94.12% (0-1: 10c)  lock-first RTP  97.059%
+    18c  lowest offer   4c at 0-2  worst vs fair   88.89% (0-2: 4c)  lock-first RTP  97.222%
+    19c  lowest offer   4c at 0-2  worst vs fair   84.21% (0-2: 4c)  lock-first RTP  97.368%
+    20c  lowest offer   5c at 0-2  worst vs fair   96.00% (0-1: 12c)  lock-first RTP  97.500%
+    21c  lowest offer   5c at 0-2  worst vs fair   95.24% (0-2: 5c)  lock-first RTP  97.619%
+    22c  lowest offer   5c at 0-2  worst vs fair   90.91% (0-2: 5c)  lock-first RTP  97.727%
+    23c  lowest offer   5c at 0-2  worst vs fair   86.96% (0-2: 5c)  lock-first RTP  97.826%
+    24c  lowest offer   6c at 0-2  worst vs fair  100.00% (0-1: 15c)  lock-first RTP 100.000%
+    25c  lowest offer   6c at 0-2  worst vs fair   96.00% (0-1: 15c)  lock-first RTP  98.000%
+    26c  lowest offer   6c at 0-2  worst vs fair   92.31% (0-2: 6c)  lock-first RTP  98.077%
+    27c  lowest offer   6c at 0-2  worst vs fair   88.89% (0-2: 6c)  lock-first RTP  98.148%
+    28c  lowest offer   7c at 0-2  worst vs fair   97.14% (0-1: 17c)  lock-first RTP  98.214%
+    29c  lowest offer   7c at 0-2  worst vs fair   96.55% (0-2: 7c)  lock-first RTP  98.276%
+    30c  lowest offer   7c at 0-2  worst vs fair   93.33% (0-2: 7c)  lock-first RTP  98.333%
+    31c  lowest offer   7c at 0-2  worst vs fair   90.32% (0-2: 7c)  lock-first RTP  98.387%
+    32c  lowest offer   8c at 0-2  worst vs fair  100.00% (0-1: 20c)  lock-first RTP 100.000%
+    33c  lowest offer   8c at 0-2  worst vs fair   96.97% (0-1: 20c)  lock-first RTP  98.485%
+    34c  lowest offer   8c at 0-2  worst vs fair   94.12% (0-2: 8c)  lock-first RTP  98.529%
+    35c  lowest offer   8c at 0-2  worst vs fair   91.43% (0-2: 8c)  lock-first RTP  98.571%
+    36c  lowest offer   9c at 0-2  worst vs fair   97.78% (0-1: 22c)  lock-first RTP  98.611%
+    37c  lowest offer   9c at 0-2  worst vs fair   97.30% (0-2: 9c)  lock-first RTP  98.649%
+    38c  lowest offer   9c at 0-2  worst vs fair   94.74% (0-2: 9c)  lock-first RTP  98.684%
+    39c  lowest offer   9c at 0-2  worst vs fair   92.31% (0-2: 9c)  lock-first RTP  98.718%
+    40c  lowest offer  10c at 0-2  worst vs fair  100.00% (0-1: 25c)  lock-first RTP 100.000%
+    41c  lowest offer  10c at 0-2  worst vs fair   97.56% (0-1: 25c)  lock-first RTP  98.780%
+    42c  lowest offer  10c at 0-2  worst vs fair   95.24% (0-2: 10c)  lock-first RTP  98.810%
+    43c  lowest offer  10c at 0-2  worst vs fair   93.02% (0-2: 10c)  lock-first RTP  98.837%
+    44c  lowest offer  11c at 0-2  worst vs fair   98.18% (0-1: 27c)  lock-first RTP  98.864%
+    45c  lowest offer  11c at 0-2  worst vs fair   97.78% (0-2: 11c)  lock-first RTP  98.889%
+    46c  lowest offer  11c at 0-2  worst vs fair   95.65% (0-2: 11c)  lock-first RTP  98.913%
+    47c  lowest offer  11c at 0-2  worst vs fair   93.62% (0-2: 11c)  lock-first RTP  98.936%
+    48c  lowest offer  12c at 0-2  worst vs fair  100.00% (0-1: 30c)  lock-first RTP 100.000%
+    49c  lowest offer  12c at 0-2  worst vs fair   97.96% (0-1: 30c)  lock-first RTP  98.980%
+    50c  lowest offer  12c at 0-2  worst vs fair   96.00% (0-2: 12c)  lock-first RTP  99.000%
+    51c  lowest offer  12c at 0-2  worst vs fair   94.12% (0-2: 12c)  lock-first RTP  99.020%
+    52c  lowest offer  13c at 0-2  worst vs fair   98.46% (0-1: 32c)  lock-first RTP  99.038%
+    53c  lowest offer  13c at 0-2  worst vs fair   98.11% (0-2: 13c)  lock-first RTP  99.057%
+    54c  lowest offer  13c at 0-2  worst vs fair   96.30% (0-2: 13c)  lock-first RTP  99.074%
+    55c  lowest offer  13c at 0-2  worst vs fair   94.55% (0-2: 13c)  lock-first RTP  99.091%
+    56c  lowest offer  14c at 0-2  worst vs fair  100.00% (0-1: 35c)  lock-first RTP 100.000%
+    57c  lowest offer  14c at 0-2  worst vs fair   98.25% (0-1: 35c)  lock-first RTP  99.123%
+    58c  lowest offer  14c at 0-2  worst vs fair   96.55% (0-2: 14c)  lock-first RTP  99.138%
+    59c  lowest offer  14c at 0-2  worst vs fair   94.92% (0-2: 14c)  lock-first RTP  99.153%
+    60c  lowest offer  15c at 0-2  worst vs fair   98.67% (0-1: 37c)  lock-first RTP  99.167%
+    61c  lowest offer  15c at 0-2  worst vs fair   98.36% (0-2: 15c)  lock-first RTP  99.180%
+    62c  lowest offer  15c at 0-2  worst vs fair   96.77% (0-2: 15c)  lock-first RTP  99.194%
+    63c  lowest offer  15c at 0-2  worst vs fair   95.24% (0-2: 15c)  lock-first RTP  99.206%
+    64c  lowest offer  16c at 0-2  worst vs fair  100.00% (0-1: 40c)  lock-first RTP 100.000%
+    65c  lowest offer  16c at 0-2  worst vs fair   98.46% (0-1: 40c)  lock-first RTP  99.231%
+    66c  lowest offer  16c at 0-2  worst vs fair   96.97% (0-2: 16c)  lock-first RTP  99.242%
+    67c  lowest offer  16c at 0-2  worst vs fair   95.52% (0-2: 16c)  lock-first RTP  99.254%
+    68c  lowest offer  17c at 0-2  worst vs fair   98.82% (0-1: 42c)  lock-first RTP  99.265%
+    69c  lowest offer  17c at 0-2  worst vs fair   98.55% (0-2: 17c)  lock-first RTP  99.275%
+    70c  lowest offer  17c at 0-2  worst vs fair   97.14% (0-2: 17c)  lock-first RTP  99.286%
+    71c  lowest offer  17c at 0-2  worst vs fair   95.77% (0-2: 17c)  lock-first RTP  99.296%
+    72c  lowest offer  18c at 0-2  worst vs fair  100.00% (0-1: 45c)  lock-first RTP 100.000%
+    73c  lowest offer  18c at 0-2  worst vs fair   98.63% (0-1: 45c)  lock-first RTP  99.315%
+    74c  lowest offer  18c at 0-2  worst vs fair   97.30% (0-2: 18c)  lock-first RTP  99.324%
+    75c  lowest offer  18c at 0-2  worst vs fair   96.00% (0-2: 18c)  lock-first RTP  99.333%
+    76c  lowest offer  19c at 0-2  worst vs fair   98.95% (0-1: 47c)  lock-first RTP  99.342%
+    77c  lowest offer  19c at 0-2  worst vs fair   98.70% (0-2: 19c)  lock-first RTP  99.351%
+    78c  lowest offer  19c at 0-2  worst vs fair   97.44% (0-2: 19c)  lock-first RTP  99.359%
+    79c  lowest offer  19c at 0-2  worst vs fair   96.20% (0-2: 19c)  lock-first RTP  99.367%
+    80c  lowest offer  20c at 0-2  worst vs fair  100.00% (0-1: 50c)  lock-first RTP 100.000%
+    81c  lowest offer  20c at 0-2  worst vs fair   98.77% (0-1: 50c)  lock-first RTP  99.383%
+    82c  lowest offer  20c at 0-2  worst vs fair   97.56% (0-2: 20c)  lock-first RTP  99.390%
+    83c  lowest offer  20c at 0-2  worst vs fair   96.39% (0-2: 20c)  lock-first RTP  99.398%
+    84c  lowest offer  21c at 0-2  worst vs fair   99.05% (0-1: 52c)  lock-first RTP  99.405%
+    85c  lowest offer  21c at 0-2  worst vs fair   98.82% (0-2: 21c)  lock-first RTP  99.412%
+    86c  lowest offer  21c at 0-2  worst vs fair   97.67% (0-2: 21c)  lock-first RTP  99.419%
+    87c  lowest offer  21c at 0-2  worst vs fair   96.55% (0-2: 21c)  lock-first RTP  99.425%
+    88c  lowest offer  22c at 0-2  worst vs fair  100.00% (0-1: 55c)  lock-first RTP 100.000%
+    89c  lowest offer  22c at 0-2  worst vs fair   98.88% (0-1: 55c)  lock-first RTP  99.438%
+    90c  lowest offer  22c at 0-2  worst vs fair   97.78% (0-2: 22c)  lock-first RTP  99.444%
+    91c  lowest offer  22c at 0-2  worst vs fair   96.70% (0-2: 22c)  lock-first RTP  99.451%
+    92c  lowest offer  23c at 0-2  worst vs fair   99.13% (0-1: 57c)  lock-first RTP  99.457%
+    93c  lowest offer  23c at 0-2  worst vs fair   98.92% (0-2: 23c)  lock-first RTP  99.462%
+    94c  lowest offer  23c at 0-2  worst vs fair   97.87% (0-2: 23c)  lock-first RTP  99.468%
+    95c  lowest offer  23c at 0-2  worst vs fair   96.84% (0-2: 23c)  lock-first RTP  99.474%
+    96c  lowest offer  24c at 0-2  worst vs fair  100.00% (0-1: 60c)  lock-first RTP 100.000%
+    97c  lowest offer  24c at 0-2  worst vs fair   98.97% (0-1: 60c)  lock-first RTP  99.485%
+    98c  lowest offer  24c at 0-2  worst vs fair   97.96% (0-2: 24c)  lock-first RTP  99.490%
+    99c  lowest offer  24c at 0-2  worst vs fair   96.97% (0-2: 24c)  lock-first RTP  99.495%
+
+ROUNDING {
+ "100": {
+  "base_stops_rtp_min": 0.9236111111111112,
+  "base_stops_rtp_max": 0.93,
+  "base_auto": 0.9298610259960974,
+  "base_nominal": 0.93,
+  "double_lock_first_card_on_lock1_win": 0.9946236559139785
+ },
+ "1000": {
+  "base_stops_rtp_min": 0.9296767832647462,
+  "base_stops_rtp_max": 0.93,
+  "base_auto": 0.9299962457284284,
+  "base_nominal": 0.93,
+  "double_lock_first_card_on_lock1_win": 0.9994623655913979
+ },
+ "10000": {
+  "base_stops_rtp_min": 0.9299768518518519,
+  "base_stops_rtp_max": 0.93,
+  "base_auto": 0.9299962457284284,
+  "base_nominal": 0.93,
+  "double_lock_first_card_on_lock1_win": 0.9999462365591398
+ }
+}
+
+run bar: acts ["bar-cash", "bar-double", "bar-doublehalf"] | ride gone: [] | remaining case-insensitive run it hits: ["Run it"]
+
+POLICIES (exact; P5 closed form asserted equal to the flow model)
+  100_lock1_P0     RTP  93.00000%  SD    0.0000  hit 1.000000  max 0.930x (p 1.000e+00)
+  100_lock1_P2     RTP  93.00000%  SD    0.9300  hit 0.500000  max 1.860x (p 5.000e-01)
+  100_lock1_P3     RTP  93.00000%  SD   29.7455  hit 0.000977  max 952.320x (p 9.766e-04)
+  100_lock1_P5     RTP  93.00000%  SD    0.4600  hit 1.000000  max 1.390x (p 5.000e-01)
+  100_lock1_P4     {"rtp": null, "exact": "not computed (state graph > 10^6 states)", "upper_bound_rtp": 0.93}
+  100_auto_P0      RTP  92.98610%  SD    4.2800  hit 0.045073  max 20.630x (p 4.507e-02)
+  100_auto_P2      RTP  92.98610%  SD    6.1238  hit 0.022537  max 41.260x (p 2.254e-02)
+  100_auto_P3      RTP  92.98610%  SD   99.1002  hit 0.000088  max 10562.560x (p 8.803e-05)
+  100_auto_P5      RTP  92.98610%  SD    4.8072  hit 0.045073  max 30.940x (p 2.254e-02)
+  100_auto_P4      {"rtp": null, "exact": "not computed (state graph > 10^6 states)", "upper_bound_rtp": 0.9298610259960974}
+  1000_lock1_P0    RTP  93.00000%  SD    0.0000  hit 1.000000  max 0.930x (p 1.000e+00)
+  1000_lock1_P2    RTP  93.00000%  SD    0.9300  hit 0.500000  max 1.860x (p 5.000e-01)
+  1000_lock1_P3    RTP  93.00000%  SD   29.7455  hit 0.000977  max 952.320x (p 9.766e-04)
+  1000_lock1_P5    RTP  93.00000%  SD    0.4650  hit 1.000000  max 1.395x (p 5.000e-01)
+  1000_lock1_P4    {"rtp": null, "exact": "not computed (state graph > 10^6 states)", "upper_bound_rtp": 0.93}
+  1000_auto_P0     RTP  92.99962%  SD    4.2806  hit 0.045073  max 20.633x (p 4.507e-02)
+  1000_auto_P2     RTP  92.99962%  SD    6.1247  hit 0.022537  max 41.266x (p 2.254e-02)
+  1000_auto_P3     RTP  92.99962%  SD   99.1146  hit 0.000088  max 10564.096x (p 8.803e-05)
+  1000_auto_P5     RTP  92.99962%  SD    4.8084  hit 0.045073  max 30.949x (p 2.254e-02)
+  1000_auto_P4     {"rtp": null, "exact": "not computed (state graph > 10^6 states)", "upper_bound_rtp": 0.9299962457284284}
+  10000_lock1_P0   RTP  93.00000%  SD    0.0000  hit 1.000000  max 0.930x (p 1.000e+00)
+  10000_lock1_P2   RTP  93.00000%  SD    0.9300  hit 0.500000  max 1.860x (p 5.000e-01)
+  10000_lock1_P3   RTP  93.00000%  SD   29.7455  hit 0.000977  max 952.320x (p 9.766e-04)
+  10000_lock1_P5   RTP  93.00000%  SD    0.4650  hit 1.000000  max 1.395x (p 5.000e-01)
+  10000_lock1_P4   {"rtp": null, "exact": "not computed (state graph > 10^6 states)", "upper_bound_rtp": 0.93}
+  10000_auto_P0    RTP  92.99962%  SD    4.2806  hit 0.045073  max 20.633x (p 4.507e-02)
+  10000_auto_P2    RTP  92.99962%  SD    6.1247  hit 0.022537  max 41.266x (p 2.254e-02)
+  10000_auto_P3    RTP  92.99962%  SD   99.1146  hit 0.000088  max 10564.096x (p 8.803e-05)
+  10000_auto_P5    RTP  92.99962%  SD    4.8084  hit 0.045073  max 30.950x (p 2.254e-02)
+  10000_auto_P4    {"rtp": null, "exact": "not computed (state graph > 10^6 states)", "upper_bound_rtp": 0.9299962457284284}
