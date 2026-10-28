@@ -1,5 +1,24 @@
 CARD RUN BLACKJACK 20x - LAB PACK (16 Oct 2026, run-bar v170, DOUBLE OR NOTHING: THE DEALER STANDS ON ALL 17s)
 ================================================================================
+UPDATE 28 Oct 2026: DOUBLE HALF LIMITED TO 50 PRESSES A ROUND (rule R50). NOT IN THE BUILD YET.
+  Rule: DOUBLE HALF is offered only while fewer than 50 DOUBLE HALF presses have been made in the round; a press counts when made (win or lose); the count starts at 0 at the first win and is never
+  reset; DOUBLE OR NOTHING and CASH OUT are never limited. Build 381595b2... (run bar v170) has NO counter: the pack's bar scripts (bar_optimum*, runbar_diff.js, consts.js) still describe v170, and the
+  figures below are the exact maths of the rule, not a play of a shipped game. When the build changes, consts.js and runbar_diff.js must be extended and the pack regenerated (BLACKJACK-MATH.md section 10, items 8-9).
+  Result (best board play 94.368%): the best bar play with the limit returns lambda(A, 50) = 1.02586 x the first win for every first win from 50 cents to $3.00 (1.025838 - 1.025867; 1.02586 +- 0.00003 as A -> infinity),
+  whole round 96.81% (upper bound 96.812%), against 97.49% with no limit. The 94.368% + 50 x 0.0910 = 98.92% accounting is a valid but loose ceiling. Nothing else changes (board, double hand, P0/P2/P3/P5; P4 by < 2^-50).
+  bar_optimum_cap.cpp  NEW. Exact optimum with DOUBLE HALF limited to N presses, layered: V_r(held, bank) with r presses left; a full double stays in layer r (no cycle: win raises held with the bank fixed, lose lands on an
+                   empty bank), DOUBLE HALF goes to layer r-1; one pass per layer in the order (empty-bank states first, larger held first), checked in the program. V_N(start) for N = 0..Nmax from one run. Same offers,
+                   banked-bust return, minimum, run cap and MAX WIN as bar_optimum.cpp.   ./bar_optimum_cap solve A p Nmax [MIN=2] [MW=0]
+  bar_optimum_cap_run.js  NEW. Driver (like bar_optimum_run.js): constants and rule fragments from the build (consts.js), p from rungame.js; writes out/bar_cap_{exact,basic}[_conv].json/.log.
+                   node bar_optimum_cap_run.js solve exact 100 5,10,20,30,40,50,60,80,100,150,200,300     (A = 300c: 286 s, 32.5 million states, 101 layers)
+  bar_cap_check.js  NEW. Independent check: memoised recursion over (held, bank, presses left) that takes every offer, amount and round end from RunBar.compute() of run-bar v170 (out/run-bar-v170.copy.js);
+                   63 cases (A = 2..13 cents, N = 0..9) agree with the solver to 4.8e-13 (out/bar_cap_check.json).
+  run_bar_cap.sh   NEW. The whole list: check, convergence (N = 1500 at A = 5, 10, 20: 1.0e-12 from the uncapped value iteration of bar_optimum.cpp), the ladder A = 5..300 at N <= 100, the conventional chart at A = 5..200
+                   (about 25 minutes, memory capped at 6 GB).   ./run_bar_cap.sh > out/bar_cap.log
+  cap_report.js    NEW. Reads those results + exact_board.json + round_worst.json; writes out/CAP50_report.txt and out/cap50.json (tables, fit to A -> infinity, lambdaHat_50 = 1.02590, whole-round estimate and bound, the
+                   ceiling for N = 0..100, the 98.92% accounting).   node cap_report.js 50
+  BLACKJACK-MATH.md/.pdf/.docx  updated: sections 0, 1, 5, 6.3-6.5, 7, 8.7, 9, 10 (new section 6.5; open items 8-11).
+
 Built on the FINAL build:
   ../builds-final/card-run-blackjack-classic-launch.html
   sha256 381595b2ec0103398f92886e7429afc9624c3a53d6e68ebcd7e86fde01f2708c   131,176 bytes

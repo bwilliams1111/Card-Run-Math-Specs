@@ -2,6 +2,31 @@
 
 All notable changes to the Card Run math specifications in this repository. Dates are the date of the math pack, not the commit. Every pack in a given entry was run in full on the build whose hash it names.
 
+## 2026-10-28 — Blackjack: DOUBLE HALF limited to 50 presses a round (rule R50)
+
+Replacement files from `blackjack-cap-update.zip`. The Blackjack build, `shared/`, and the Crash, Kicks and Mines packs are unchanged.
+
+### Changed
+
+- **Blackjack 20×** (`blackjack/`) — `BLACKJACK-MATH.pdf/.md/.docx` gain section 6.5 and an updated section 5, summary and open items; `README.txt` and `PACK-README.txt` updated.
+  **Rule R50:** DOUBLE HALF is offered only while fewer than 50 DOUBLE HALF presses have been made in the round. A press counts when made, win or lose; the count starts at 0 with the first win, never resets (not on a lost double, a RUN BANK return, a reload or a reconnect) and is part of the stored round state. DOUBLE OR NOTHING and CASH OUT are never limited.
+  **Result:** the best possible bar play returns 1.02586 × the first win for every first win from 50 cents up (λ₅₀(∞) = 1.02586 ± 0.00003), so a whole round returns at most **96.81%** (upper bound 96.812%), against 97.49% with no limit. Margin to 100% rises from 2.5 to 3.2 points. Board, double hand and policies P0, P2, P3, P5 are unchanged; P4 changes by less than 2⁻⁵⁰. Sections 6.3–6.4 (no limit) stay as the reference the limited optimum converges to.
+- `VERIFICATION.md` — update note at the top; §5.5 policy table now leads with the R50 optimum (96.81%) and keeps the unlimited 97.49% as reference; §8 items 3 and 9 updated; new §8 item 10.
+- `README.md` — Blackjack headline figures, four-game table and reproduce commands updated; `.gitignore` adds the compiled `bar_optimum_cap`.
+
+### Added
+
+- `blackjack/bar_optimum_cap.cpp`, `bar_optimum_cap_run.js`, `bar_cap_check.js`, `run_bar_cap.sh`, `cap_report.js` — exact layer-by-layer solver over the number of presses left (each layer acyclic, solved in one pass with no tolerance); it equals an independent recursion on run-bar v170 to 5e-13 and converges to the unlimited optimum to 1e-12.
+- `blackjack/out/bar_cap_*.json/.log`, `cap50.json`, `CAP50_report.txt` — results for every limit N = 0…100 at twelve first-win sizes (5c–300c).
+
+### Open items added
+
+| Ref | Item | Owner |
+|---|---|---|
+| — | **Rule R50 is not in build `381595b2…`.** Add the per-round DOUBLE HALF press counter to the Blackjack build and `run-bar.js`, extend `consts.js` and `runbar_diff.js`, regenerate the Blackjack pack for the new hash (`BLACKJACK-MATH.md` §10, `VERIFICATION.md` §8 item 10) | Production |
+
+---
+
 ## 2026-10-16 — run-bar v170: initial delivery, all four games
 
 Four commits, one per game, in the order the packs were completed.

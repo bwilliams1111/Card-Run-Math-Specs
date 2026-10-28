@@ -4,7 +4,7 @@ Math specifications, exact solvers, simulation evidence and PAR sheets for the *
 
 | Game | Status | Folder |
 |---|---|---|
-| **Blackjack 20×** | **Delivered** (16 Oct 2026, run-bar v170) | [`blackjack/`](blackjack/) |
+| **Blackjack 20×** | **Delivered** (16 Oct 2026, run-bar v170) · **updated 28 Oct 2026** (rule R50: DOUBLE HALF limited to 50 presses a round) | [`blackjack/`](blackjack/) |
 | **Mines 20×** | **Delivered** (16 Oct 2026, run-bar v170) | [`mines/`](mines/) |
 | **Kicks 20×** | **Delivered** (16 Oct 2026, run-bar v170) | [`kicks/`](kicks/) |
 | **Crash 20×** | **Delivered** (16 Oct 2026, run-bar v170) | [`crash/`](crash/) |
@@ -15,7 +15,7 @@ All four packs are complete. The platform rules shared by all four games (bets, 
 
 | Game | Base RTP | Skill | Double | Whole round, any bar play |
 |---|---|---|---|---|
-| Blackjack | 94.368% best play (81.950% worst) | Yes — hit/stand | 100.0910% best play (+edge) | ≤ 97.49% (exact optimum) |
+| Blackjack | 94.368% best play (81.950% worst) | Yes — hit/stand | 100.0910% best play (+edge) | ≤ 96.81% with rule R50 (97.49% with no limit; exact optimum) |
 | Mines | 93.0000% every stop (92.3636% grid low after rounding) | No — volatility only | 100.0000% exactly | = base RTP |
 | Kicks | 92.9666% best play (84.8069% worst) | Yes — GOAL/WIDE calls, shoe count | 100.0000% exactly | = base RTP |
 | Crash | 93.0000% every stop (92.3077% grid low after rounding) | No — volatility only | 100.0000% played out; LOCK IN offers ≤ fair | ≤ base RTP |
@@ -32,6 +32,7 @@ All four packs are complete. The platform rules shared by all four games (bets, 
 | [`blackjack/results.json`](blackjack/results.json) | Every headline number and CI check as data |
 | [`blackjack/README.txt`](blackjack/README.txt) | Every script, command and seed |
 | [`blackjack/PACK-README.txt`](blackjack/PACK-README.txt) | The math pack's cover note |
+| [`blackjack/out/CAP50_report.txt`](blackjack/out/CAP50_report.txt) | The 50-press DOUBLE HALF limit (rule R50): λ_N for every solved first win and limit |
 | [`blackjack/out/`](blackjack/out/) | Raw solver and simulation outputs, screenshots |
 
 ### Headline figures (exact)
@@ -43,7 +44,9 @@ All four packs are complete. The platform rules shared by all four games (bets, 
 | Base game RTP, worst play | 81.950% |
 | Base game top pay | 20× the bet, 1 in 209,049 rounds |
 | DOUBLE OR NOTHING, best play / basic strategy | **100.0910% / 100.0721%** (dealer stands on all 17s) |
-| Whole round, best possible bar play (exact optimum) | **≈ 97.49%** (upper bound 97.489%) |
+| DOUBLE HALF limit (rule R50, 28 Oct) | **At most 50 presses in a round**; DOUBLE OR NOTHING and CASH OUT never limited |
+| Whole round, best possible bar play **with rule R50** (exact optimum) | **≈ 96.81%** (upper bound 96.812%) |
+| Whole round, best possible bar play with no limit (reference) | ≈ 97.49% (upper bound 97.489%) |
 | MAX WIN | 20,000× the bet |
 | Bets | $1.00 – $100.00 in $0.10 steps; all pays whole cents, rounded down |
 
@@ -58,6 +61,8 @@ All four packs are complete. The platform rules shared by all four games (bets, 
 
 Verify with `sha256sum <file>` before testing.
 
+> **Rule R50 is not in this build.** Build `381595b2…` has no DOUBLE HALF press counter. The pack states the rule and solves its maths exactly; the build and `run-bar.js` need the change described in `BLACKJACK-MATH.md` section 5 (per-round press count stored with the round state, never reset; DOUBLE HALF offered only while it is below 50), then `consts.js` and `runbar_diff.js` extended and the pack regenerated for the new hash. See `VERIFICATION.md` §8 item 10 and `BLACKJACK-MATH.md` section 10.
+
 ### Reproducing the results
 
 Requirements: Node ≥ 18, `g++` for the exact bar optimum, no network. Every script in `blackjack/` reads the build from `../builds-final/` and asserts every constant and rule fragment it depends on against the build text, so the math cannot drift from the code.
@@ -71,11 +76,12 @@ node exact_runs.js > out/exact_runs.log
 node runbar_diff.js > out/runbar_diff.log
 ./run_sims.sh 1 ; ./run_double_sims.sh 1
 ./run_bar_optimum.sh ; ./run_bar_optimum_2.sh   # ~1.5 h + 23 min
+./run_bar_cap.sh > out/bar_cap.log ; node cap_report.js 50   # the DOUBLE HALF limit, ~25 min
 ./run_post.sh
 node round_worst.js ; node aggregate.js ; node cr_report.js
 ```
 
-Full command list, timings and every seed: `blackjack/README.txt`. The compiled solver (`blackjack/bar_optimum`) and the 44 MB optimal-policy tables (`blackjack/out/bar_policy_exact_*.bin`) are regenerated locally and are not committed (see `.gitignore`).
+Full command list, timings and every seed: `blackjack/README.txt`. The compiled solvers (`blackjack/bar_optimum`, `blackjack/bar_optimum_cap`) and the 44 MB optimal-policy tables (`blackjack/out/bar_policy_exact_*.bin`) are regenerated locally and are not committed (see `.gitignore`).
 
 ---
 

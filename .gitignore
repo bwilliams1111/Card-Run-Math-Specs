@@ -1,5 +1,6 @@
 # Regenerated locally by the blackjack pack (see blackjack/README.txt, "ZIP NOTE")
 blackjack/bar_optimum
+blackjack/bar_optimum_cap
 blackjack/out/bar_policy_exact_*.bin
 node_modules/
 .DS_Store

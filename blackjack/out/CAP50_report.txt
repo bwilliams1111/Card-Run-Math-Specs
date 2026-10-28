@@ -1,0 +1,42 @@
+CARD RUN BLACKJACK 20x - DOUBLE HALF CAP (at most 50 presses per run)    build 381595b2ec01...   p = 0.50045487064506489   edge per double 2p-1 = 0.09097%
+Solver check: bar_optimum_cap.cpp v an independent recursion over (held, bank, presses left) using RunBar.compute() of run-bar v170: 63 cases, largest difference 4.8e-13 (pass).
+
+lambda_N(A) = best expected final payout / first win A, with at most N DOUBLE HALF presses (rows N, columns A in cents)
+N              5        10        20        30        40        50        60        80       100       150       200       300
+0       1.009135  1.009135  1.009135  1.009135  1.009135  1.009135  1.009135  1.009135  1.009135  1.009135  1.009135  1.009135
+1       1.010419  1.010050  1.010050  1.010050  1.010050  1.010050  1.010050  1.010050  1.010050  1.010050  1.010050  1.010050
+2       1.011294  1.011092  1.010909  1.011122  1.010909  1.011129  1.010909  1.010909  1.010909  1.010909  1.010909  1.010909
+3       1.012102  1.011908  1.011810  1.011938  1.011720  1.012052  1.011825  1.011720  1.011828  1.011720  1.011720  1.011720
+5       1.013451  1.013377  1.013303  1.013294  1.013255  1.013363  1.013286  1.013233  1.013361  1.013264  1.013289  1.013237
+10      1.015969  1.016077  1.016101  1.016097  1.016101  1.016101  1.016086  1.016096  1.016089  1.016094  1.016085  1.016087
+20      1.019298  1.019510  1.019589  1.019619  1.019617  1.019635  1.019627  1.019626  1.019633  1.019633  1.019631  1.019631
+30      1.021658  1.021968  1.022087  1.022135  1.022132  1.022158  1.022151  1.022149  1.022159  1.022160  1.022159  1.022160
+40      1.023543  1.023924  1.024089  1.024154  1.024155  1.024196  1.024181  1.024181  1.024196  1.024202  1.024197  1.024198
+50      1.025132  1.025580  1.025738  1.025816  1.025804  1.025863  1.025840  1.025838  1.025860  1.025867  1.025860  1.025863
+60      1.026412  1.026928  1.027121  1.027189  1.027190  1.027236  1.027219  1.027216  1.027239  1.027240  1.027239  1.027240
+75      1.027877  1.028494  1.028730  1.028811  1.028818  1.028859  1.028848  1.028850  1.028868  1.028870  1.028870  1.028871
+100     1.029453  1.030201  1.030492  1.030600  1.030604  1.030664  1.030648  1.030646  1.030668  1.030676  1.030671  1.030674
+inf     1.031066  1.032151  1.032639  1.032821  1.032859  1.032950  1.032942  1.032956  1.032996  1.033014  1.033015  1.033024
+
+At the cap N = 50: 5c 1.025132 · 10c 1.025580 · 20c 1.025738 · 30c 1.025816 · 40c 1.025804 · 50c 1.025863 · 60c 1.025840 · 80c 1.025838 · 100c 1.025860 · 150c 1.025867 · 200c 1.025860 · 300c 1.025863
+Saturation in A: for A >= 50c the value stays within 2.9e-5 (min 1.025838, max 1.025867); the press count, not the room under the 1,000x cap or the 2-cent minimum, is what limits the run.
+Extrapolation A -> infinity at N = 50: fit A>=20: 1.025881 (c1 -0.0025, rms 1.6e-5); fit A>=40: 1.025875 (c1 -0.0021, rms 1.6e-5); fit A>=50: 1.025865 (c1 -0.0008, rms 1.2e-5); Richardson (40,80) 1.025873, (50,100) 1.025858, (100,200) 1.025860, (150,300) 1.025859. lambda_50(infinity) = 1.02586 +- 0.00003; lambdaHat_50 = 1.02590 (uncapped lambdaHat 1.03308).
+Marginal value of the next press at N = 50: 50c +1.49e-4 · 60c +1.49e-4 · 80c +1.48e-4 · 100c +1.49e-4 · 150c +1.49e-4 · 200c +1.49e-4 · 300c +1.49e-4 (lambda_51 - lambda_50).
+
+Convergence N -> infinity (this solver against the uncapped value iteration of bar_optimum.cpp, an independent algorithm):
+  A 5  c  N = 1500: 1.031065918  uncapped 1.031065918  difference 1.0e-12  within 1e-9 from N = 582
+  A 10 c  N = 1500: 1.032151161  uncapped 1.032151161  difference 1.0e-12  within 1e-9 from N = 613
+  A 20 c  N = 1500: 1.032638743  uncapped 1.032638743  difference 1.0e-12  within 1e-9 from N = 638
+
+Whole round, best play on the board (base 94.368%):
+Bet       Cash out  Always DOUBLE   Optimum, cap 50      Upper bound, cap 50   No cap: estimate  No cap: bound
+$1        94.3679%       95.2299%           96.808%                  96.812%            97.482%        97.489%
+$10       94.3679%       95.2299%           96.810%                  96.812%            97.487%        97.489%
+$100      94.3679%       95.2299%           96.810%                  96.812%            97.487%        97.489%
+estimate = exact V_50(A) where A was solved (8 of the ammo values at $1; 36.8% of rounds) and lambda_fit(A) elsewhere; upper bound = base best-play return x lambdaHat_50.
+The proposed accounting: base 94.368% + 50 x 0.0910 = 98.917% (adds the edge as if each press staked exactly one bet; a ceiling here, not the exact figure). Exact ceiling 96.812%.
+
+Whole-round ceiling v cap N (best board play, ceiling = base x lambda_N at A = 200c):
+N 0: 95.230% · N 1: 95.316% · N 2: 95.397% · N 3: 95.474% · N 5: 95.622% · N 10: 95.886% · N 20: 96.220% · N 30: 96.459% · N 40: 96.651% · N 50: 96.808% · N 60: 96.938% · N 75: 97.092% · N 100: 97.262% · no cap: 97.489% (bound), 97.487% (estimate)
+
+Conventional chart in the double (p = 0.50036044049423456): lambda_N(A) at N = 0 / 50 / no cap: 5c 1.007232 / 1.019867 / 1.024541 · 10c 1.007232 / 1.020220 / 1.025395 · 20c 1.007232 / 1.020345 / 1.025779 · 40c 1.007232 / 1.020397 / 1.025951 · 100c 1.007232 / 1.020441 / 1.026059 · 200c 1.007232 / 1.020441 / 1.026074

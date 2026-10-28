@@ -1,8 +1,9 @@
 # Card Run Blackjack 20× — Math Pack for Certification
 
 **Build:** `card-run-blackjack-classic-launch.html` · sha256 `381595b2ec0103398f92886e7429afc9624c3a53d6e68ebcd7e86fde01f2708c` · 131,176 bytes
-**Date:** 16 October 2026 · **Run bar:** v170 · **Change in this build:** the dealer stands on all 17s in the DOUBLE OR NOTHING hand (change request "DOUBLE OR NOTHING returns just over 100% (Blackjack)", 2026-10-16)
-**Companion files:** `par.txt` (plain-text PAR sheet), `results.json` (every number below), `README.txt` (every script, command and seed), `out/CR_report.txt` (the change request's report-back block).
+**Date:** 16 October 2026, updated 28 October 2026 (DOUBLE HALF limited to 50 presses a round, section 6.5) · **Run bar:** v170 · **Change in this build:** the dealer stands on all 17s in the DOUBLE OR NOTHING hand (change request "DOUBLE OR NOTHING returns just over 100% (Blackjack)", 2026-10-16)
+**Companion files:** `par.txt` (plain-text PAR sheet), `results.json` (every number below), `README.txt` (every script, command and seed), `out/CR_report.txt` (the change request's report-back block), `out/CAP50_report.txt` and `out/cap50.json` (the 50-press cap, section 6.5).
+**Status of the cap:** the cap is a rule of this pack. Build `381595b2…` (run bar v170) does **not** enforce it yet; the build and the run-bar module need the change in section 5 before the pack describes a shipped game (section 10, item 8).
 
 ---
 
@@ -21,7 +22,9 @@
 | DOUBLE OR NOTHING, worst play | 92.0888% |
 | Whole round, cash out at once (best play) | 94.3679% |
 | Whole round, double to the 1,000× cap | 95.2299% |
-| **Whole round, the best possible bar play (exact optimum)** | **≈ 97.49%** (upper bound 97.489%) — below 100% |
+| DOUBLE HALF limit (rule R50) | **at most 50 presses in a round**; DOUBLE OR NOTHING and CASH OUT are never limited |
+| **Whole round, the best possible bar play with the 50-press limit (exact optimum)** | **≈ 96.81%** (upper bound 96.812%) — below 100% |
+| Whole round, the best possible bar play with no limit (reference only) | ≈ 97.49% (upper bound 97.489%) |
 | Bets | $1.00 – $100.00 in $0.10 steps |
 | Rounding | Whole cents, rounded down; no rounding occurs on the base game or on any double |
 
@@ -29,7 +32,9 @@
 
 **Contract change.** The shared rule "each game's double returns at most 100%" no longer holds for Blackjack: its double returns **100.07%–100.09%**, depending on play. The whole round still returns well under 100% (below).
 
-**A correction to the change request.** The request states that the worst case for a whole round is about 94.4% (a player who doubles every time). That is the *double-every-time* case only. A player who uses DOUBLE HALF as well can do better; the exact optimum over every possible sequence of button presses is **97.49%** per round. Still under 100%, with 2.5 points to spare. Section 6 has the working.
+**A correction to the change request.** The request states that the worst case for a whole round is about 94.4% (a player who doubles every time). That is the *double-every-time* case only. A player who uses DOUBLE HALF as well can do better; the exact optimum over every possible sequence of button presses is **97.49%** per round with no limit on DOUBLE HALF, and **96.81%** with it limited to 50 presses a round. Both are under 100%; the limit raises the margin from 2.5 to 3.2 points. Section 6 has the working.
+
+**What changed in this update.** DOUBLE HALF may be pressed at most 50 times in a round (rule R50). Nothing on the board or in the double hand changes, so every figure in sections 2 to 4 stands. The best-play ceiling for the whole round falls from 97.49% to 96.81%. The first-win size hardly matters once the limit is in force: for every solved first win from 50 cents to $3.00 the best bar play returns 1.02586 × the first win to within 3e-5 (section 6.5). The 100% question was not open before the limit and is not open after it; the limit narrows the worst case and bounds the length of a run.
 
 ---
 
@@ -41,7 +46,7 @@
 - **Ties win.** A player blackjack against a dealer blackjack ties, and the BJ column pays. A dealer blackjack beats every other hand.
 - **Pays** (× bet; the three columns add): **WINS** (hands won) 2 / 3 / 4 = 0.3× / 1.2× / 2×; **MADE 21** (hands that make 21) 1 / 2 / 3 / 4 = 0.4× / 1× / 2× / 4×; **BJ** (blackjacks) 1 / 2 / 3 / 4 = 0.5× / 2× / 10× / 18×. Four blackjacks and four wins together make the top pay of 20×; four blackjacks against a dealer blackjack pay 18× (the BJ column only).
 - **The 20× name is a target, not a cap.** Top pay is 20× and nothing on the board pays more.
-- **After any win** the run bar opens (section 5).
+- **After any win** the run bar opens (section 5). **DOUBLE HALF may be pressed at most 50 times in a round** (rule R50, section 5).
 
 ---
 
@@ -166,6 +171,7 @@ After any win the bar offers: **CASH OUT** · **DOUBLE OR NOTHING** · **DOUBLE 
 - **Order of checks after every result, in cents:** clip the held amount to MAX WIN − RUN BANK; end at MAX WIN; end at the **1,000× run cap** (1,000 × the first win; the double that crosses it pays in full); otherwise show the bar.
 - **DOUBLE** is offered only when the held amount is at least $0.02 and RUN BANK + 2 × held ≤ MAX WIN. **DOUBLE HALF** only when ⌊held ÷ 2⌋ ≥ $0.02 (so held ≥ $0.04) and RUN BANK + (held − half) + 2 × half ≤ MAX WIN. A bar with neither shows CASH OUT alone.
 - Doubles are exact whole-cent doubles: no rounding at small amounts.
+- **DOUBLE HALF limit (rule R50).** DOUBLE HALF is offered only while fewer than 50 DOUBLE HALF presses have been made in the round, on top of the conditions above. A press counts when it is made, whether the double then wins or loses. The count starts at 0 with the first win of the round and only goes up: a lost double, the RUN BANK coming back as the held amount, a reload or a reconnect do not reset it, and it is part of the stored round state. At 50 presses the DOUBLE HALF control is not shown and the bar offers CASH OUT and DOUBLE OR NOTHING (and CASH OUT alone when the held amount is under $0.02, as before). DOUBLE OR NOTHING and CASH OUT are never limited. Order of checks: the MAX WIN and run-cap checks come first, as above; the limit only removes the DOUBLE HALF offer.
 - RUN IT AGAIN and RUN HALF do not exist in this build.
 
 The shipped bar code equals the shared module `run-bar.js` v170: `runbar_diff.js` compares the offers and amounts on 1,594,400 states with 0 differences.
@@ -201,7 +207,9 @@ Closed forms (each asserted equal to the bar model to 1e-12):
 
 Standard deviations (× bet): P2 1.633, P3 42.84 (hit rate 1 in 1,460), P4 2.692 (a lower bound), P5 1.154.
 
-### 6.3 The exact optimum over every possible bar policy
+### 6.3 The exact optimum over every possible bar policy (no limit on DOUBLE HALF; reference)
+
+Sections 6.3 and 6.4 solve the bar with DOUBLE HALF unlimited, which is the case before rule R50. They stay in the pack because the limited optimum (6.5) is measured against them and converges to them as the limit grows.
 
 The most the bar can ever return is found exactly by dynamic programming (`bar_optimum.cpp`): the state is (held, RUN BANK) in whole cents; the actions at each state are the ones the build offers; the value of a state is the expected final payout under the best continuation. Value iteration (Gauss-Seidel) runs until the relative residual is 1e-13. For an ammo of A cents let **λ(A) = V\*(A) ÷ A**.
 
@@ -245,14 +253,77 @@ The base game gives the ammo distribution of the first win (section 2.2); each a
 - **Joint optimisation of board and bar play.** For any board policy, E[V\*(ammo)] ≤ λ̂ × E[ammo], and E[ammo] is largest (94.368% of the bet) at best play. So no combination of board and bar play exceeds 97.489%; the best-play estimate sits within 0.007 points of that bound.
 - **The change request's 94.4% is the always-double case on a 93.5% board** (93.5% × 1.0009¹⁰). On the shipped board's best-play 94.368% the always-double figure is **95.23%**, and the true worst case is **97.49%**.
 
-**Conclusion:** the claim "every round strategy stays below 100%" holds, with a margin of 2.5 points. The figure 94.4% should be replaced by **97.49%** wherever the worst case is quoted.
+**Conclusion:** the claim "every round strategy stays below 100%" holds, with a margin of 2.5 points with no limit on DOUBLE HALF. The figure 94.4% should be replaced by **97.49%** where the worst case with no limit is quoted, and by **96.81%** with the 50-press limit (section 6.5).
+
+### 6.5 DOUBLE HALF limited to 50 presses a round (rule R50)
+
+**The rule.** DOUBLE HALF is offered only while fewer than 50 DOUBLE HALF presses have been made in the round (section 5). DOUBLE OR NOTHING and CASH OUT are never limited.
+
+**Why it matters.** Each double is a favourable bet (+0.091% of the amount staked). DOUBLE HALF lets the player stake again and again while the rest of the winnings sits safe in the RUN BANK, so with no limit the number of favourable bets in a round is bounded only by the 1,000× cap. The limit bounds the number of repeats. It changes no board figure, no double-hand figure and none of the named policies P0, P2, P3 or P5 (none of them presses DOUBLE HALF more than once). P4 (a random button each time) presses DOUBLE HALF with probability at most ½ at each bar, so a path with 50 presses has probability below 2⁻⁵⁰ = 8.9e-16, far under the 1e-12 cut of section 6.2; P4 is unchanged to the stated accuracy.
+
+**Method.** Let V\_r(held, RUN BANK) be the best expected final payout with *r* DOUBLE HALF presses still allowed (`bar_optimum_cap.cpp`). DOUBLE OR NOTHING stays in layer *r*; DOUBLE HALF moves to layer *r* − 1. Inside one layer the states have no cycle (a full double either raises the held amount with the bank fixed or lands on an empty bank, from which it only raises the held amount or ends the round), so each layer is solved exactly in one pass, with no iteration and no tolerance. Layer 0 is the bar with DOUBLE OR NOTHING and CASH OUT only. The value of the start state in layer *N* is the optimum with the limit *N*, so one run gives every limit from 0 to 100 (1,500 for the three smallest first wins). The offers, the banked-bust return, the 2-cent minimum, the 1,000× run cap and MAX WIN are those of section 5 and 6.3. For a first win of *A* cents let **λ\_N(A) = V\_N(A) ÷ A**.
+
+| N (limit) | A = 5c | A = 20c | A = 50c | A = 100c | A = 200c | A = 300c |
+|---|---|---|---|---|---|---|
+| 0 | 1.009135 | 1.009135 | 1.009135 | 1.009135 | 1.009135 | 1.009135 |
+| 10 | 1.015969 | 1.016101 | 1.016101 | 1.016089 | 1.016085 | 1.016087 |
+| 20 | 1.019298 | 1.019589 | 1.019635 | 1.019633 | 1.019631 | 1.019631 |
+| 30 | 1.021658 | 1.022087 | 1.022158 | 1.022159 | 1.022159 | 1.022160 |
+| 40 | 1.023543 | 1.024089 | 1.024196 | 1.024196 | 1.024197 | 1.024198 |
+| **50** | **1.025132** | **1.025738** | **1.025863** | **1.025860** | **1.025860** | **1.025863** |
+| 75 | 1.027877 | 1.028730 | 1.028859 | 1.028868 | 1.028870 | 1.028871 |
+| 100 | 1.029453 | 1.030492 | 1.030664 | 1.030668 | 1.030671 | 1.030674 |
+| no limit | 1.031066 | 1.032639 | 1.032950 | 1.032996 | 1.033015 | 1.033024 |
+
+(N = 0 is 1.000910¹⁰ = 1.009135: ten doubles reach the 1,000× cap. λ\_N(A) has small lattice wobbles at small N and small A from whole-cent halves, up to 4e-4 at N ≤ 5.) The same table for every solved first win (5, 10, 20, 30, 40, 50, 60, 80, 100, 150, 200 and 300 cents) is in `out/CAP50_report.txt`.
+
+**The limit makes the first-win size irrelevant.** Without a limit λ(A) keeps rising with A (1.0311 at 5c to 1.0330 at 300c, section 6.3). With 50 presses it is flat once A reaches 50 cents: for A = 50, 60, 80, 100, 150, 200 and 300 it lies between 1.025838 and 1.025867 (spread 2.9e-5). The number of presses, not the room under the 1,000× cap or the 2-cent minimum, is what limits the run. Extrapolating the solved sizes to large A (fits on A ≥ 20, 40 and 50 and four Richardson pairs, 1.025858 to 1.025881): **λ\_50(∞) = 1.02586 ± 0.00003**; λ̂\_50 = 1.02590 (the larger of the largest solved value and the extrapolated limit plus its error, the rule of section 6.3). Without the limit λ̂ = 1.03308. The 51st press would add +1.49e-4 × the first win (+0.014 points of round return); the 100th adds +5.5e-5.
+
+**Whole round, best board play (94.368%).**
+
+| Bet | Cash out (P0) | Always DOUBLE (P3) | Optimum with the limit (estimate) | Upper bound with the limit | No limit: estimate | No limit: upper bound |
+|---|---|---|---|---|---|---|
+| $1 | 94.3679% | 95.2299% | 96.808% | 96.812% | 97.482% | 97.489% |
+| $10 | 94.3679% | 95.2299% | 96.810% | 96.812% | 97.487% | 97.489% |
+| $100 | 94.3679% | 95.2299% | 96.810% | 96.812% | 97.487% | 97.489% |
+
+- **Estimate** = the exact V\_50(A) where A was solved (8 of the 36 first-win sizes at a $1 bet, 36.8% of rounds) and the fitted λ\_50(A) = 1.025875 − 0.0021 ÷ A elsewhere. With λ\_50 flat from 50 cents up, the fit matters only for first wins under 50 cents.
+- **Upper bound** = the board's best-play return 94.368% × λ̂\_50 1.02590 = 96.812%. As in 6.4, for any board policy E[V\_50(ammo)] ≤ λ̂\_50 × E[ammo] ≤ λ̂\_50 × 94.368%, so no combination of board and bar play exceeds 96.812% (under the assumption that λ\_50(A) ≤ λ̂\_50 at every A, which every solved size supports).
+- **Margin to 100%:** 3.19 points (2.51 points with no limit).
+
+**What the limit costs at other settings** (best board play, λ\_N at A = 200c; ceiling = 94.368% × λ\_N):
+
+| N (limit) | Whole-round ceiling |
+|---|---|
+| 0 | 95.230% |
+| 1 | 95.316% |
+| 2 | 95.397% |
+| 3 | 95.474% |
+| 5 | 95.622% |
+| 10 | 95.886% |
+| 20 | 96.220% |
+| 30 | 96.459% |
+| 40 | 96.651% |
+| **50** | **96.808%** |
+| 60 | 96.938% |
+| 75 | 97.092% |
+| 100 | 97.262% |
+| no limit | 97.489% |
+
+A lower limit lowers the ceiling; a higher one raises it towards 97.49%. The ceiling is a worst case over every possible player; no player reaches it without playing the bar perfectly.
+
+**The proposed accounting, checked.** The change was proposed on the reasoning that 50 presses at the double's edge of 0.0910 points each add 4.55 points to the base return, 94.368% + 4.55% = 98.92%, still under 100%. That figure is a valid ceiling (the exact one, 96.812%, is below it) but it is not how the exact ceiling arises: the edge is earned on the amount staked, which is a share of the running winnings and not one bet, and DOUBLE OR NOTHING presses are not limited, so the sum of 50 edges is not a derivation. The exact solution above is the proof; the linear figure is only a cross-check on the size.
+
+**With the conventional chart in the double** (win chance 0.50036044049423456), λ\_50 is 1.019867 (5c), 1.020220 (10c), 1.020345 (20c), 1.020397 (40c) and 1.020441 (100c and 200c), against 1.026074 with no limit at 200c and 1.007232 at N = 0.
+
+**Checks.** (1) The layered solver equals an independent memoised recursion over (held, RUN BANK, presses left) that takes every offer, amount and round end from `RunBar.compute()` of the shipped run-bar v170 (not from the solver's own offers): 63 cases, A = 2 to 13 cents and N = 0 to 9, largest difference 4.8e-13. (2) For N → ∞ the solver converges to the value iteration of 6.3, a different algorithm: at A = 5, 10 and 20 cents, N = 1,500 differs from the no-limit value by 1.0e-12, and the two agree to 1e-9 from N = 582, 613 and 638. (3) N = 0 equals the closed form 1.000910¹⁰ = 1.009135 at every A. The shipped bar code does not contain the counter yet, so the shipped build is not played under the limit (section 10, item 8).
 
 ---
 
 ## 7. Rounding, limits, RNG
 
 - **Rounding.** All pays are whole cents rounded down. Board pays are exact at every legal bet on the $0.10 grid; doubles are exact; no rounding occurs anywhere in Blackjack. DOUBLE HALF uses the floor of half the cents and banks the rest.
-- **Limits.** Bets $1.00–$100.00 in $0.10 steps; MAX WIN 20,000× the bet; run cap 1,000× the first win (the double that crosses it pays in full); minimum $0.02 for DOUBLE OR NOTHING and $0.04 for DOUBLE HALF.
+- **Limits.** Bets $1.00–$100.00 in $0.10 steps; MAX WIN 20,000× the bet; run cap 1,000× the first win (the double that crosses it pays in full); minimum $0.02 for DOUBLE OR NOTHING and $0.04 for DOUBLE HALF; DOUBLE HALF at most 50 presses a round (rule R50).
 - **RNG.** Every card is drawn with rejection sampling from `crypto.getRandomValues`; no outcome uses `Math.random`, and with `crypto` missing the game throws. Platform RNG replaces the browser source in production (open item, section 10).
 - **Lowest documented return:** 81.95% (worst play on the board), above 75% (GLI-19 §4.7) and 80% (Missouri 11 CSR 45-5.190).
 
@@ -320,6 +391,10 @@ Headless Chromium, 14 checks, all pass (`browser_smoke.js`, screenshots in `out/
 | 6 | Rules text | New dealer line and return row (Classic sheet; Clover and Vault are not in this build) — pass |
 | 7 | Base game unchanged | 94.368% best play / 93.448% rules-sheet basic; board outputs identical — pass |
 
+### 8.7 The DOUBLE HALF limit (rule R50)
+
+The limit is solved exactly, not simulated, and the shipped build does not contain it, so there are no simulation rounds for it. The evidence is in section 6.5: 63 cases of the solver against an independent recursion on the shipped run-bar v170 (largest difference 4.8e-13) and convergence to the no-limit optimum (1.0e-12 at N = 1,500). Files: `bar_optimum_cap.cpp`, `bar_optimum_cap_run.js`, `bar_cap_check.js`, `cap_report.js`; outputs `out/bar_cap_exact.json`, `out/bar_cap_basic.json`, `out/bar_cap_exact_conv.json`, `out/bar_cap_check.json`, `out/cap50.json`, `out/CAP50_report.txt`.
+
 ---
 
 ## 9. How to reproduce
@@ -334,9 +409,11 @@ node exact_runs.js > out/exact_runs.log
 node runbar_diff.js > out/runbar_diff.log
 ./run_sims.sh 1 ; ./run_double_sims.sh 1
 ./run_bar_optimum.sh ; ./run_bar_optimum_2.sh
+./run_bar_cap.sh > out/bar_cap.log      # the DOUBLE HALF limit: solver check, convergence, ladder (about 25 minutes)
 ./run_post.sh
 NODE_PATH=/opt/npm-tools/node_modules node browser_smoke.js
 node round_worst.js ; node aggregate.js ; node cr_report.js
+node cap_report.js 50                  # out/CAP50_report.txt, out/cap50.json
 ```
 
 | File | What it is |
@@ -347,12 +424,14 @@ node round_worst.js ; node aggregate.js ; node cr_report.js
 | `exact_runs.js` | Exact policy values P0, P2–P5 at $1/$10/$100 |
 | `bar_optimum.cpp`, `bar_optimum_run.js` | Exact optimum over all bar policies, with a check against run-bar v170 |
 | `bar_policy_eval.js`, `bar_policy_sim.js` | Independent check of the optimum; the optimal policy played through the shipped code |
+| `bar_optimum_cap.cpp`, `bar_optimum_cap_run.js`, `bar_cap_check.js`, `run_bar_cap.sh` | Exact optimum with DOUBLE HALF limited to N presses (layered, exact); independent recursion check on run-bar v170; the ladder of first wins |
+| `cap_report.js` | The 50-press report (`out/CAP50_report.txt`, `out/cap50.json`) |
 | `round_worst.js` | Round-level worst case and extrapolation |
 | `harness.js`, `policy.js`, `strategy.js`, `seedcrypto.js` | Run the shipped scripts with a seeded RNG and a bot |
 | `mc_model.js`, `trace_check.js`, `trace_replay.sh`, `runbar_diff.js` | Model Monte Carlo and equality proofs between the shipped bar and the model |
 | `double_sim.js`, `browser_smoke.js` | The double hand through the shipped code; headless browser rig tests |
 | `aggregate.js`, `compare_prev.js`, `cr_report.js` | Pooling and CI checks; same-seed comparison; change-request report |
-| `par.txt`, `results.json` | Every number in this document |
+| `par.txt`, `results.json` | Every number in this document except section 6.5 (those are in `out/CAP50_report.txt` and `out/cap50.json`) |
 
 Seeds for every chunk are listed in `README.txt`.
 
@@ -360,10 +439,14 @@ Seeds for every chunk are listed in `README.txt`.
 
 ## 10. Items for the lab and open points
 
-1. **Declare the double hand as a range, 100.07% (basic) to 100.09% (best),** and the round as: base 94.368% (best play) / 93.448% (rules-sheet basic) with a worst case over all bar play of **97.49%**. The previous statement that every bar action returns under 100% is withdrawn for Blackjack.
-2. **The 94.4% worst case in the change request is superseded** by 97.49% (section 6). It is the always-double case on a 93.5% board; the build's board returns 94.368% at best play.
-3. **The optimum is proven for sizes A ≤ 300 cents.** For the larger first wins at $10 and $100 bets the figure uses the fitted curve, and the upper bound assumes λ(A) ≤ 1.03308 for every A. The solved sizes and the fit support it; it is not a proof for unsolved A. If the lab wants the larger sizes solved exactly, A = 300c took 23 minutes and 32.5 million states; $10 bets start at A = 300c and $100 bets at 3,000c.
+1. **Declare the double hand as a range, 100.07% (basic) to 100.09% (best),** and the round as: base 94.368% (best play) / 93.448% (rules-sheet basic) with a worst case over all bar play of **96.81%** (DOUBLE HALF limited to 50 presses a round, section 6.5; 97.49% with no limit). The previous statement that every bar action returns under 100% is withdrawn for Blackjack.
+2. **The 94.4% worst case in the change request is superseded** by 96.81% with the 50-press limit (97.49% with no limit; section 6). It is the always-double case on a 93.5% board; the build's board returns 94.368% at best play.
+3. **The optimum is proven for sizes A ≤ 300 cents.** For the larger first wins at $10 and $100 bets the figure uses the fitted curve, and the upper bound assumes λ(A) ≤ 1.03308 for every A. The solved sizes and the fit support it; it is not a proof for unsolved A. With the 50-press limit the same assumption is much better supported: λ\_50(A) is flat (spread 2.9e-5) over every solved A from 50 to 300 cents, so λ̂\_50 = 1.02590 does not rest on a rising curve. If the lab wants the larger sizes solved exactly, A = 300c took 23 minutes and 32.5 million states; $10 bets start at A = 300c and $100 bets at 3,000c.
 4. **"Basic strategy" for the double hand** is the conventional chart, as in the change request. The rules sheet's own basic play is a board strategy and returns 99.9579% when applied to the double; the sheet does not show a basic figure for the double hand.
 5. **The rules sheet shows one decimal (100.1%).** The change request asks for 100.09% / 100.07% in the rules text; the build shows 100.1% under the one-decimal convention used for every RTP on the sheet. Say if the lab wants two decimals for this line.
 6. **Clover and Vault** appear in the change request's rules table; they are not in this build.
 7. **RNG:** the production platform RNG and server-side outcome determination replace the browser `crypto` source.
+8. **The build does not contain rule R50.** Build `381595b2…` (run bar v170) has no DOUBLE HALF counter. The change is: a per-round counter of DOUBLE HALF presses, starting at 0 at the first win and stored with the round state; the press increments it before the double is played; the DOUBLE HALF offer in `RunBar.compute()` additionally requires the counter to be below 50; nothing resets it. Once the build is changed, `consts.js` must assert the constant and the offer fragment, `runbar_diff.js` and the solver's offer check must include the counter, and the pack must be regenerated for the new build hash. Until then section 6.5 describes the rule and its maths, not a shipped game.
+9. **Tests for the limit** (to add to the build's tests): after 49 presses DOUBLE HALF is shown and after the 50th it is not; the 50th press is counted whether it wins or loses; a lost double that returns the RUN BANK does not reset the count; a reload or reconnect keeps the count; at 50 presses the bar shows CASH OUT and DOUBLE OR NOTHING; DOUBLE OR NOTHING is still offered after 50 presses until the 1,000× cap or MAX WIN; the count restarts at 0 in the next round.
+10. **Player-facing text.** The rules sheet and the bar copy should state the limit (for example "DOUBLE HALF can be used up to 50 times in a round"). The sheet shows one decimal for every RTP, so no new RTP line is needed: the limit changes only the worst-case ceiling, which the sheet does not show.
+11. **An operator who lowers the limit** lowers the ceiling (table in section 6.5); a limit above 50 is not covered by the 50-press figures (the table gives 60, 75 and 100, and the no-limit figure is the reference).
